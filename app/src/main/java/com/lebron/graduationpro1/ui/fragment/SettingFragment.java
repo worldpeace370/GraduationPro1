@@ -51,9 +51,9 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if((Boolean) newValue){
-                    ShowToast.shortTime(" ");
+                    ShowToast.shortTime("已开启2G/3G/4G无图模式");
                 }else {
-                    ShowToast.shortTime(" ");
+                    ShowToast.shortTime("已关闭2G/3G/4G无图模式");
                 }
                 return true;
             }
@@ -63,9 +63,9 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if((Boolean) newValue){
-                    ShowToast.shortTime(" ");
+                    ShowToast.shortTime("已开启夜间模式");
                 }else {
-                    ShowToast.shortTime(" ");
+                    ShowToast.shortTime("已关闭夜间模式");
                 }
                 return true;
             }
@@ -77,6 +77,6 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
-        return false;
+        return true;
     }
 }
