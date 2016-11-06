@@ -1,7 +1,6 @@
 package com.lebron.graduationpro1.ui.activity;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,6 +8,9 @@ import android.graphics.Color;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -21,6 +23,7 @@ import com.lebron.graduationpro1.utils.NetWorkUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -42,21 +45,53 @@ public class ShowVideoActivity extends BaseActivity {
     private Bitmap mBitmap;
     private int mWidth;
     private int mHeight;
+    private String TAG = "ShowVideoActivity";
+    private MyHandler mMyHandler;
+
+    private static class MyHandler extends Handler{
+        WeakReference<ShowVideoActivity> weakReference;
+        public MyHandler(ShowVideoActivity activity){
+            weakReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            ShowVideoActivity activity = weakReference.get();
+            if (activity != null){//如果activity仍然在弱引用中,执行...
+                switch (msg.what){
+                    case 0:
+                        activity.createNetFailedDialog("貌似ip地址不对哦");
+                        break;
+                }
+            }else { //否则不执行
+            }
+        }
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //强制横屏
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        setContentView(R.layout.activity_show_video);
+    protected void initView() {
         unbinder = ButterKnife.bind(this);
-        //设置透明状态栏,父类的方法
-        setTransparent();
         //加入ActivityManager
         MyActivityManager.getInstance().addActivity(this);
+        initSurfaceView();
+    }
+
+    @Override
+    protected void initData() {
+        mMyHandler = new MyHandler(this);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_show_video;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         //接收传入的视频url地址
         getVideoUrl();
-        initSurfaceView();
     }
 
     private void initSurfaceView() {
@@ -66,12 +101,13 @@ public class ShowVideoActivity extends BaseActivity {
         mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
+                Log.i(TAG, "surfaceCreated: ");
                 //如果网络没问题,开始刷新SurfaceView
                 if (NetWorkUtils.isNetWorkConnected(AppApplication.getAppContext())){
                     new Thread(refreshVideoThread).start();
                 }else {
                     //弹出对话框提示
-                    createNetFailedDialog();
+                    createNetFailedDialog("貌似没有网啦～");
                 }
             }
 
@@ -92,12 +128,12 @@ public class ShowVideoActivity extends BaseActivity {
     /**
      * 网络连接失败,弹出对话框提醒
      */
-    private void createNetFailedDialog() {
+    private void createNetFailedDialog(String errorInfo) {
         MaterialDialog dialog = new MaterialDialog.Builder(this)
-                .title("貌似没有网啦")
+                .title(errorInfo)
                 .content("本项目开源, 你想怎么改?快来联系我~")
                 .positiveText("Github")
-                .negativeText("知乎")
+                .negativeText("Zhihu")
                 .callback(new MaterialDialog.Callback() {
                     @Override
                     public void onPositive(MaterialDialog dialog) {
@@ -118,17 +154,14 @@ public class ShowVideoActivity extends BaseActivity {
             URL url;
             HttpURLConnection connection;
             InputStream inputStream;
-            RectF rectF = new RectF(0, 0, mWidth, mHeight);
-            try {
-                url = new URL(mVideoUrl);
-                connection = (HttpURLConnection) url.openConnection();
-                //设置get请求方式,默认也是该值
-                connection.setRequestMethod("GET");
-                //设置为Input模式,默认也是该值
-                connection.setDoInput(true);
-                //如果返回码是200表示状态正常
-                if (connection.getResponseCode() == 200){
-                    while (isStartRefresh){
+            RectF rectF = new RectF(0, 0, mWidth, 4 * mHeight / 3);
+            //由于是无状态的连接,所以需要一直不断的申请连接
+            while (isStartRefresh){
+                try {
+                    url = new URL(mVideoUrl);
+                    connection = (HttpURLConnection) url.openConnection();
+                    //如果返回码是200表示状态正常
+                    if (connection.getResponseCode() == 200){
                         //由于图片是一帧一帧的,所以io流每次都是新值
                         inputStream = connection.getInputStream();
                         //得到输入流来的Bitmap
@@ -138,10 +171,19 @@ public class ShowVideoActivity extends BaseActivity {
                         canvas.drawBitmap(mBitmap, null, rectF, null);
                         mSurfaceHolder.unlockCanvasAndPost(canvas);
                     }
+                    connection.disconnect();
+                    url = null;
+                    connection = null;
+                    inputStream = null;
+                } catch (IOException e) {
+                    isStartRefresh = false;
+                    e.printStackTrace();
+                    Message message = mMyHandler.obtainMessage();
+                    message.what = 0;
+                    mMyHandler.sendMessage(message);
+                    Log.i(TAG, "connect is error!");
+                    return;
                 }
-                connection.disconnect();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     };
@@ -150,7 +192,7 @@ public class ShowVideoActivity extends BaseActivity {
         Intent intent = getIntent();
         if (null != intent){
             Bundle bundle = intent.getExtras();
-            mVideoUrl = bundle.getString("video_url");
+            mVideoUrl = "http://" + bundle.getString("video_url") + ":8080/?action=snapshot";
         }
     }
 

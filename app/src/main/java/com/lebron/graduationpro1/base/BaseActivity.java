@@ -1,12 +1,28 @@
 package com.lebron.graduationpro1.base;
 
 import android.graphics.Color;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(getLayoutId());
+        //设置透明状态栏,父类的方法
+        setTransparent();
+        initView();
+        initData();
+    }
+    abstract protected void initView();
+    abstract protected void initData();
+    abstract protected int getLayoutId();
 
     protected void setTransparent(){
         //API 在19--21之间
