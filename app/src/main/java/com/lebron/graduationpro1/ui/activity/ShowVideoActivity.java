@@ -40,13 +40,13 @@ public class ShowVideoActivity extends BaseActivity {
     private Unbinder unbinder;
     private String mVideoUrl;
     private SurfaceHolder mSurfaceHolder;
-    private boolean isStartRefresh = true;
     //每帧图像的Bitmap,用于保存图片到SD卡
     private Bitmap mBitmap;
     private int mWidth;
     private int mHeight;
     private String TAG = "ShowVideoActivity";
     private MyHandler mMyHandler;
+    private SurfaceThread mSurfaceThread;
 
     private static class MyHandler extends Handler{
         WeakReference<ShowVideoActivity> weakReference;
@@ -98,13 +98,17 @@ public class ShowVideoActivity extends BaseActivity {
         //保持屏幕常亮
         mSurfaceView.setKeepScreenOn(true);
         mSurfaceHolder = mSurfaceView.getHolder();
+        //按下home键之后先是执行surfaceDestroyed方法,当前线程其实结束了
+        //返回app时会重新执行下面前两个个方法,由于之前的线程销毁了所以需要在surfaceCreated重新开启线程
         mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
                 Log.i(TAG, "surfaceCreated: ");
-                //如果网络没问题,开始刷新SurfaceView
+                //如果网络没问题,开始刷新SurfaceView,线程一定要在这里创建.因为按下home键重新返回的时候还会再次执行该方法
                 if (NetWorkUtils.isNetWorkConnected(AppApplication.getAppContext())){
-                    new Thread(refreshVideoThread).start();
+                    mSurfaceThread = new SurfaceThread(mSurfaceHolder);
+                    mSurfaceThread.isStartRefresh = true;
+                    mSurfaceThread.start();
                 }else {
                     //弹出对话框提示
                     createNetFailedDialog("貌似没有网啦～");
@@ -113,12 +117,19 @@ public class ShowVideoActivity extends BaseActivity {
 
             @Override
             public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
+                Log.i(TAG, "surfaceChanged: ");
             }
 
             @Override
             public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
+                Log.i(TAG, "surfaceDestroyed: ");
+                //取消线程的刷新,退出线程
+                mSurfaceThread.isStartRefresh = false;
+                try {
+                    mSurfaceThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
         mWidth = getWindowManager().getDefaultDisplay().getWidth();
@@ -148,13 +159,23 @@ public class ShowVideoActivity extends BaseActivity {
         dialog.show();
     }
 
-    private Runnable refreshVideoThread = new Runnable() {
+    /**
+     * 自定义线程类,方便刷新
+     */
+    private class SurfaceThread extends Thread{
+        final SurfaceHolder mSurfaceHolder;
+        boolean isStartRefresh;
+        SurfaceThread(SurfaceHolder holder){
+            this.mSurfaceHolder = holder;
+        }
         @Override
         public void run() {
+            super.run();
             URL url;
             HttpURLConnection connection;
             InputStream inputStream;
             RectF rectF = new RectF(0, 0, mWidth, 4 * mHeight / 3);
+            Canvas canvas = null;
             //由于是无状态的连接,所以需要一直不断的申请连接
             while (isStartRefresh){
                 try {
@@ -166,10 +187,14 @@ public class ShowVideoActivity extends BaseActivity {
                         inputStream = connection.getInputStream();
                         //得到输入流来的Bitmap
                         mBitmap = BitmapFactory.decodeStream(inputStream);
-                        Canvas canvas = mSurfaceHolder.lockCanvas();
-                        canvas.drawColor(Color.WHITE);
-                        canvas.drawBitmap(mBitmap, null, rectF, null);
-                        mSurfaceHolder.unlockCanvasAndPost(canvas);
+                        synchronized (this.mSurfaceHolder){
+                            canvas = mSurfaceHolder.lockCanvas();
+                            //避免报空指针异常
+                            if (canvas != null){
+                                canvas.drawColor(Color.WHITE);
+                                canvas.drawBitmap(mBitmap, null, rectF, null);
+                            }
+                        }
                     }
                     connection.disconnect();
                     url = null;
@@ -183,10 +208,15 @@ public class ShowVideoActivity extends BaseActivity {
                     mMyHandler.sendMessage(message);
                     Log.i(TAG, "connect is error!");
                     return;
+                }finally {
+                    if (canvas != null){
+                        //放在这里为了保证正常的提交画布,避免报空指针异常
+                        mSurfaceHolder.unlockCanvasAndPost(canvas);
+                    }
                 }
             }
         }
-    };
+    }
 
     private void getVideoUrl() {
         Intent intent = getIntent();
@@ -200,7 +230,5 @@ public class ShowVideoActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
-        //取消线程的刷新,退出线程
-        isStartRefresh = false;
     }
 }
