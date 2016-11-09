@@ -52,7 +52,8 @@
                 android:textSize="22sp"
                 android:textColor="#ffffff"
                 android:textStyle="normal"
-                android:text="@string/tab_title"/>
+                android:text="@string/tab_title"
+                android:drawableEnd="@mipmap/choice"/>
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image_head_main"
                 android:layout_marginTop="25dp"

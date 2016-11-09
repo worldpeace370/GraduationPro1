@@ -34,4 +34,5 @@ dependencies {
     compile 'com.robbypond:material-dialogs:1.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'se.emilsjolander:stickylistheaders:2.7.0'
 }

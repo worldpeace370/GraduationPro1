@@ -7,9 +7,10 @@
     <string name="action_settings">Settings</string>
     <string name="record">Record</string>
     <string name="save">Save</string>
-    <string name="tab_title">供暖监控</string>
+    <string name="tab_title">供暖节点</string>
     <string name="scan">概览</string>
     <string name="video">视频</string>
     <string name="control">控制</string>
     <string name="details">详情</string>
+    <string name="node_choice">节点选择</string>
 </resources>

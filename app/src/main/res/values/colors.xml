@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="tabSelected">#18b6ef</color>
     <color name="tabRelease">#8a8a8a</color>
+    <color name="transparent">#00000000</color>
+    <color name="backPressed">#18b6ff</color>
+    <color name="backChecked">#18b6ff</color>
 </resources>
