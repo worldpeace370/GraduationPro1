@@ -1,34 +1,65 @@
 package com.lebron.graduationpro1.ui.activity;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.lebron.graduationpro1.R;
+import com.lebron.graduationpro1.base.BaseActivity;
+import com.lebron.graduationpro1.utils.ShowToast;
+import com.lebron.graduationpro1.view.DragLayout;
+import com.lebron.graduationpro1.view.MainLinearLayout;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity{
-//    @BindView(R.id.editText_ip)
-//    EditText mEditText;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+public class MainActivity extends BaseActivity{
+    private static final String TAG = "MainActivity";
+    @BindView(R.id.drawer_layout)
+    DragLayout mDragLayout;
+    @BindView(R.id.main_linearLayout)
+    MainLinearLayout mMainLinearLayout;
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_main);
+//        ButterKnife.bind(this);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
+//    }
+
+    @Override
+    protected void initView() {
+        ButterKnife.bind(this);
+        mDragLayout.setDragStatusChangedListener(new DragLayout.OnDragStatusChangedListener() {
+            @Override
+            public void onClosed() {
+                ShowToast.shortTime("closed");
+            }
+
+            @Override
+            public void onOpened() {
+                ShowToast.shortTime("opened");
+            }
+
+            @Override
+            public void onDragging(float percent) {
+                Log.i(TAG, "onDragging: " + percent);
+            }
+        });
+        mMainLinearLayout.setDragLayout(mDragLayout);
     }
 
-//    public void click(View view){
-//        int id = view.getId();
-//        switch (id){
-//            case R.id.button_open:
-//                openShowVideoActivity();
-//                break;
-//        }
-//    }
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
+
 //
 //    /**
 //     * 获得输入的ip地址,正则表达式验证合法性之后启动Activity

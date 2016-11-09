@@ -33,4 +33,5 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.robbypond:material-dialogs:1.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 }

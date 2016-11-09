@@ -6,21 +6,98 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/bg"
-    android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#66660000">
+        android:orientation="vertical"
+        android:paddingTop="50dp"
+        android:paddingBottom="50dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="50dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_head"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@mipmap/head"/>
+        <ListView
+            android:id="@+id/list_setting"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
 
     </LinearLayout>
 
-    <LinearLayout
+    <com.lebron.graduationpro1.view.MainLinearLayout
+        android:id="@+id/main_linearLayout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#66006600">
-
-    </LinearLayout>
+        android:background="#ffffffff">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="#18b6ef">
+            <TextView android:id="@+id/tab_title"
+                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textSize="22sp"
+                android:textColor="#ffffff"
+                android:textStyle="normal"
+                android:text="@string/tab_title"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_head_main"
+                android:layout_marginTop="25dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="left"
+                android:visibility="visible"
+                android:src="@mipmap/head"/>
+        </android.support.v7.widget.Toolbar>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <FrameLayout android:id="@+id/content_container"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#ffeeeeee"/>
+            <RadioGroup android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <RadioButton style="@style/tab_style"
+                    android:id="@+id/scan"
+                    android:checked="true"
+                    android:drawableTop="@drawable/tab_scan_selector"
+                    android:text="@string/scan"/>
+                <RadioButton style="@style/tab_style"
+                    android:id="@+id/video"
+                    android:drawableTop="@drawable/tab_video_selector"
+                    android:text="@string/video"/>
+                <RadioButton style="@style/tab_style"
+                    android:id="@+id/control"
+                    android:drawableTop="@drawable/tab_control_selector"
+                    android:text="@string/control"/>
+                <RadioButton style="@style/tab_style"
+                    android:id="@+id/details"
+                    android:drawableTop="@drawable/tab_details_selector"
+                    android:text="@string/details"/>
+            </RadioGroup>
+        </LinearLayout>
+    </com.lebron.graduationpro1.view.MainLinearLayout>
 
 </com.lebron.graduationpro1.view.DragLayout>
