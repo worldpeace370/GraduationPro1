@@ -1,9 +1,10 @@
 package com.lebron.graduationpro1.ui.activity;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.CycleInterpolator;
 import android.widget.TextView;
 
 import com.lebron.graduationpro1.R;
@@ -16,6 +17,7 @@ import com.lebron.graduationpro1.view.MainLinearLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends BaseActivity{
     private static final String TAG = "MainActivity";
@@ -25,6 +27,9 @@ public class MainActivity extends BaseActivity{
     MainLinearLayout mMainLinearLayout;
     @BindView(R.id.tab_title)
     TextView mTextViewTitle;
+    @BindView(R.id.image_head_main)
+    CircleImageView mImageView;
+    //用于按下两次返回键退出程序用
     private long mExitTime;
     @Override
     protected void initView() {
@@ -32,7 +37,11 @@ public class MainActivity extends BaseActivity{
         mDragLayout.setDragStatusChangedListener(new DragLayout.OnDragStatusChangedListener() {
             @Override
             public void onClosed() {
-                ShowToast.shortTime("closed");
+                //关闭抽屉的时候让头像晃动
+                ObjectAnimator animator = ObjectAnimator.ofFloat(mImageView, "translationX", 12.0f);
+                animator.setInterpolator(new CycleInterpolator(4.0f));
+                animator.setDuration(500);
+                animator.start();
             }
 
             @Override
@@ -42,7 +51,8 @@ public class MainActivity extends BaseActivity{
 
             @Override
             public void onDragging(float percent) {
-                Log.i(TAG, "onDragging: " + percent);
+                //设置在拖拽过程中的头像透明度渐变效果
+                mImageView.setAlpha(1 - percent);
             }
         });
         mMainLinearLayout.setDragLayout(mDragLayout);
@@ -53,6 +63,8 @@ public class MainActivity extends BaseActivity{
                 //跳转到供暖节点选择Activity
                 Intent intent = new Intent(MainActivity.this, NodeChoiceActivity.class);
                 startActivityForResult(intent, ConstantValue.NODE_CHOICE_CODE);
+                //Activity启动动画
+                MainActivity.this.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
             }
         });
     }

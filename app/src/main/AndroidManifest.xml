@@ -29,7 +29,8 @@
         <activity
             android:name=".ui.activity.ShowVideoActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".ui.activity.NodeChoiceActivity"></activity>
+        <activity android:name=".ui.activity.NodeChoiceActivity"
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>

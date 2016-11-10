@@ -17,19 +17,131 @@
         android:paddingStart="10dp"
         android:paddingEnd="50dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/image_head"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@mipmap/head"/>
-        <ListView
-            android:id="@+id/list_setting"
-            android:layout_marginTop="10dp"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </ListView>
-
+            android:layout_height="60dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_head"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@mipmap/shanzhi"/>
+            <TextView android:id="@+id/nick_name"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:layout_toRightOf="@id/image_head"
+                android:layout_marginLeft="20dp"
+                android:text="@string/nick_name"/>
+        </RelativeLayout>
+        <ScrollView
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView android:id="@+id/my_device"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:textColor="#c2b6a8"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:drawableStart="@mipmap/my_device"
+                    android:drawablePadding="10dp"
+                    android:text="@string/my_device"/>
+                <View android:background="#000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+                <TextView android:id="@+id/my_collect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:textColor="#c2b6a8"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:drawableStart="@mipmap/my_collect"
+                    android:drawablePadding="10dp"
+                    android:text="@string/my_collect"/>
+                <View android:background="#000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+                <TextView android:id="@+id/my_note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:textColor="#c2b6a8"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:drawableStart="@mipmap/my_note"
+                    android:drawablePadding="10dp"
+                    android:text="@string/my_note"/>
+                <View android:background="#000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+                <TextView android:id="@+id/my_contracts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:textColor="#c2b6a8"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:drawableStart="@mipmap/my_contracts"
+                    android:drawablePadding="10dp"
+                    android:text="@string/my_contracts"/>
+                <View android:background="#000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+                <TextView android:id="@+id/my_data"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:textColor="#c2b6a8"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:drawableStart="@mipmap/my_data"
+                    android:drawablePadding="10dp"
+                    android:text="@string/my_data"/>
+                <View android:background="#000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+                <TextView android:id="@+id/exit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:textColor="#c2b6a8"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:drawableStart="@mipmap/exit"
+                    android:drawablePadding="10dp"
+                    android:text="@string/exit"/>
+                <View android:background="#000000"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+            </LinearLayout>
+        </ScrollView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+            <TextView android:id="@+id/settings"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:textColor="#c2b6a8"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:drawableStart="@mipmap/settings"
+                android:drawablePadding="10dp"
+                android:text="@string/settings"/>
+            <TextView android:id="@+id/night_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_toRightOf="@id/settings"
+                android:layout_marginLeft="40dp"
+                android:textColor="#c2b6a8"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:drawableStart="@mipmap/night_mode"
+                android:drawablePadding="10dp"
+                android:text="@string/night_mode"/>
+        </RelativeLayout>
     </LinearLayout>
 
     <com.lebron.graduationpro1.view.MainLinearLayout
@@ -61,7 +173,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="left"
                 android:visibility="visible"
-                android:src="@mipmap/head"/>
+                android:src="@mipmap/shanzhi"/>
         </android.support.v7.widget.Toolbar>
         <LinearLayout
             android:layout_width="match_parent"
