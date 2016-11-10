@@ -1,19 +1,27 @@
 package com.lebron.graduationpro1.ui.activity;
 
 import android.animation.ObjectAnimator;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseActivity;
+import com.lebron.graduationpro1.ui.fragment.SettingFragment;
 import com.lebron.graduationpro1.utils.ConstantValue;
 import com.lebron.graduationpro1.utils.MyActivityManager;
 import com.lebron.graduationpro1.utils.ShowToast;
 import com.lebron.graduationpro1.view.DragLayout;
 import com.lebron.graduationpro1.view.MainLinearLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,8 +37,17 @@ public class MainActivity extends BaseActivity{
     TextView mTextViewTitle;
     @BindView(R.id.image_head_main)
     CircleImageView mImageView;
+    @BindView(R.id.radioGroup)
+    RadioGroup mRadioGroup;
     //用于按下两次返回键退出程序用
     private long mExitTime;
+
+    //Fragment的List
+    private List<Fragment> mFragmentList;
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
     @Override
     protected void initView() {
         ButterKnife.bind(this);
@@ -46,7 +63,7 @@ public class MainActivity extends BaseActivity{
 
             @Override
             public void onOpened() {
-                ShowToast.shortTime("opened");
+                //do nothing
             }
 
             @Override
@@ -67,16 +84,103 @@ public class MainActivity extends BaseActivity{
                 MainActivity.this.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
             }
         });
+        initTabs();
+    }
+
+    /**
+     * 初始化书签导航
+     */
+    private void initTabs(){
+        final RadioButton[] radioButtons = new RadioButton[mRadioGroup.getChildCount()];
+        for (int i = 0; i < mRadioGroup.getChildCount(); i++) {
+            radioButtons[i] = ((RadioButton) mRadioGroup.getChildAt(i));
+        }
+        //设置默认选中第一个书签
+        radioButtons[0].setChecked(true);
+        //RadioGroup的监听事件,切换不同的页面
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                for (int i = 0; i < radioButtons.length; i++) {
+                    //如果找到了按下的那个RadioButton,切换到对应的页面上
+                    if (radioButtons[i].getId() == checkedId){
+                        switchFragment(i);
+                    }
+                }
+            }
+        });
+        replaceFragment(R.id.content_container, new SettingFragment());
+    }
+
+    /**
+     * 切换不同的页面(概览-视频-控制-详情)
+     * @param tabIndex 不同的书签对应的编号,0~3
+     */
+    private void switchFragment(int tabIndex) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+    }
+
+    /**
+     * 切换Fragment,可以当前Activity调用,也可以在attach的Fragment中调用
+     * @param containerId 当前FrameLayout的布局id
+     * @param fragment 替换到当前布局中的Fragment
+     */
+    public void replaceFragment(int containerId, Fragment fragment){
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(containerId, fragment);
+        transaction.commit();
     }
 
     @Override
     protected void initData() {
         MyActivityManager.getInstance().addActivity(this);
+        initFragmentList();
     }
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_main;
+    private void initFragmentList() {
+        if (mFragmentList == null){
+            mFragmentList = new ArrayList<>();
+        }
+//        mFragmentList.add(new SettingFragment());
+    }
+
+    public void click(View view){
+        int id = view.getId();
+        switch (id){
+            case R.id.image_head:
+                ShowToast.shortTime("image_head");
+                break;
+            case R.id.nick_name:
+                ShowToast.shortTime("nick_name");
+                break;
+            case R.id.my_device:
+                ShowToast.shortTime("my_device");
+                break;
+            case R.id.my_collect:
+                ShowToast.shortTime("my_collect");
+                break;
+            case R.id.my_note:
+                ShowToast.shortTime("my_note");
+                break;
+            case R.id.my_contracts:
+                ShowToast.shortTime("my_contracts");
+                break;
+            case R.id.my_data:
+                ShowToast.shortTime("my_data");
+                break;
+            case R.id.exit:
+                ShowToast.shortTime("exit");
+                break;
+            case R.id.settings:
+                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                break;
+            case R.id.night_mode:
+                ShowToast.shortTime("night_mode");
+                break;
+            case R.id.image_head_main:
+                mDragLayout.openDrag();
+                break;
+        }
     }
 
 //

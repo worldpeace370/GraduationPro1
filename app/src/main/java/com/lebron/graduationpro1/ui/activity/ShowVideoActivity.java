@@ -18,7 +18,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.AppApplication;
 import com.lebron.graduationpro1.base.BaseActivity;
-import com.lebron.graduationpro1.utils.MyActivityManager;
 import com.lebron.graduationpro1.utils.NetWorkUtils;
 
 import java.io.IOException;
@@ -72,8 +71,6 @@ public class ShowVideoActivity extends BaseActivity {
     @Override
     protected void initView() {
         unbinder = ButterKnife.bind(this);
-        //加入ActivityManager
-        MyActivityManager.getInstance().addActivity(this);
         initSurfaceView();
     }
 

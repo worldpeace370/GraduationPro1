@@ -42,7 +42,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         scan_mode = (CheckBoxPreference) findPreference(SCAN_MODE);
         about_app = findPreference(ABOUT_APP);
         app_version = findPreference(APP_VERSION);
-        app_version.setTitle(AppInfoUtils.getVersionName(getActivity()));
+        app_version.setTitle("版本:" + AppInfoUtils.getVersionName(getActivity()));
 
     }
 
