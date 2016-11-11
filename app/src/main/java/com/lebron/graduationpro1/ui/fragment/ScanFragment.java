@@ -8,8 +8,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.lebron.graduationpro1.R;
+import com.lebron.graduationpro1.interfaces.RequestFinishedListener;
+import com.lebron.graduationpro1.net.VolleyRequest;
+import com.lebron.graduationpro1.utils.ConstantValue;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,13 +27,17 @@ import com.lebron.graduationpro1.R;
  * Use the {@link ScanFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ScanFragment extends Fragment {
+public class ScanFragment extends Fragment implements RequestFinishedListener{
+    @BindView(R.id.textView_scan)
+    TextView mTextView;
+    private Unbinder mUnbinder;
+
     private static final String ARG_PARAM1 = "param1";
+
     private static final String ARG_PARAM2 = "param2";
-
     private String mParam1;
-    private String mParam2;
 
+    private String mParam2;
     private OnFragmentInteractionListener mListener;
 
     public ScanFragment() {
@@ -61,13 +73,16 @@ public class ScanFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        VolleyRequest volleyRequest = new VolleyRequest();
+        volleyRequest.getJsonFromServer(ConstantValue.TESTURL, this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_scan, container, false);
+        View view = inflater.inflate(R.layout.fragment_scan, container, false);
+        mUnbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     public void onButtonPressed(Uri uri) {
@@ -81,16 +96,29 @@ public class ScanFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onRequestSucceed(String responseString) {
+        mTextView.setText(responseString);
+    }
+
+    @Override
+    public void onRequestError(String errorString) {
+
     }
 
     /**

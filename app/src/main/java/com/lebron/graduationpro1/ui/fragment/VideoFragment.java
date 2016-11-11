@@ -1,5 +1,6 @@
-package com.lebron.graduationpro1.ui.activity;
+package com.lebron.graduationpro1.ui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,14 +11,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.AppApplication;
-import com.lebron.graduationpro1.base.BaseActivity;
+import com.lebron.graduationpro1.ui.activity.MainActivity;
 import com.lebron.graduationpro1.utils.NetStatusUtils;
 
 import java.io.IOException;
@@ -31,63 +37,138 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * 显示监控视频的Activity,用到SurfaceView
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {} interface
+ * to handle interaction events.
+ * Use the {@link VideoFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
-public class ShowVideoActivity extends BaseActivity {
-    @BindView(R.id.surfaceView) SurfaceView mSurfaceView;
+public class VideoFragment extends Fragment {
+    @BindView(R.id.surfaceView)
+    SurfaceView mSurfaceView;
     //得到一个unbinder对象然后在视图销毁的时候调用unbinder.unbind().在Fragment生命周期中这样用,Activity不用这么做
     private Unbinder unbinder;
+    //视频地址
     private String mVideoUrl;
     private SurfaceHolder mSurfaceHolder;
     //每帧图像的Bitmap,用于保存图片到SD卡
     private Bitmap mBitmap;
     private int mWidth;
     private int mHeight;
-    private String TAG = "ShowVideoActivity";
+    private static final String TAG = "VideoFragment";
+    private Activity mMainActivity;
     private MyHandler mMyHandler;
     private SurfaceThread mSurfaceThread;
 
-    private static class MyHandler extends Handler{
-        WeakReference<ShowVideoActivity> weakReference;
-        public MyHandler(ShowVideoActivity activity){
-            weakReference = new WeakReference<>(activity);
+    private static class MyHandler extends Handler {
+        WeakReference<VideoFragment> weakReference;
+        public MyHandler(VideoFragment fragment){
+            weakReference = new WeakReference<>(fragment);
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            ShowVideoActivity activity = weakReference.get();
-            if (activity != null){//如果activity仍然在弱引用中,执行...
+            VideoFragment fragment = weakReference.get();
+            if (fragment != null){//如果fragment仍然在弱引用中,执行...
                 switch (msg.what){
                     case 0:
-                        activity.createNetFailedDialog("貌似ip地址不对哦");
+                        fragment.createNetFailedDialog("貌似ip地址不对哦");
                         break;
                 }
             }
         }
     }
+    private static final String URL_PARAM = "url_param";
 
-    @Override
-    protected void initView() {
-        unbinder = ButterKnife.bind(this);
-        initSurfaceView();
+    public VideoFragment() {
+
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     * @param videoUrl Parameter 1.
+     * @return A new instance of fragment VideoFragment.
+     */
+    public static VideoFragment newInstance(String videoUrl) {
+        VideoFragment fragment = new VideoFragment();
+        Bundle args = new Bundle();
+        args.putString(URL_PARAM, videoUrl);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
-    protected void initData() {
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof MainActivity){
+            mMainActivity = activity;
+        }else {
+            throw new IllegalArgumentException("The activity must to be MainActivity");
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mVideoUrl = getArguments().getString(URL_PARAM);
+            mVideoUrl = "http://" + "192.168.1.100" + ":8080/?action=snapshot";
+        }
         mMyHandler = new MyHandler(this);
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_show_video;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_video, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        mWidth = mMainActivity.getWindowManager().getDefaultDisplay().getWidth();
+        mHeight = mMainActivity.getWindowManager().getDefaultDisplay().getHeight();
+        Log.i(TAG, "onCreateView: mWidth = " + mWidth + ", mHeight = " + mHeight);
+        return view;
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        //接收传入的视频url地址
-        getVideoUrl();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initSurfaceView();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    /**
+     * 网络连接失败,弹出对话框提醒
+     */
+    private void createNetFailedDialog(String errorInfo) {
+        MaterialDialog dialog = new MaterialDialog.Builder(mMainActivity)
+                .title(errorInfo)
+                .content("本项目开源, 你想怎么改?快来联系我~")
+                .positiveText("Github")
+                .negativeText("Zhihu")
+                .callback(new MaterialDialog.Callback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/worldpeace370")));
+                    }
+
+                    @Override
+                    public void onNegative(MaterialDialog dialog) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.zhihu.com/people/hu-qi-xing-66")));
+                    }
+                }).build();
+        dialog.show();
     }
 
     private void initSurfaceView() {
@@ -102,7 +183,7 @@ public class ShowVideoActivity extends BaseActivity {
                 Log.i(TAG, "surfaceCreated: ");
                 //如果网络没问题,开始刷新SurfaceView,线程一定要在这里创建.因为按下home键重新返回的时候还会再次执行该方法
                 if (NetStatusUtils.isNetWorkConnected(AppApplication.getAppContext())){
-                    mSurfaceThread = new SurfaceThread(mSurfaceHolder);
+                    mSurfaceThread = new SurfaceThread(mSurfaceHolder, mVideoUrl);
                     mSurfaceThread.isStartRefresh = true;
                     mSurfaceThread.start();
                 }else {
@@ -128,41 +209,18 @@ public class ShowVideoActivity extends BaseActivity {
                 }
             }
         });
-        mWidth = getWindowManager().getDefaultDisplay().getWidth();
-        mHeight = getWindowManager().getDefaultDisplay().getHeight();
-    }
-
-    /**
-     * 网络连接失败,弹出对话框提醒
-     */
-    private void createNetFailedDialog(String errorInfo) {
-        MaterialDialog dialog = new MaterialDialog.Builder(this)
-                .title(errorInfo)
-                .content("本项目开源, 你想怎么改?快来联系我~")
-                .positiveText("Github")
-                .negativeText("Zhihu")
-                .callback(new MaterialDialog.Callback() {
-                    @Override
-                    public void onPositive(MaterialDialog dialog) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/worldpeace370")));
-                    }
-
-                    @Override
-                    public void onNegative(MaterialDialog dialog) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.zhihu.com/people/hu-qi-xing-66")));
-                    }
-                }).build();
-        dialog.show();
     }
 
     /**
      * 自定义线程类,方便刷新
      */
     private class SurfaceThread extends Thread{
-        final SurfaceHolder mSurfaceHolder;
+        final SurfaceHolder surfaceHolder;
+        String videoUrl;
         boolean isStartRefresh;
-        SurfaceThread(SurfaceHolder holder){
-            this.mSurfaceHolder = holder;
+        SurfaceThread(SurfaceHolder holder, String videoUrl){
+            this.surfaceHolder = holder;
+            this.videoUrl = videoUrl;
         }
         @Override
         public void run() {
@@ -170,12 +228,12 @@ public class ShowVideoActivity extends BaseActivity {
             URL url;
             HttpURLConnection connection;
             InputStream inputStream;
-            RectF rectF = new RectF(0, 0, mWidth, 4 * mHeight / 3);
+            RectF rectF = new RectF(0, 0, mWidth, 2 * mWidth / 3);
             Canvas canvas = null;
             //由于是无状态的连接,所以需要一直不断的申请连接
             while (isStartRefresh){
                 try {
-                    url = new URL(mVideoUrl);
+                    url = new URL(this.videoUrl);
                     connection = (HttpURLConnection) url.openConnection();
                     //如果返回码是200表示状态正常
                     if (connection.getResponseCode() == 200){
@@ -183,8 +241,8 @@ public class ShowVideoActivity extends BaseActivity {
                         inputStream = connection.getInputStream();
                         //得到输入流来的Bitmap
                         mBitmap = BitmapFactory.decodeStream(inputStream);
-                        synchronized (this.mSurfaceHolder){
-                            canvas = mSurfaceHolder.lockCanvas();
+                        synchronized (this.surfaceHolder){
+                            canvas = surfaceHolder.lockCanvas();
                             //避免报空指针异常
                             if (canvas != null){
                                 canvas.drawColor(Color.WHITE);
@@ -207,24 +265,10 @@ public class ShowVideoActivity extends BaseActivity {
                 }finally {
                     if (canvas != null){
                         //放在这里为了保证正常的提交画布,避免报空指针异常
-                        mSurfaceHolder.unlockCanvasAndPost(canvas);
+                        surfaceHolder.unlockCanvasAndPost(canvas);
                     }
                 }
             }
         }
-    }
-
-    private void getVideoUrl() {
-        Intent intent = getIntent();
-        if (null != intent){
-            Bundle bundle = intent.getExtras();
-            mVideoUrl = "http://" + bundle.getString("video_url") + ":8080/?action=snapshot";
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
     }
 }

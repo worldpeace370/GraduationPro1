@@ -12,7 +12,7 @@ import com.lebron.graduationpro1.base.AppApplication;
 
 public class RequestManager {
 
-    public static RequestQueue sRequestQueue = Volley.newRequestQueue(AppApplication.getAppContext());
+    private static RequestQueue sRequestQueue = Volley.newRequestQueue(AppApplication.getAppContext());
     private RequestManager(){
 
     }

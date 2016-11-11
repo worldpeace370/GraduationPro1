@@ -4,12 +4,12 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-/**网络连接的帮助类
+/**网络连接状态的帮助类
  * Created by lebron on 16-11-2.
  * Contact by wuxiangkun2015@163.com
  */
 
-public class NetWorkUtils {
+public class NetStatusUtils {
 
     /**
      * 判断当前网络是否连接
