@@ -99,7 +99,7 @@ public class VideoFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+    //重写onAttach(Context context)也可以,互相调用而已
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

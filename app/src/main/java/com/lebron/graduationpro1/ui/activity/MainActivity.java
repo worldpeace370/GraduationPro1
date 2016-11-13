@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseActivity;
+import com.lebron.graduationpro1.ui.fragment.ControlFragment;
 import com.lebron.graduationpro1.ui.fragment.ScanFragment;
 import com.lebron.graduationpro1.ui.fragment.VideoFragment;
 import com.lebron.graduationpro1.utils.ConstantValue;
@@ -157,6 +158,7 @@ public class MainActivity extends BaseActivity{
         }
         mFragmentList.add(ScanFragment.newInstance("", ""));
         mFragmentList.add(VideoFragment.newInstance(""));
+        mFragmentList.add(ControlFragment.newInstance("", ""));
     }
 
     public void click(View view){

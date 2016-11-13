@@ -39,4 +39,10 @@ public class NodeChoiceActivity extends BaseActivity {
     public void back(View view){
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
+    }
 }
