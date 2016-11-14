@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:background="@mipmap/pop"
+    android:orientation="vertical" >
+    <LinearLayout
+        android:id="@+id/pop_layout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginTop="24dp">
+
+        <LinearLayout
+            android:id="@+id/select_new_node"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp" >
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/skip" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginStart="10dp"
+                android:gravity="center"
+                android:text="@string/select_node"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:background="@color/tabRelease" />
+
+        <LinearLayout
+            android:id="@+id/save_image_sd_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp" >
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/save" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:gravity="center"
+                android:text="@string/save_sd"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

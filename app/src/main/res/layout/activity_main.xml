@@ -186,7 +186,7 @@
                 android:layout_gravity="left"
                 android:visibility="visible"
                 android:src="@mipmap/shanzhi"/>
-            <ImageView android:id="@+id/add_node"
+            <ImageView android:id="@+id/add_menu"
                 android:layout_marginTop="33dp"
                 android:layout_marginRight="10dp"
                 android:layout_width="25dp"

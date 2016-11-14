@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +13,15 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.beans.LineChartTestData;
 import com.lebron.graduationpro1.interfaces.RequestFinishedListener;
@@ -60,7 +63,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     TextView mTextViewX;
     @BindView(R.id.textView_Y_MAX)
     TextView mTextViewY;
-
     private Unbinder mUnbinder;
 
     private static final String ARG_PARAM1 = "param1";
@@ -91,6 +93,19 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         return fragment;
     }
 
+    public void saveLineChartToSDCard(){
+        if (mLineChart == null){
+            Log.i("ScanFragment", "saveLineChartToSDCard mLineChart == null");
+        }else {
+            if (mLineChart.saveToGallery("lineChart" + System.currentTimeMillis() + ".jpg", 100)){
+                Log.i("ScanFragment", "saveLineChartToSDCard mLineChart != null");
+                ShowToast.shortTime("保存成功!");
+            }else{
+                ShowToast.shortTime("保存失败!");
+            }
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -119,6 +134,48 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initLineChartData();
+        //宽高为0
+        Log.i("ScanFragment", "onActivityCreated：mLineChart.getWidth() = " + mLineChart.getWidth()
+                + ",mLineChart.getHeight() = " + mLineChart.getHeight());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //宽高为0
+        Log.i("ScanFragment", "onStart：mLineChart.getWidth() = " + mLineChart.getWidth()
+                + ",mLineChart.getHeight() = " + mLineChart.getHeight());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //宽高为0
+        Log.i("ScanFragment", "onResume：mLineChart.getWidth() = " + mLineChart.getWidth()
+                + ",mLineChart.getHeight() = " + mLineChart.getHeight());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //宽高不为0
+        Log.i("ScanFragment", "onPause：mLineChart.getWidth() = " + mLineChart.getWidth()
+                + ",mLineChart.getHeight() = " + mLineChart.getHeight());
+        saveLineChartToSDCard();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //宽高不为0
+        Log.i("ScanFragment", "onStop：mLineChart.getWidth() = " + mLineChart.getWidth()
+                + ",mLineChart.getHeight() = " + mLineChart.getHeight());
+    }
+
     private void initViewAndListener() {
         mButtonDay.setBackgroundColor(Color.parseColor("#b4afaf"));
         mButtonDay.setOnClickListener(this);
@@ -131,61 +188,163 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         mSeekBarX.setOnSeekBarChangeListener(this);
         mSeekBarX.setOnSeekBarChangeListener(this);
 
-        mLineChart.setDescription("哈哈");//右下角说明
+        mLineChart.setDescription("节点信息");//右下角说明
         mLineChart.setNoDataTextDescription("You need to provide data for the chart");
         mLineChart.setTouchEnabled(true);//enable touch gesture
         mLineChart.setDragEnabled(true);//enable scaling and dragging
         mLineChart.setScaleEnabled(true);
         mLineChart.setPinchZoom(true);
-
+        mLineChart.setDoubleTapToZoomEnabled(true);
         //create a custom MarkerView (extends MarkerView) and specify the layout
         MyMarkerView markerView = new MyMarkerView(mMainActivity, R.layout.custom_marker_view);
         mLineChart.setMarkerView(markerView);
+        initAxis(mLineChart);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        initLineChartData();
-    }
 
     private void initLineChartData() {
-        LineChartTestData[] datas = new LineChartTestData[10];
+        ArrayList<LineDataSet> dataSetList = new ArrayList<>();
+        dataSetList.add(initTemperatureLine(new ArrayList<LineChartTestData>()));
+        dataSetList.add(initFlowLine(new ArrayList<LineChartTestData>()));
+        String xVals[] = new String[]{"0h","1h","2h","3h","4h","5h","6h","7h","8h","9h","10h","11h","12h"
+        , "13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h"};
+        LineData lineData = new LineData(xVals, dataSetList);
+        mLineChart.setData(lineData);
+        //X方向动画效果
+        mLineChart.animateX(3500, Easing.EasingOption.EaseInOutQuart);
+        //X,Y方向同时动画
+//        mLineChart.animateXY(3000, 3000);
+        mLineChart.invalidate();
+
+    }
+
+    /**
+     * 设置x,y轴和Legend显示的属性
+     */
+    private void initAxis(LineChart lineChart) {
+        //获取右侧Y轴
+        YAxis rightAxis = lineChart.getAxisRight();
+        //取消右侧Y轴显示
+        rightAxis.setEnabled(false);
+        //获取左侧Y轴
+        YAxis leftAxis = lineChart.getAxisLeft();
+        //设置网格线虚线模式
+        leftAxis.enableGridDashedLine(2f, 3f, 0);
+        //设置Y轴最大值
+        leftAxis.setAxisMaxValue(100f);
+        leftAxis.setDrawLimitLinesBehindData(true);
+        //自定义格式的标签,显示温度等
+//        leftAxis.setValueFormatter(new YAxisValueFormatter() {
+//            @Override
+//            public String getFormattedValue(float value, YAxis yAxis) {
+//                return value + "℃";
+//            }
+//        });
+        LimitLine limitLineWater = new LimitLine(70, "水温阈值");
+        limitLineWater.setLineColor(Color.RED);
+        limitLineWater.setLineWidth(1f);
+        limitLineWater.setTextColor(Color.BLACK);
+        limitLineWater.setTextSize(12f);
+        limitLineWater.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+        limitLineWater.enableDashedLine(6f, 10f, 0f);
+        leftAxis.addLimitLine(limitLineWater);
+        LimitLine limitLineRotateSpeed = new LimitLine(50, "转速阈值");
+        limitLineRotateSpeed.setLineColor(Color.GREEN);
+        limitLineRotateSpeed.setLineWidth(1f);
+        limitLineRotateSpeed.setTextColor(Color.BLACK);
+        limitLineRotateSpeed.setTextSize(12f);
+        limitLineRotateSpeed.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+        limitLineRotateSpeed.enableDashedLine(6f, 10f, 0f);
+        leftAxis.addLimitLine(limitLineRotateSpeed);
+        //X轴设置在底部
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        //设置网格线虚线模式
+        xAxis.enableGridDashedLine(2f, 3f, 0f);
+        //设置标签字符间的空隙,默认是4字符间距
+        xAxis.setSpaceBetweenLabels(2);
+        //设置在"绘制下一个标签时",要忽略的标签数
+        xAxis.setLabelsToSkip(1);
+        //避免剪掉x轴上第一个和最后一个坐标项
+        xAxis.setAvoidFirstLastClipping(true);
+        //设置Legend,左下角的东西,可以是横线,方形
+        Legend legend = lineChart.getLegend();
+        legend.setForm(Legend.LegendForm.LINE);
+//        legend.setTextColor(Color.RED);
+    }
+
+    /**
+     * 初始化水温折线
+     * @param list 传入的数据,网络下载
+     * @return 返回LineDataSet
+     */
+    private LineDataSet initTemperatureLine(ArrayList<LineChartTestData> list){
+        LineChartTestData[] datas = new LineChartTestData[24];
         for (int i = 0; i < datas.length; i++) {
-            datas[i] = new LineChartTestData(i, i);
+            datas[i] = new LineChartTestData(i, 80 + (int) (Math.random() * 10));
         }
         List<Entry> entries = new ArrayList<>();
         for (LineChartTestData data:datas) {
-            entries.add(new Entry(data.getxValue(), data.getyValue()));
+            entries.add(new Entry(data.getyValue(), data.getxValue()));//左:Y值,右:X值
         }
 
-        LineDataSet dataSet = new LineDataSet(entries, "温度");
+        //LineDataSet可以看作是一条线
+        LineDataSet dataSet = new LineDataSet(entries, "水温℃");
+        //设置折线的颜色
         dataSet.setColor(Color.RED);
+        //设置折线上点的字体颜色
         dataSet.setValueTextColor(Color.RED);
-        String xVals[] = new String[]{"1月","2月","3月","4月","5月","6月","7月","8月","9月","10月"};
-        LineData lineData = new LineData(xVals, dataSet);
-        mLineChart.setData(lineData);
+        //设置折线圆点的颜色
+        dataSet.setCircleColor(Color.RED);
+        //图上不描述点的值
+        dataSet.setDrawValues(false);
+        //设置折线圆点中心的颜色
+        //        dataSet.setCircleColorHole(Color.GRAY);
+        //设置圆点的大小
+        dataSet.setCircleSize(4f);
+        //设置点击某个点时,横竖两条线的颜色
+        dataSet.setHighLightColor(Color.YELLOW);
+        return dataSet;
+    }
 
-        //获取Y轴
-        YAxis leftAxis = mLineChart.getAxisLeft();
-        leftAxis.setValueFormatter(new YAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, YAxis yAxis) {
-                return value + "℃";
-            }
-        });
-        LimitLine limitLine = new LimitLine(4, "Top");
-        limitLine.setLineColor(Color.RED);
-        limitLine.setLineWidth(4f);
-        limitLine.setTextColor(Color.BLACK);
-        limitLine.setTextSize(12f);
-        leftAxis.addLimitLine(limitLine);
-        mLineChart.invalidate();
+    /**
+     * 初始化转速折线
+     * @param list 传入的数据,网络下载
+     * @return 返回LineDataSet
+     */
+    private LineDataSet initFlowLine(ArrayList<LineChartTestData> list){
+        LineChartTestData[] datas = new LineChartTestData[24];
+        for (int i = 0; i < datas.length; i++) {
+            datas[i] = new LineChartTestData(i, (i%4 + 2)*15);
+        }
+        List<Entry> entries = new ArrayList<>();
+        for (LineChartTestData data:datas) {
+            entries.add(new Entry(data.getyValue(), data.getxValue()));//左:Y值,右:X值
+        }
+
+        //LineDataSet可以看作是一条线
+        LineDataSet dataSet = new LineDataSet(entries, "转速n/s");
+        //设置折线的颜色
+        dataSet.setColor(Color.GREEN);
+        //设置折线上点的字体颜色
+        dataSet.setValueTextColor(Color.GREEN);
+        //设置折线圆点的颜色
+        dataSet.setCircleColor(Color.GREEN);
+        //设置折线圆点中心的颜色
+        //        dataSet.setCircleColorHole(Color.GRAY);
+        //设置圆点的大小
+        dataSet.setCircleSize(4f);
+        //设置点击某个点时,横竖两条线的颜色
+        dataSet.setHighLightColor(Color.YELLOW);
+        return dataSet;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        //宽高不为0
+        Log.i("ScanFragment", "onDestroyView：mLineChart.getWidth() = " + mLineChart.getWidth()
+                + ",mLineChart.getHeight() = " + mLineChart.getHeight());
         mUnbinder.unbind();
     }
 

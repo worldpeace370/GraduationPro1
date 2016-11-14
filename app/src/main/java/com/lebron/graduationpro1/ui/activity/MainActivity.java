@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
 import android.widget.ImageView;
@@ -20,6 +19,7 @@ import com.lebron.graduationpro1.ui.fragment.VideoFragment;
 import com.lebron.graduationpro1.utils.ConstantValue;
 import com.lebron.graduationpro1.utils.MyActivityManager;
 import com.lebron.graduationpro1.utils.ShowToast;
+import com.lebron.graduationpro1.view.AddPopWindow;
 import com.lebron.graduationpro1.view.DragLayout;
 import com.lebron.graduationpro1.view.MainLinearLayout;
 
@@ -39,13 +39,14 @@ public class MainActivity extends BaseActivity{
     CircleImageView mImageView;
     @BindView(R.id.tab_title)
     TextView mTextViewTitle;
-    @BindView(R.id.add_node)
-    ImageView mImageViewAddNode;
+    @BindView(R.id.add_menu)
+    ImageView mImageViewAddMenu;
     @BindView(R.id.radioGroup)
     RadioGroup mRadioGroup;
     //用于按下两次返回键退出程序用
     private long mExitTime;
-
+    //节点名字,放置到mTextViewTitle中
+    private String mNodeName = "";
     //Fragment的List
     private ArrayList<Fragment> mFragmentList;
 
@@ -113,20 +114,20 @@ public class MainActivity extends BaseActivity{
     private void switchFragment(int tabIndex) {
         switch (tabIndex){
             case 0:
-                mTextViewTitle.setText("供暖节点");
-                mImageViewAddNode.setVisibility(View.VISIBLE);
+                mTextViewTitle.setText(mNodeName);
+                mImageViewAddMenu.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 mTextViewTitle.setText("监控视频");
-                mImageViewAddNode.setVisibility(View.INVISIBLE);
+                mImageViewAddMenu.setVisibility(View.INVISIBLE);
                 break;
             case 2:
                 mTextViewTitle.setText("远程控制");
-                mImageViewAddNode.setVisibility(View.INVISIBLE);
+                mImageViewAddMenu.setVisibility(View.INVISIBLE);
                 break;
             case 3:
                 mTextViewTitle.setText("详情日志");
-                mImageViewAddNode.setVisibility(View.INVISIBLE);
+                mImageViewAddMenu.setVisibility(View.INVISIBLE);
                 break;
         }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -165,7 +166,7 @@ public class MainActivity extends BaseActivity{
         int id = view.getId();
         switch (id){
             case R.id.image_head:
-                ShowToast.shortTime("image_head");
+                startActivity(new Intent(MainActivity.this, TestActivity.class));
                 break;
             case R.id.nick_name:
                 ShowToast.shortTime("nick_name");
@@ -199,11 +200,30 @@ public class MainActivity extends BaseActivity{
                 //打开抽屉布局
                 mDragLayout.openDrag();
                 break;
-            case R.id.add_node:
-                //进入节点选择更改Activity
-                startNodeChoiceActivity();
+            case R.id.add_menu:
+                //弹出PopWindow,选择新节点or保存当前节点图到内存卡
+                showPopWindowAndDealEvent();
                 break;
         }
+    }
+
+    /**
+     * 弹出PopupWindow,然后执行对应的操作
+     */
+    private void showPopWindowAndDealEvent(){
+        AddPopWindow addPopWindow = new AddPopWindow(this);
+        addPopWindow.showPopupWindow(mImageViewAddMenu);
+        addPopWindow.setOnPopupWindowItemClickListener(new AddPopWindow.OnPopupWindowItemClickListener() {
+            @Override
+            public void onItemClick(int id) {
+                if (id == R.id.select_new_node){
+                    startNodeChoiceActivity();
+                }else if (id == R.id.save_image_sd_card){
+                    ScanFragment fragment = (ScanFragment) mFragmentList.get(0);
+//                    fragment.saveLineChartToSDCard();
+                }
+            }
+        });
     }
 
     /**
@@ -212,11 +232,24 @@ public class MainActivity extends BaseActivity{
     private void startNodeChoiceActivity() {
         //跳转到供暖节点选择Activity
         Intent intent = new Intent(MainActivity.this, NodeChoiceActivity.class);
-        startActivityForResult(intent, ConstantValue.NODE_CHOICE_CODE);
+        startActivityForResult(intent, ConstantValue.NODE_CHOICE_REQUEST_CODE);
         //Activity启动动画
         MainActivity.this.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
     }
-//
+    //得到选择的节点,设置到mTextViewTitle中
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //获得 mNodeName
+        if (requestCode == ConstantValue.NODE_CHOICE_REQUEST_CODE && resultCode == ConstantValue.NODE_CHOICE_RESULT_CODE){
+            if (data != null){
+                mNodeName = data.getStringExtra("nodeName");
+                mTextViewTitle.setText(mNodeName);
+            }
+        }
+    }
+
+    //
 //    /**
 //     * 获得输入的ip地址,正则表达式验证合法性之后启动Activity
 //     */
@@ -235,17 +268,18 @@ public class MainActivity extends BaseActivity{
 //            ShowToast.shortTime("您输入的ip地址不合法!");
 //        }
 //    }
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
-            if (System.currentTimeMillis() - mExitTime > 2000){
-                ShowToast.shortTime("再按一次退出程序");
-                mExitTime = System.currentTimeMillis();
-            }else {
-                MyActivityManager.getInstance().finishAllActivityAndExit();
-            }
-            return true;//此处返回true or false 貌似没有意义了,两个都能正常的退出程序
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+//            if (System.currentTimeMillis() - mExitTime > 2000){
+//                ShowToast.shortTime("再按一次退出程序");
+//                mExitTime = System.currentTimeMillis();
+//            }else {
+//                MyActivityManager.getInstance().finishAllActivityAndExit();
+//            }
+//            return true;//此处返回true or false 貌似没有意义了,两个都能正常的退出程序
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
+
 }
