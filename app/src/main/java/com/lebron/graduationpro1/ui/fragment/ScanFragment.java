@@ -1,7 +1,6 @@
 package com.lebron.graduationpro1.ui.fragment;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,8 +31,11 @@ import com.lebron.graduationpro1.utils.ConstantValue;
 import com.lebron.graduationpro1.utils.ShowToast;
 import com.lebron.graduationpro1.view.MyMarkerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,8 +56,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     Button mButtonMonth;
     @BindView(R.id.latest_year)
     Button mButtonYear;
-    @BindView(R.id.save_save)
-    Button mButtonSaveImage;
     @BindView(R.id.lineChart1)
     LineChart mLineChart;
     @BindView(R.id.seekBar_X)
@@ -67,16 +67,12 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     @BindView(R.id.textView_Y_MAX)
     TextView mTextViewY;
     private Unbinder mUnbinder;
-
     private static final String ARG_PARAM1 = "param1";
-
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
-
     private String mParam2;
+    private static final String TAG = "ScanFragment";
     private MainActivity mMainActivity;
-    private Bitmap mLineChartChartBitmap;
-    private byte[] mBytes;
 
     public ScanFragment() {
 
@@ -90,6 +86,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
      * @return A new instance of fragment ScanFragment.
      */
     public static ScanFragment newInstance(String param1, String param2) {
+        Log.i(TAG, "newInstance: 执行了");
         ScanFragment fragment = new ScanFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -98,18 +95,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         return fragment;
     }
 
-    public void saveLineChartToSDCard(){
-        if (mLineChart != null){
-            if (mLineChart.saveToGallery("lineChart" + System.currentTimeMillis() + ".jpg", 100)){
-                ShowToast.shortTime("保存成功!");
-            }else {
-                ShowToast.shortTime("保存失败!");
-            }
-        }else {
-            Log.i("ScanFragment", "saveLineChartToSDCard: mLineChart is null");
-            ShowToast.shortTime("mLineChart is null!");
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -117,6 +102,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         if (context != null){
             mMainActivity = (MainActivity) getActivity();
         }
+        Log.i(TAG, "onAttach: 执行了");
     }
 
     @Override
@@ -128,6 +114,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         }
         VolleyRequest volleyRequest = new VolleyRequest();
         volleyRequest.getJsonFromServer(ConstantValue.TESTURL, this);
+        Log.i(TAG, "onCreate: 执行了");
     }
 
     @Override
@@ -189,7 +176,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         mButtonWeek.setOnClickListener(this);
         mButtonMonth.setOnClickListener(this);
         mButtonYear.setOnClickListener(this);
-        mButtonSaveImage.setOnClickListener(this);
         mSeekBarX.setProgress(49);
         mSeekBarY.setProgress(100);
         mSeekBarX.setOnSeekBarChangeListener(this);
@@ -361,6 +347,22 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     }
 
 
+    public void saveLineChartToSDCard(){
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+        String dateString = format.format(date);
+        if (mLineChart != null){
+            if (mLineChart.saveToGallery("lineChart-" + dateString + ".jpg", 100)){
+                ShowToast.shortTime("保存成功!");
+            }else {
+                ShowToast.shortTime("保存失败!");
+            }
+        }else {
+            Log.i("ScanFragment", "saveLineChartToSDCard: mLineChart is null");
+            ShowToast.shortTime("mLineChart is null!");
+        }
+    }
+
     @Override
     public void onRequestSucceed(String responseString) {
 
@@ -424,9 +426,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
                 mButtonDay.setBackgroundColor(Color.parseColor("#dfdbdb"));
                 mButtonWeek.setBackgroundColor(Color.parseColor("#dfdbdb"));
                 mButtonMonth.setBackgroundColor(Color.parseColor("#dfdbdb"));
-                break;
-            case R.id.save_save:
-                saveLineChartToSDCard();
                 break;
         }
     }

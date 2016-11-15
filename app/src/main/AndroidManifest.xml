@@ -33,9 +33,6 @@
             android:name=".ui.activity.NodeChoiceActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ui.activity.SettingActivity" />
-        <activity android:name=".ui.activity.TestActivity" />
-        <activity android:name=".ui.activity.TransparentDialog"
-            android:theme="@style/Theme.AppCompat.Dialog"/>
     </application>
 
 </manifest>

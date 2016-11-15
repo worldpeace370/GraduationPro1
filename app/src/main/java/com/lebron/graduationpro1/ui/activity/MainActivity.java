@@ -105,7 +105,8 @@ public class MainActivity extends BaseActivity{
                 }
             }
         });
-        replaceFragment(R.id.content_container, ScanFragment.newInstance("", ""));
+        initFragmentList();
+        replaceFragment(R.id.content_container, mFragmentList.get(0));
     }
 
     /**
@@ -151,7 +152,6 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void initData() {
         MyActivityManager.getInstance().addActivity(this);
-        initFragmentList();
     }
 
     private void initFragmentList() {
@@ -167,7 +167,7 @@ public class MainActivity extends BaseActivity{
         int id = view.getId();
         switch (id){
             case R.id.image_head:
-                startActivity(new Intent(MainActivity.this, TestActivity.class));
+                ShowToast.shortTime("image_head");
                 break;
             case R.id.nick_name:
                 ShowToast.shortTime("nick_name");
@@ -220,11 +220,12 @@ public class MainActivity extends BaseActivity{
                 if (id == R.id.select_new_node){
                     startNodeChoiceActivity();
                 }else if (id == R.id.save_image_sd_card){
-                    //分享图片给好友啥的,待做
+                    //保存折线图到SD卡
+                    ScanFragment fragment = (ScanFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
+                    fragment.saveLineChartToSDCard();
                 }
             }
         });
-        //startActivity(new Intent(this, TransparentDialog.class));
     }
 
     /**
