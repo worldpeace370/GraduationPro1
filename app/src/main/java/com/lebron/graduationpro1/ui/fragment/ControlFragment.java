@@ -1,15 +1,20 @@
 package com.lebron.graduationpro1.ui.fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.lebron.graduationpro1.R;
+import com.lebron.graduationpro1.ui.activity.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,7 +25,7 @@ import butterknife.Unbinder;
  * Use the {@link ControlFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ControlFragment extends Fragment implements SeekBar.OnSeekBarChangeListener{
+public class ControlFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener{
     @BindView(R.id.seekBar_water_temp)
     SeekBar mSeekBarWaterTemp;
     @BindView(R.id.seekBar_water_rate)
@@ -29,12 +34,26 @@ public class ControlFragment extends Fragment implements SeekBar.OnSeekBarChange
     TextView mTextViewWaterTemp;
     @BindView(R.id.textView_water_rate_MAX)
     TextView mTextViewWaterRate;
+
+    @BindView(R.id.water_decrease)
+    ImageView mButtonWaterDecrease;
+    @BindView(R.id.water_increase)
+    ImageView mButtonWaterIncrease;
+    @BindView(R.id.rate_decrease)
+    ImageView mButtonRateDecrease;
+    @BindView(R.id.rate_increase)
+    ImageView mButtonRateIncrease;
+    @BindView(R.id.water_post)
+    Button mButtonWaterPost;
+    @BindView(R.id.rate_post)
+    Button mButtonRatePost;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private String mParam1;
     private String mParam2;
     private Unbinder mBind;
+    private MainActivity mMainActivity;
 
     public ControlFragment() {
     }
@@ -79,11 +98,18 @@ public class ControlFragment extends Fragment implements SeekBar.OnSeekBarChange
         mTextViewWaterRate.setText(mSeekBarWaterRate.getProgress() + "n/s");
         mSeekBarWaterTemp.setOnSeekBarChangeListener(this);
         mSeekBarWaterRate.setOnSeekBarChangeListener(this);
+        mButtonWaterDecrease.setOnClickListener(this);
+        mButtonWaterIncrease.setOnClickListener(this);
+        mButtonRateDecrease.setOnClickListener(this);
+        mButtonRateIncrease.setOnClickListener(this);
+        mButtonWaterPost.setOnClickListener(this);
+        mButtonRatePost.setOnClickListener(this);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mMainActivity = (MainActivity) getActivity();
     }
 
     @Override
@@ -114,5 +140,48 @@ public class ControlFragment extends Fragment implements SeekBar.OnSeekBarChange
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id){
+            case R.id.water_decrease:
+                mSeekBarWaterTemp.setProgress(mSeekBarWaterTemp.getProgress() - 1);
+                break;
+            case R.id.water_increase:
+                mSeekBarWaterTemp.setProgress(mSeekBarWaterTemp.getProgress() + 1);
+                break;
+            case R.id.rate_decrease:
+                mSeekBarWaterRate.setProgress(mSeekBarWaterRate.getProgress() - 1);
+                break;
+            case R.id.rate_increase:
+                mSeekBarWaterRate.setProgress(mSeekBarWaterRate.getProgress() + 1);
+                break;
+            case R.id.water_post:
+                createDialog();
+                break;
+            case R.id.rate_post:
+                createDialog();
+                break;
+        }
+    }
+
+    private void createDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(mMainActivity);
+        builder.setTitle("确认提交吗?");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 }
