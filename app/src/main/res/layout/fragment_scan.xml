@@ -42,6 +42,13 @@
                 android:layout_marginStart="1dp"
                 android:background="@drawable/date_choice_button"
                 android:text="@string/latest_year"/>
+            <Button android:id="@+id/save_save"
+                android:layout_width="0dp"
+                android:layout_weight="1.0"
+                android:layout_height="30dp"
+                android:layout_marginStart="1dp"
+                android:background="@drawable/date_choice_button"
+                android:text="@string/save_save_line_image"/>
         </LinearLayout>
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lineChart1"
@@ -56,6 +63,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick=""
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:text="@string/scroll_to_scale"/>

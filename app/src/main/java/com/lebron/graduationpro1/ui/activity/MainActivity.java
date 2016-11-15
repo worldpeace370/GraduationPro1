@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
 import android.widget.ImageView;
@@ -219,11 +220,11 @@ public class MainActivity extends BaseActivity{
                 if (id == R.id.select_new_node){
                     startNodeChoiceActivity();
                 }else if (id == R.id.save_image_sd_card){
-                    ScanFragment fragment = (ScanFragment) mFragmentList.get(0);
-//                    fragment.saveLineChartToSDCard();
+                    //分享图片给好友啥的,待做
                 }
             }
         });
+        //startActivity(new Intent(this, TransparentDialog.class));
     }
 
     /**
@@ -282,4 +283,9 @@ public class MainActivity extends BaseActivity{
 //        return super.onKeyDown(keyCode, event);
 //    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause: 执行了");
+    }
 }

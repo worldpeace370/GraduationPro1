@@ -1,6 +1,7 @@
 package com.lebron.graduationpro1.ui.fragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -53,6 +54,8 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     Button mButtonMonth;
     @BindView(R.id.latest_year)
     Button mButtonYear;
+    @BindView(R.id.save_save)
+    Button mButtonSaveImage;
     @BindView(R.id.lineChart1)
     LineChart mLineChart;
     @BindView(R.id.seekBar_X)
@@ -72,6 +75,8 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
 
     private String mParam2;
     private MainActivity mMainActivity;
+    private Bitmap mLineChartChartBitmap;
+    private byte[] mBytes;
 
     public ScanFragment() {
 
@@ -94,15 +99,15 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     }
 
     public void saveLineChartToSDCard(){
-        if (mLineChart == null){
-            Log.i("ScanFragment", "saveLineChartToSDCard mLineChart == null");
-        }else {
+        if (mLineChart != null){
             if (mLineChart.saveToGallery("lineChart" + System.currentTimeMillis() + ".jpg", 100)){
-                Log.i("ScanFragment", "saveLineChartToSDCard mLineChart != null");
                 ShowToast.shortTime("保存成功!");
-            }else{
+            }else {
                 ShowToast.shortTime("保存失败!");
             }
+        }else {
+            Log.i("ScanFragment", "saveLineChartToSDCard: mLineChart is null");
+            ShowToast.shortTime("mLineChart is null!");
         }
     }
 
@@ -159,14 +164,16 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
                 + ",mLineChart.getHeight() = " + mLineChart.getHeight());
     }
 
+
     @Override
     public void onPause() {
         super.onPause();
         //宽高不为0
         Log.i("ScanFragment", "onPause：mLineChart.getWidth() = " + mLineChart.getWidth()
                 + ",mLineChart.getHeight() = " + mLineChart.getHeight());
-        saveLineChartToSDCard();
+
     }
+
 
     @Override
     public void onStop() {
@@ -182,7 +189,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         mButtonWeek.setOnClickListener(this);
         mButtonMonth.setOnClickListener(this);
         mButtonYear.setOnClickListener(this);
-
+        mButtonSaveImage.setOnClickListener(this);
         mSeekBarX.setProgress(49);
         mSeekBarY.setProgress(100);
         mSeekBarX.setOnSeekBarChangeListener(this);
@@ -417,6 +424,9 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
                 mButtonDay.setBackgroundColor(Color.parseColor("#dfdbdb"));
                 mButtonWeek.setBackgroundColor(Color.parseColor("#dfdbdb"));
                 mButtonMonth.setBackgroundColor(Color.parseColor("#dfdbdb"));
+                break;
+            case R.id.save_save:
+                saveLineChartToSDCard();
                 break;
         }
     }
