@@ -1,12 +1,85 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.lebron.graduationpro1.ui.fragment.ControlFragment">
-
-        <SeekBar android:id="@+id/seekBar"
+        <TextView
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="200"/>
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:textSize="16dp"
+            android:text="水温控制"/>
+        <LinearLayout android:id="@+id/linearLayout_temp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.0"
+            android:layout_marginTop="10dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:gravity="center">
+                <TextView android:id="@+id/textView_label_water_temp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="水温:"/>
+                <SeekBar android:id="@+id/seekBar_water_temp"
+                    android:layout_weight="1.0"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="60"
+                    android:layout_width="0dp"
+                    android:progressDrawable="@drawable/progress_holo_light"
+                    android:thumb="@mipmap/seek_bar_icon"/>
+                <TextView android:id="@+id/textView_water_temp_MAX"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="100℃"/>
+        </LinearLayout>
 
-</FrameLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/tabSelected"/>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:textSize="16dp"
+            android:text="转速控制"/>
+        <LinearLayout android:id="@+id/linearLayout_rate"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.0"
+            android:layout_marginTop="10dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:gravity="center">
+                <TextView android:id="@+id/textView_label_water_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="转速:"/>
+                <SeekBar android:id="@+id/seekBar_water_rate"
+                    android:layout_weight="1.0"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="40"
+                    android:layout_width="0dp"
+                    android:progressDrawable="@drawable/progress_holo_light"
+                    android:thumb="@mipmap/seek_bar_icon"/>
+                <TextView android:id="@+id/textView_water_rate_MAX"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="100n/s"/>
+        </LinearLayout>
+
+</LinearLayout>

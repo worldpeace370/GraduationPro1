@@ -177,7 +177,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         mButtonMonth.setOnClickListener(this);
         mButtonYear.setOnClickListener(this);
         mSeekBarX.setProgress(49);
-        mSeekBarY.setProgress(100);
+        mSeekBarY.setProgress(40);
         mSeekBarX.setOnSeekBarChangeListener(this);
         mSeekBarX.setOnSeekBarChangeListener(this);
 
@@ -239,15 +239,17 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         limitLineWater.setTextColor(Color.BLACK);
         limitLineWater.setTextSize(12f);
         limitLineWater.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-        limitLineWater.enableDashedLine(6f, 10f, 0f);
+        //设置虚线
+//        limitLineWater.enableDashedLine(6f, 10f, 0f);
         leftAxis.addLimitLine(limitLineWater);
-        LimitLine limitLineRotateSpeed = new LimitLine(50, "转速阈值");
+        LimitLine limitLineRotateSpeed = new LimitLine(40, "转速阈值");
         limitLineRotateSpeed.setLineColor(Color.GREEN);
         limitLineRotateSpeed.setLineWidth(1f);
         limitLineRotateSpeed.setTextColor(Color.BLACK);
         limitLineRotateSpeed.setTextSize(12f);
         limitLineRotateSpeed.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-        limitLineRotateSpeed.enableDashedLine(6f, 10f, 0f);
+        //设置虚线
+//        limitLineRotateSpeed.enableDashedLine(6f, 10f, 0f);
         leftAxis.addLimitLine(limitLineRotateSpeed);
         //X轴设置在底部
         XAxis xAxis = lineChart.getXAxis();
@@ -308,7 +310,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     private LineDataSet initFlowLine(ArrayList<LineChartTestData> list){
         LineChartTestData[] datas = new LineChartTestData[24];
         for (int i = 0; i < datas.length; i++) {
-            datas[i] = new LineChartTestData(i, (i%4 + 2)*15);
+            datas[i] = new LineChartTestData(i, 50 + (int) (Math.random() * 10));
         }
         List<Entry> entries = new ArrayList<>();
         for (LineChartTestData data:datas) {
@@ -329,6 +331,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         dataSet.setCircleSize(4f);
         //设置点击某个点时,横竖两条线的颜色
         dataSet.setHighLightColor(Color.YELLOW);
+        dataSet.setDrawValues(false);
         return dataSet;
     }
 

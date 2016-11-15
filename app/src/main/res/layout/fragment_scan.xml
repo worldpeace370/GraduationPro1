@@ -76,7 +76,7 @@
                 <SeekBar android:id="@+id/seekBar_X"
                     android:layout_weight="1.0"
                     android:layout_height="wrap_content"
-                    android:max="500"
+                    android:max="100"
                     android:layout_width="0dp"
                     android:progressDrawable="@drawable/progress_holo_light"
                     android:thumb="@mipmap/seek_bar_icon"/>
@@ -104,7 +104,7 @@
                 <SeekBar android:id="@+id/seekBar_Y"
                     android:layout_weight="1.0"
                     android:layout_height="wrap_content"
-                    android:max="500"
+                    android:max="100"
                     android:layout_width="0dp"
                     android:progressDrawable="@drawable/progress_holo_light"
                     android:thumb="@mipmap/seek_bar_icon"/>

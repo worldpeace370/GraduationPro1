@@ -1,29 +1,40 @@
 package com.lebron.graduationpro1.ui.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.lebron.graduationpro1.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ControlFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link ControlFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ControlFragment extends Fragment {
+public class ControlFragment extends Fragment implements SeekBar.OnSeekBarChangeListener{
+    @BindView(R.id.seekBar_water_temp)
+    SeekBar mSeekBarWaterTemp;
+    @BindView(R.id.seekBar_water_rate)
+    SeekBar mSeekBarWaterRate;
+    @BindView(R.id.textView_water_temp_MAX)
+    TextView mTextViewWaterTemp;
+    @BindView(R.id.textView_water_rate_MAX)
+    TextView mTextViewWaterRate;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private String mParam1;
     private String mParam2;
+    private Unbinder mBind;
 
     public ControlFragment() {
     }
@@ -57,18 +68,51 @@ public class ControlFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_control, container, false);
+        View view = inflater.inflate(R.layout.fragment_control, container, false);
+        mBind = ButterKnife.bind(this, view);
+        initView();
+        return view;
+    }
+
+    private void initView() {
+        mTextViewWaterTemp.setText(mSeekBarWaterTemp.getProgress() + "℃");
+        mTextViewWaterRate.setText(mSeekBarWaterRate.getProgress() + "n/s");
+        mSeekBarWaterTemp.setOnSeekBarChangeListener(this);
+        mSeekBarWaterRate.setOnSeekBarChangeListener(this);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mBind.unbind();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+    //下面三个方法是SeekBar拖动回调方法
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (seekBar.equals(mSeekBarWaterTemp)){
+            mTextViewWaterTemp.setText(progress + "℃");
+        }else if (seekBar.equals(mSeekBarWaterRate)){
+            mTextViewWaterRate.setText(progress + "n/s");
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 }
