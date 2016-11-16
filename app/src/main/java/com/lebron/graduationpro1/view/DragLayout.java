@@ -169,6 +169,11 @@ public class DragLayout extends FrameLayout {
             @Override
             public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
                 super.onViewPositionChanged(changedView, left, top, dx, dy);
+                //由于点击事件会传递到mLeftContent中,导致在mMainContent点击会引起mLeftContent 中view的响应
+                //所以在布局中设置mLeftContent的可见性为invisible,可以避免点击引起的mLeftContent 中view的响应
+                //当侧滑菜单拉出来之后要设置mLeftContent可见性,然后其中的View就能正常响应了,当关闭抽屉布局时
+                //设置其可见性为INVISIBLE,来避免在mMainContent点击引起的mLeftContent 中view的响应
+                mLeftContent.setVisibility(View.VISIBLE);
                 //将拖拽左面板的动作传递给主面板
                 int newLeft = left;
                 if (changedView == mLeftContent){
@@ -360,6 +365,7 @@ public class DragLayout extends FrameLayout {
      * @param isSmooth true or false
      */
     public void closeDrag(boolean isSmooth) {
+        mLeftContent.setVisibility(View.INVISIBLE);
         int finalLeft = 0;
         if (isSmooth){
             /**
