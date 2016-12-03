@@ -2,7 +2,6 @@ package com.lebron.graduationpro1.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,7 +15,6 @@ import com.lebron.graduationpro1.R;
  *自定义popupWindow
  */
 public class AddPopWindow extends PopupWindow {
-	private View conentView;
 	private OnPopupWindowItemClickListener mListener;
 
 	public void setOnPopupWindowItemClickListener(OnPopupWindowItemClickListener listener) {
@@ -26,48 +24,56 @@ public class AddPopWindow extends PopupWindow {
 	public AddPopWindow(final Activity context) {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		conentView = inflater.inflate(R.layout.add_popup_dialog, null);
+		View contentView = inflater.inflate(R.layout.add_popup_dialog, null);
 		int h = context.getWindowManager().getDefaultDisplay().getHeight();
 		int w = context.getWindowManager().getDefaultDisplay().getWidth();
-		//设置SelectPicPopupWindow的View
-		this.setContentView(conentView);
-		//设置SelectPicPopupWindow的弹出窗体的宽
+		//设置AddPopWindow的View
+		this.setContentView(contentView);
+		//设置AddPopWindow的弹出窗体的宽
 		this.setWidth(w / 2 - 70);
-		//设置SelectPicPopupWindow的弹出窗体的高
+		//设置AddPopWindow的弹出窗体的高
 		this.setHeight(LayoutParams.WRAP_CONTENT);
-		//设置SelectPicPopupWindow的弹出窗体的可点击
+		//设置AddPopWindow的弹出窗体的可点击
 		this.setFocusable(true);
-		this.setOutsideTouchable(true);
 		//刷新状态
 		this.update();
 		//实例化一个ColorDrawable颜色为半透明
-		ColorDrawable dw = new ColorDrawable(0000000000);
-		//点back键和其他地方使其消失,设置了这个才能触发OnDismissListener,设置其他控件变化等操作
-		this.setBackgroundDrawable(dw);
+//		ColorDrawable dw = new ColorDrawable(0);
+//		this.setBackgroundDrawable(dw);
 		//设置SelectPicPopWindow弹出窗体动画效果
 		this.setAnimationStyle(R.style.PopupWindowAnimation);
-		LinearLayout addTaskLayout = (LinearLayout) conentView
+		LinearLayout selectNewNode = (LinearLayout) contentView
 				.findViewById(R.id.select_new_node);
-		LinearLayout teamMemberLayout = (LinearLayout) conentView
+		LinearLayout saveImageSdCard = (LinearLayout) contentView
 				.findViewById(R.id.save_image_sd_card);
+		LinearLayout refreshData = (LinearLayout) contentView.findViewById(R.id.refresh_data);
 		//选择节点
-		addTaskLayout.setOnClickListener(new OnClickListener() {
+		selectNewNode.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View arg0) {
-				if (arg0.getId() == R.id.select_new_node && mListener != null){
-					mListener.onItemClick(arg0.getId());
+			public void onClick(View view) {
+				if (mListener != null){
+					mListener.onItemClick(view.getId());
 				}
 				AddPopWindow.this.dismiss();
 			}
 		});
 		//保存SD卡
-		teamMemberLayout.setOnClickListener(new OnClickListener() {
+		saveImageSdCard.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View v) {
-				if (v.getId() == R.id.save_image_sd_card && mListener != null){
-					mListener.onItemClick(v.getId());
+			public void onClick(View view) {
+				if (mListener != null){
+					mListener.onItemClick(view.getId());
+				}
+				AddPopWindow.this.dismiss();
+			}
+		});
+		refreshData.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (mListener != null){
+					mListener.onItemClick(view.getId());
 				}
 				AddPopWindow.this.dismiss();
 			}

@@ -39,7 +39,7 @@ public class MainLinearLayout extends LinearLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        //如果抽屉打开了,处理事件,点击后松手,关闭抽屉,其他的操作不做
+        //如果抽屉打开了,由于事件被拦截,需要由当前view处理事件.点击后松手,关闭抽屉,其他的操作不做
         if (mDragLayout.getStatus() == DragLayout.Status.Opened){
             if (event.getAction() == MotionEvent.ACTION_UP){
                 if (mDragLayout != null){

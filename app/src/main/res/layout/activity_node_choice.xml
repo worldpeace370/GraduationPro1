@@ -41,18 +41,25 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <SearchView
-            android:id="@+id/searchView"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="#cae1ff"
-            android:iconifiedByDefault="false"
-            android:imeOptions="actionSearch"
-            android:queryHint="中文/拼音/首字母">
-        </SearchView>
+            >
+            <SearchView
+                android:id="@+id/searchView"
+                android:layout_marginStart="80dp"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:iconifiedByDefault="false"
+                android:imeOptions="actionSearch"
+                android:queryHint="中文/拼音/首字母">
+            </SearchView>
+        </RelativeLayout>
         <RelativeLayout android:id="@+id/last_scan_layout"
             android:layout_width="match_parent"
-            android:layout_height="30dp">
+            android:layout_height="30dp"
+            android:paddingStart="10dp">
             <TextView android:id="@+id/last_scan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

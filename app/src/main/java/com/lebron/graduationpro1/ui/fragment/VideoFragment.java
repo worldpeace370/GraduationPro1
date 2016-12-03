@@ -1,6 +1,7 @@
 package com.lebron.graduationpro1.ui.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -63,7 +64,7 @@ public class VideoFragment extends Fragment {
 
     private static class MyHandler extends Handler {
         WeakReference<VideoFragment> weakReference;
-        public MyHandler(VideoFragment fragment){
+        MyHandler(VideoFragment fragment){
             weakReference = new WeakReference<>(fragment);
         }
 
@@ -83,7 +84,6 @@ public class VideoFragment extends Fragment {
     private static final String URL_PARAM = "url_param";
 
     public VideoFragment() {
-
     }
 
     /**
@@ -101,13 +101,14 @@ public class VideoFragment extends Fragment {
     }
     //重写onAttach(Context context)也可以,互相调用而已
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof MainActivity){
-            mMainActivity = activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MainActivity){
+            mMainActivity = getActivity();
         }else {
-            throw new IllegalArgumentException("The activity must to be MainActivity");
+            throw new IllegalArgumentException("The context must to be instanceof MainActivity");
         }
+        Log.i(TAG, "onAttach: 执行了");
     }
 
     @Override

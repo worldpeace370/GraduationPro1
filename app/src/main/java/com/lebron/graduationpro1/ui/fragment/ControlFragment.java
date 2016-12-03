@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ public class ControlFragment extends Fragment implements SeekBar.OnSeekBarChange
     private String mParam2;
     private Unbinder mBind;
     private MainActivity mMainActivity;
+    private String TAG = "ControlFragment";
 
     public ControlFragment() {
     }
@@ -73,6 +75,17 @@ public class ControlFragment extends Fragment implements SeekBar.OnSeekBarChange
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MainActivity){
+            mMainActivity = (MainActivity) getActivity();
+        }else {
+            throw new IllegalArgumentException("The context must to be instanceof MainActivity");
+        }
+        Log.i(TAG, "onAttach: 执行了");
     }
 
     @Override
@@ -104,12 +117,6 @@ public class ControlFragment extends Fragment implements SeekBar.OnSeekBarChange
         mButtonRateIncrease.setOnClickListener(this);
         mButtonWaterPost.setOnClickListener(this);
         mButtonRatePost.setOnClickListener(this);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mMainActivity = (MainActivity) getActivity();
     }
 
     @Override

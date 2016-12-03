@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,6 +67,8 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     TextView mTextViewX;
     @BindView(R.id.textView_Y_MAX)
     TextView mTextViewY;
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout mRefreshLayout;
     private Unbinder mUnbinder;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -86,7 +89,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
      * @return A new instance of fragment ScanFragment.
      */
     public static ScanFragment newInstance(String param1, String param2) {
-        Log.i(TAG, "newInstance: 执行了");
         ScanFragment fragment = new ScanFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -99,8 +101,10 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context != null){
+        if (context instanceof MainActivity){
             mMainActivity = (MainActivity) getActivity();
+        }else {
+            throw new IllegalArgumentException("The context must to be instanceof MainActivity");
         }
         Log.i(TAG, "onAttach: 执行了");
     }
@@ -170,7 +174,25 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
                 + ",mLineChart.getHeight() = " + mLineChart.getHeight());
     }
 
+    public void refreshData(){
+        mRefreshLayout.setRefreshing(true);
+    }
+
     private void initViewAndListener() {
+        //原生下拉刷新控件
+        mRefreshLayout.setColorSchemeResources(R.color.holo_blue_bright,
+                R.color.holo_green_light,
+                R.color.holo_orange_light,
+                R.color.holo_red_light);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //重新加载数据,绘制图形
+                initLineChartData();
+            }
+        });
+
+
         mButtonDay.setBackgroundColor(Color.parseColor("#b4afaf"));
         mButtonDay.setOnClickListener(this);
         mButtonWeek.setOnClickListener(this);
@@ -191,6 +213,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         //create a custom MarkerView (extends MarkerView) and specify the layout
         MyMarkerView markerView = new MyMarkerView(mMainActivity, R.layout.custom_marker_view);
         mLineChart.setMarkerView(markerView);
+        //初始化X,Y轴
         initAxis(mLineChart);
     }
 
@@ -204,11 +227,10 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         LineData lineData = new LineData(xVals, dataSetList);
         mLineChart.setData(lineData);
         //X方向动画效果
-        mLineChart.animateX(3500, Easing.EasingOption.EaseInOutQuart);
+        mLineChart.animateX(1500, Easing.EasingOption.EaseInOutQuart);
         //X,Y方向同时动画
 //        mLineChart.animateXY(3000, 3000);
         mLineChart.invalidate();
-
     }
 
     /**

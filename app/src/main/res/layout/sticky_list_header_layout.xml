@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
     <TextView android:id="@+id/textView_header"
         android:layout_width="match_parent"
-        android:paddingLeft="10dp"
+        android:paddingLeft="20dp"
         android:layout_height="24dp"
-        android:background="#18b6ea"/>
+        android:background="#cae1ff"/>
 </LinearLayout>

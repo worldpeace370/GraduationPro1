@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseActivity;
 import com.lebron.graduationpro1.ui.fragment.ControlFragment;
+import com.lebron.graduationpro1.ui.fragment.DetailFragment;
 import com.lebron.graduationpro1.ui.fragment.ScanFragment;
 import com.lebron.graduationpro1.ui.fragment.VideoFragment;
 import com.lebron.graduationpro1.utils.ConstantValue;
@@ -161,6 +163,7 @@ public class MainActivity extends BaseActivity{
         mFragmentList.add(ScanFragment.newInstance("", ""));
         mFragmentList.add(VideoFragment.newInstance(""));
         mFragmentList.add(ControlFragment.newInstance("", ""));
+        mFragmentList.add(DetailFragment.newInstance("", ""));
     }
 
     public void click(View view){
@@ -223,6 +226,9 @@ public class MainActivity extends BaseActivity{
                     //保存折线图到SD卡
                     ScanFragment fragment = (ScanFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
                     fragment.saveLineChartToSDCard();
+                }else if (id == R.id.refresh_data){
+                    ScanFragment fragment = (ScanFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
+                    fragment.refreshData();
                 }
             }
         });
@@ -270,19 +276,19 @@ public class MainActivity extends BaseActivity{
 //            ShowToast.shortTime("您输入的ip地址不合法!");
 //        }
 //    }
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
-//            if (System.currentTimeMillis() - mExitTime > 2000){
-//                ShowToast.shortTime("再按一次退出程序");
-//                mExitTime = System.currentTimeMillis();
-//            }else {
-//                MyActivityManager.getInstance().finishAllActivityAndExit();
-//            }
-//            return true;//此处返回true or false 貌似没有意义了,两个都能正常的退出程序
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+            if (System.currentTimeMillis() - mExitTime > 2000){
+                ShowToast.shortTime("再按一次退出程序");
+                mExitTime = System.currentTimeMillis();
+            }else {
+                MyActivityManager.getInstance().finishAllActivityAndExit();
+            }
+            return true;//此处返回true or false 貌似没有意义了,两个都能正常的退出程序
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     @Override
     protected void onPause() {

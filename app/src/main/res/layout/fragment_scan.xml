@@ -3,118 +3,123 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.lebron.graduationpro1.ui.fragment.ScanFragment">
-    <LinearLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <LinearLayout android:orientation="horizontal"
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
-            android:layout_marginEnd="14dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:padding="0dp">
-            <Button android:id="@+id/latest_day"
-                android:layout_width="0dp"
-                android:layout_weight="1.0"
-                android:layout_height="30dp"
-                android:background="@drawable/date_choice_button"
-                android:text="@string/latest_day"/>
-            <Button android:id="@+id/latest_week"
-                android:layout_width="0dp"
-                android:layout_weight="1.0"
-                android:layout_height="30dp"
-                android:layout_marginStart="1dp"
-                android:background="@drawable/date_choice_button"
-                android:text="@string/latest_week"/>
-            <Button android:id="@+id/latest_month"
-                android:layout_width="0dp"
-                android:layout_weight="1.0"
-                android:layout_height="30dp"
-                android:layout_marginStart="1dp"
-                android:background="@drawable/date_choice_button"
-                android:text="@string/latest_month"/>
-            <Button android:id="@+id/latest_year"
-                android:layout_width="0dp"
-                android:layout_weight="1.0"
-                android:layout_height="30dp"
-                android:layout_marginStart="1dp"
-                android:background="@drawable/date_choice_button"
-                android:text="@string/latest_year"/>
-        </LinearLayout>
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChart1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.0">
-        </com.github.mikephil.charting.charts.LineChart>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp">
-            <TextView
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick=""
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:text="@string/scroll_to_scale"/>
-            <LinearLayout android:id="@+id/linearLayout_X"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:gravity="center"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp">
-                <TextView android:id="@+id/textView_labelX"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="X轴:"/>
-                <SeekBar android:id="@+id/seekBar_X"
-                    android:layout_weight="1.0"
-                    android:layout_height="wrap_content"
-                    android:max="100"
+                android:layout_marginStart="28dp"
+                android:layout_marginEnd="14dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:padding="0dp">
+                <Button android:id="@+id/latest_day"
                     android:layout_width="0dp"
-                    android:progressDrawable="@drawable/progress_holo_light"
-                    android:thumb="@mipmap/seek_bar_icon"/>
-                <TextView android:id="@+id/textView_X_MAX"
-                    android:layout_width="wrap_content"
-                    android:gravity="center"
-                    android:layout_height="wrap_content"
-                    android:text="@string/x_500"/>
+                    android:layout_weight="1.0"
+                    android:layout_height="30dp"
+                    android:background="@drawable/date_choice_button"
+                    android:text="@string/latest_day"/>
+                <Button android:id="@+id/latest_week"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.0"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@drawable/date_choice_button"
+                    android:text="@string/latest_week"/>
+                <Button android:id="@+id/latest_month"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.0"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@drawable/date_choice_button"
+                    android:text="@string/latest_month"/>
+                <Button android:id="@+id/latest_year"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.0"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="1dp"
+                    android:background="@drawable/date_choice_button"
+                    android:text="@string/latest_year"/>
             </LinearLayout>
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.0">
+            </com.github.mikephil.charting.charts.LineChart>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick=""
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:text="@string/scroll_to_scale"/>
+                <LinearLayout android:id="@+id/linearLayout_X"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:gravity="center"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp">
+                    <TextView android:id="@+id/textView_labelX"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="X轴:"/>
+                    <SeekBar android:id="@+id/seekBar_X"
+                        android:layout_weight="1.0"
+                        android:layout_height="wrap_content"
+                        android:max="100"
+                        android:layout_width="0dp"
+                        android:progressDrawable="@drawable/progress_holo_light"
+                        android:thumb="@mipmap/seek_bar_icon"/>
+                    <TextView android:id="@+id/textView_X_MAX"
+                        android:layout_width="wrap_content"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:text="@string/x_500"/>
+                </LinearLayout>
 
-            <LinearLayout android:id="@+id/linearLayout_Y"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/linearLayout_X"
-                android:layout_marginTop="10dp"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:gravity="center">
-                <TextView android:id="@+id/textView_labelY"
-                    android:layout_width="wrap_content"
+                <LinearLayout android:id="@+id/linearLayout_Y"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Y轴:"/>
-                <SeekBar android:id="@+id/seekBar_Y"
-                    android:layout_weight="1.0"
-                    android:layout_height="wrap_content"
-                    android:max="100"
-                    android:layout_width="0dp"
-                    android:progressDrawable="@drawable/progress_holo_light"
-                    android:thumb="@mipmap/seek_bar_icon"/>
-                <TextView android:id="@+id/textView_Y_MAX"
-                    android:layout_width="wrap_content"
-                    android:gravity="center"
-                    android:layout_height="wrap_content"
-                    android:text="@string/y_500"/>
-            </LinearLayout>
-        </RelativeLayout>
-    </LinearLayout>
+                    android:layout_below="@id/linearLayout_X"
+                    android:layout_marginTop="10dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:gravity="center">
+                    <TextView android:id="@+id/textView_labelY"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Y轴:"/>
+                    <SeekBar android:id="@+id/seekBar_Y"
+                        android:layout_weight="1.0"
+                        android:layout_height="wrap_content"
+                        android:max="100"
+                        android:layout_width="0dp"
+                        android:progressDrawable="@drawable/progress_holo_light"
+                        android:thumb="@mipmap/seek_bar_icon"/>
+                    <TextView android:id="@+id/textView_Y_MAX"
+                        android:layout_width="wrap_content"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:text="@string/y_500"/>
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>
