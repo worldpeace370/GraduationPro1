@@ -3,6 +3,8 @@ package com.lebron.graduationpro1.ui.fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -32,6 +34,7 @@ import com.lebron.graduationpro1.utils.ConstantValue;
 import com.lebron.graduationpro1.utils.ShowToast;
 import com.lebron.graduationpro1.view.MyMarkerView;
 
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -76,18 +79,32 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     private String mParam2;
     private static final String TAG = "ScanFragment";
     private MainActivity mMainActivity;
+    private MyHandler mHandler;
+
+    private static class MyHandler extends Handler{
+        WeakReference<ScanFragment> weakReference;
+        public MyHandler(ScanFragment fragment){
+            weakReference = new WeakReference<>(fragment);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            ScanFragment fragment = weakReference.get();
+            if (fragment != null){//如果activity仍然在弱引用中,执行...
+                switch (msg.what){
+                    case 0x01:
+                        fragment.setEnabledRefreshAnim(false);
+                        break;
+                }
+            }
+        }
+    }
 
     public ScanFragment() {
 
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ScanFragment.
-     */
     public static ScanFragment newInstance(String param1, String param2) {
         ScanFragment fragment = new ScanFragment();
         Bundle args = new Bundle();
@@ -96,7 +113,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -119,6 +135,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         VolleyRequest volleyRequest = new VolleyRequest();
         volleyRequest.getJsonFromServer(ConstantValue.TESTURL, this);
         Log.i(TAG, "onCreate: 执行了");
+        mHandler = new MyHandler(this);
     }
 
     @Override
@@ -154,8 +171,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         Log.i("ScanFragment", "onResume：mLineChart.getWidth() = " + mLineChart.getWidth()
                 + ",mLineChart.getHeight() = " + mLineChart.getHeight());
     }
-
-
+    //在onResume()方法之后,Fragment才是active的状态,所以mLineChart的宽和高只有在onResume()之后才有值
     @Override
     public void onPause() {
         super.onPause();
@@ -165,7 +181,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
 
     }
 
-
     @Override
     public void onStop() {
         super.onStop();
@@ -174,8 +189,42 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
                 + ",mLineChart.getHeight() = " + mLineChart.getHeight());
     }
 
+    /**
+     * 手动刷新数据,下拉刷新和点击折线图有事件冲突,这样也可以
+     */
     public void refreshData(){
         mRefreshLayout.setRefreshing(true);
+        //网络下载数据,耗时操作(下面是示例代码),数据下载完成,在回调接口中更新UI
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }finally {
+                    Message message = Message.obtain();
+                    message.what = 0x01;
+                    mHandler.sendMessage(message);
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 设置是否停止刷新的动画操作
+     * @param enabledRefresh true represents show animation; false stop showing animation
+     */
+    private void setEnabledRefreshAnim(boolean enabledRefresh){
+        if (!enabledRefresh){
+            if (mRefreshLayout.isRefreshing()){
+                mRefreshLayout.setRefreshing(false);
+            }
+        }else {
+            if (!mRefreshLayout.isRefreshing()){
+                mRefreshLayout.setRefreshing(true);
+            }
+        }
     }
 
     private void initViewAndListener() {
@@ -184,6 +233,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
                 R.color.holo_green_light,
                 R.color.holo_orange_light,
                 R.color.holo_red_light);
+        mRefreshLayout.setEnabled(false);
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -425,32 +475,44 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         int id = v.getId();
         switch (id){
             case R.id.latest_day:
+                //UI变化
                 ShowToast.shortTime("近一天");
                 mButtonDay.setBackgroundColor(Color.parseColor("#b4afaf"));
                 mButtonWeek.setBackgroundColor(Color.parseColor("#dfdbdb"));
                 mButtonMonth.setBackgroundColor(Color.parseColor("#dfdbdb"));
                 mButtonYear.setBackgroundColor(Color.parseColor("#dfdbdb"));
+                //数据变化 待写
+
                 break;
             case R.id.latest_week:
+                //UI变化
                 ShowToast.shortTime("近一周");
                 mButtonWeek.setBackgroundColor(Color.parseColor("#b4afaf"));
                 mButtonDay.setBackgroundColor(Color.parseColor("#dfdbdb"));
                 mButtonMonth.setBackgroundColor(Color.parseColor("#dfdbdb"));
                 mButtonYear.setBackgroundColor(Color.parseColor("#dfdbdb"));
+                //数据变化 待写
+
                 break;
             case R.id.latest_month:
+                //UI变化
                 ShowToast.shortTime("近一月");
                 mButtonMonth.setBackgroundColor(Color.parseColor("#b4afaf"));
                 mButtonDay.setBackgroundColor(Color.parseColor("#dfdbdb"));
                 mButtonWeek.setBackgroundColor(Color.parseColor("#dfdbdb"));
                 mButtonYear.setBackgroundColor(Color.parseColor("#dfdbdb"));
+                //数据变化 待写
+
                 break;
             case R.id.latest_year:
+                //UI变化
                 ShowToast.shortTime("近一年");
                 mButtonYear.setBackgroundColor(Color.parseColor("#b4afaf"));
                 mButtonDay.setBackgroundColor(Color.parseColor("#dfdbdb"));
                 mButtonWeek.setBackgroundColor(Color.parseColor("#dfdbdb"));
                 mButtonMonth.setBackgroundColor(Color.parseColor("#dfdbdb"));
+                //数据变化 待写
+
                 break;
         }
     }

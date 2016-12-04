@@ -2,6 +2,7 @@ package com.lebron.graduationpro1.ui.activity;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -82,6 +83,7 @@ public class MainActivity extends BaseActivity{
             }
         });
         mMainLinearLayout.setDragLayout(mDragLayout);
+        //初始化书签导航
         initTabs();
     }
 
@@ -153,6 +155,7 @@ public class MainActivity extends BaseActivity{
 
     @Override
     protected void initData() {
+        //貌似没有卵用,将所有activity加入链表队列中,有的activity需要销毁的时候反而不能销毁
         MyActivityManager.getInstance().addActivity(this);
     }
 
@@ -294,5 +297,10 @@ public class MainActivity extends BaseActivity{
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "onPause: 执行了");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }
