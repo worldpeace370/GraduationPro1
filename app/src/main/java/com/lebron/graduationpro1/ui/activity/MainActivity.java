@@ -2,12 +2,16 @@ package com.lebron.graduationpro1.ui.activity;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.CycleInterpolator;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -33,7 +37,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends BaseActivity{
+import static android.R.attr.id;
+
+public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener{
     private static final String TAG = "MainActivity";
     @BindView(R.id.drawer_layout)
     DragLayout mDragLayout;
@@ -47,12 +53,160 @@ public class MainActivity extends BaseActivity{
     ImageView mImageViewAddMenu;
     @BindView(R.id.radioGroup)
     RadioGroup mRadioGroup;
+    private final int TAB_SCAN = R.id.scan;
+    private final int TAB_VIDEO = R.id.video;
+    private final int TAB_CONTROL = R.id.control;
+    private final int TAB_DETAILS = R.id.details;
+    private int currentSelectedTab = R.id.scan;
+    private ScanFragment mScanFragment;
+    private VideoFragment mVideoFragment;
+    private ControlFragment mControlFragment;
+    private DetailFragment mDetailFragment;
+
+    private FragmentManager mFragmentManager;
+
     //用于按下两次返回键退出程序用
     private long mExitTime;
     //节点名字,放置到mTextViewTitle中
     private String mNodeName = "";
-    //Fragment的List
-    private ArrayList<Fragment> mFragmentList;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mScanFragment = findFragmentByClassName(ScanFragment.class);
+            mVideoFragment = findFragmentByClassName(VideoFragment.class);
+            mControlFragment = findFragmentByClassName(ControlFragment.class);
+            mDetailFragment = findFragmentByClassName(DetailFragment.class);
+        }
+        /**
+         * 开启硬件加速
+         */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        }
+        getWindow().setBackgroundDrawable(null);
+    }
+
+    /**
+     * 通过类名寻找曾经保存下来的Fragment对象
+     * @param type 类名
+     * @param <T> 泛型
+     * @return 返回Fragment对象
+     */
+    private <T extends Fragment> T findFragmentByClassName(Class<T> type) {
+        return (T) getSupportFragmentManager().findFragmentByTag(type.getSimpleName());
+    }
+
+    /**
+     *
+     * @param id
+     * @param t
+     * @param ft
+     * @param <T>
+     */
+    private <T extends Fragment> void addFragment(int contentContainerId, T t, FragmentTransaction ft) {
+        ft.add(contentContainerId, t, t.getClass().getSimpleName()).commitAllowingStateLoss();
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        goToTargetFragment(checkedId);
+    }
+
+    private void changeTargetFragment(int checkedId){
+        RadioButton radioButton = (RadioButton) findViewById(checkedId);
+        if (radioButton.isChecked()) {
+            goToTargetFragment(checkedId);
+        } else {
+            radioButton.setChecked(true);
+        }
+    }
+
+    private void hideFragment(FragmentTransaction ft) {
+        if (mScanFragment != null) {
+            ft.hide(mScanFragment);
+        }
+        if (mVideoFragment != null) {
+            ft.hide(mVideoFragment);
+        }
+        if (mControlFragment != null) {
+            ft.hide(mControlFragment);
+        }
+        if (mDetailFragment != null) {
+            ft.hide(mDetailFragment);
+        }
+    }
+
+
+    private void goToTargetFragment(int checkedId) {
+        if (mFragmentManager == null) {
+            mFragmentManager = getSupportFragmentManager();
+        }
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        hideFragment(ft);
+        switch (checkedId) {
+            case TAB_SCAN:
+                change2Scan(ft);
+                break;
+            case TAB_VIDEO:
+                change2Video(ft);
+                break;
+            case TAB_CONTROL:
+                change2Control(ft);
+                break;
+            case TAB_DETAILS:
+                change2Details(ft);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void change2Scan(FragmentTransaction ft) {
+        if (mScanFragment == null) {
+            mScanFragment = new ScanFragment();
+            addFragment(R.id.content_container, mScanFragment, ft);
+        } else {
+            ft.show(mScanFragment).commitAllowingStateLoss();
+            mTextViewTitle.setText(mNodeName);
+            mImageViewAddMenu.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void change2Video(FragmentTransaction ft) {
+        if (mVideoFragment == null) {
+            mVideoFragment = new VideoFragment();
+            addFragment(R.id.content_container, mVideoFragment, ft);
+        } else {
+            ft.show(mVideoFragment).commitAllowingStateLoss();
+            mTextViewTitle.setText("监控视频");
+            mImageViewAddMenu.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void change2Control(FragmentTransaction ft) {
+        if (mControlFragment == null) {
+            mControlFragment = new ControlFragment();
+            addFragment(R.id.content_container, mControlFragment, ft);
+        } else {
+            ft.show(mControlFragment).commitAllowingStateLoss();
+            mTextViewTitle.setText("远程控制");
+            mImageViewAddMenu.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void change2Details(FragmentTransaction ft) {
+        if (mDetailFragment == null) {
+            mDetailFragment = new DetailFragment();
+            addFragment(R.id.content_container, mDetailFragment, ft);
+        } else {
+            ft.show(mDetailFragment).commitAllowingStateLoss();
+            mTextViewTitle.setText("详情日志");
+            mImageViewAddMenu.setVisibility(View.INVISIBLE);
+        }
+    }
 
     @Override
     protected int getLayoutId() {
@@ -83,63 +237,8 @@ public class MainActivity extends BaseActivity{
             }
         });
         mMainLinearLayout.setDragLayout(mDragLayout);
-        //初始化书签导航
-        initTabs();
-    }
-
-    /**
-     * 初始化书签导航
-     */
-    private void initTabs(){
-        final RadioButton[] radioButtons = new RadioButton[mRadioGroup.getChildCount()];
-        for (int i = 0; i < mRadioGroup.getChildCount(); i++) {
-            radioButtons[i] = ((RadioButton) mRadioGroup.getChildAt(i));
-        }
-        //设置默认选中第一个书签
-        radioButtons[0].setChecked(true);
-        //RadioGroup的监听事件,切换不同的页面
-        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                for (int i = 0; i < radioButtons.length; i++) {
-                    //如果找到了按下的那个RadioButton,切换到对应的页面上
-                    if (radioButtons[i].getId() == checkedId){
-                        switchFragment(i);
-                    }
-                }
-            }
-        });
-        initFragmentList();
-        replaceFragment(R.id.content_container, mFragmentList.get(0));
-    }
-
-    /**
-     * 切换不同的页面(概览-视频-控制-详情)
-     * @param tabIndex 不同的书签对应的编号,0~3
-     */
-    private void switchFragment(int tabIndex) {
-        switch (tabIndex){
-            case 0:
-                mTextViewTitle.setText(mNodeName);
-                mImageViewAddMenu.setVisibility(View.VISIBLE);
-                break;
-            case 1:
-                mTextViewTitle.setText("监控视频");
-                mImageViewAddMenu.setVisibility(View.INVISIBLE);
-                break;
-            case 2:
-                mTextViewTitle.setText("远程控制");
-                mImageViewAddMenu.setVisibility(View.INVISIBLE);
-                break;
-            case 3:
-                mTextViewTitle.setText("详情日志");
-                mImageViewAddMenu.setVisibility(View.INVISIBLE);
-                break;
-        }
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        Fragment targetFragment = mFragmentList.get(tabIndex);
-        transaction.replace(R.id.content_container, targetFragment);
-        transaction.commit();
+        changeTargetFragment(currentSelectedTab);
+        mRadioGroup.setOnCheckedChangeListener(this);
     }
 
     /**
@@ -157,16 +256,6 @@ public class MainActivity extends BaseActivity{
     protected void initData() {
         //貌似没有卵用,将所有activity加入链表队列中,有的activity需要销毁的时候反而不能销毁
         MyActivityManager.getInstance().addActivity(this);
-    }
-
-    private void initFragmentList() {
-        if (mFragmentList == null){
-            mFragmentList = new ArrayList<>();
-        }
-        mFragmentList.add(ScanFragment.newInstance("", ""));
-        mFragmentList.add(VideoFragment.newInstance(""));
-        mFragmentList.add(ControlFragment.newInstance("", ""));
-        mFragmentList.add(DetailFragment.newInstance("", ""));
     }
 
     public void click(View view){
