@@ -30,7 +30,6 @@ dependencies {
     compile 'com.dubsmash.volley:library:2.0.1'
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.robbypond:material-dialogs:1.0.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
     compile 'com.android.support:cardview-v7:24.2.1'
