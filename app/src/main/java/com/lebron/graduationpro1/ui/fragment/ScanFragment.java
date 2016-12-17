@@ -30,6 +30,7 @@ import com.lebron.graduationpro1.beans.LineChartTestData;
 import com.lebron.graduationpro1.interfaces.RequestFinishedListener;
 import com.lebron.graduationpro1.net.VolleyRequest;
 import com.lebron.graduationpro1.ui.activity.MainActivity;
+import com.lebron.graduationpro1.utils.AppLog;
 import com.lebron.graduationpro1.utils.ConstantValue;
 import com.lebron.graduationpro1.utils.ShowToast;
 import com.lebron.graduationpro1.view.MyMarkerView;
@@ -122,7 +123,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         }else {
             throw new IllegalArgumentException("The context must to be instanceof MainActivity");
         }
-        Log.i(TAG, "onAttach: 执行了");
+        AppLog.i(TAG, "onAttach: 执行了");
     }
 
     @Override
@@ -134,8 +135,8 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         }
         VolleyRequest volleyRequest = new VolleyRequest();
         volleyRequest.getJsonFromServer(ConstantValue.TESTURL, this);
-        Log.i(TAG, "onCreate: 执行了");
         mHandler = new MyHandler(this);
+        AppLog.i(TAG, "onCreate: 执行了");
     }
 
     @Override
@@ -144,6 +145,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         View view = inflater.inflate(R.layout.fragment_scan, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         initViewAndListener();
+        AppLog.i(TAG, "onCreateView: 执行了");
         return view;
     }
 
@@ -154,6 +156,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         //宽高为0
         Log.i("ScanFragment", "onActivityCreated：mLineChart.getWidth() = " + mLineChart.getWidth()
                 + ",mLineChart.getHeight() = " + mLineChart.getHeight());
+        AppLog.i(TAG, "onActivityCreated: 执行了");
     }
 
     @Override
@@ -162,6 +165,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         //宽高为0
         Log.i("ScanFragment", "onStart：mLineChart.getWidth() = " + mLineChart.getWidth()
                 + ",mLineChart.getHeight() = " + mLineChart.getHeight());
+        AppLog.i(TAG, "onStart: 执行了");
     }
 
     @Override
@@ -170,6 +174,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         //宽高为0
         Log.i("ScanFragment", "onResume：mLineChart.getWidth() = " + mLineChart.getWidth()
                 + ",mLineChart.getHeight() = " + mLineChart.getHeight());
+        AppLog.i(TAG, "onResume: 执行了");
     }
     //在onResume()方法之后,Fragment才是active的状态,所以mLineChart的宽和高只有在onResume()之后才有值
     @Override
@@ -178,7 +183,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         //宽高不为0
         Log.i("ScanFragment", "onPause：mLineChart.getWidth() = " + mLineChart.getWidth()
                 + ",mLineChart.getHeight() = " + mLineChart.getHeight());
-
+        AppLog.i(TAG, "onPause: 执行了");
     }
 
     @Override
@@ -187,7 +192,31 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         //宽高不为0
         Log.i("ScanFragment", "onStop：mLineChart.getWidth() = " + mLineChart.getWidth()
                 + ",mLineChart.getHeight() = " + mLineChart.getHeight());
+        AppLog.i(TAG, "onStop: 执行了");
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //宽高不为0
+        Log.i("ScanFragment", "onDestroyView：mLineChart.getWidth() = " + mLineChart.getWidth()
+                + ",mLineChart.getHeight() = " + mLineChart.getHeight());
+        mUnbinder.unbind();
+        AppLog.i(TAG, "onDestroyView: 执行了");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AppLog.i(TAG, "onDestroy: 执行了");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        AppLog.i(TAG, "onDetach: 执行了");
+    }
+
 
     /**
      * 手动刷新数据,下拉刷新和点击折线图有事件冲突,这样也可以
@@ -406,21 +435,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         dataSet.setDrawValues(false);
         return dataSet;
     }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        //宽高不为0
-        Log.i("ScanFragment", "onDestroyView：mLineChart.getWidth() = " + mLineChart.getWidth()
-                + ",mLineChart.getHeight() = " + mLineChart.getHeight());
-        mUnbinder.unbind();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
 
     public void saveLineChartToSDCard(){
         Date date = new Date(System.currentTimeMillis());

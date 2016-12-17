@@ -25,6 +25,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.AppApplication;
 import com.lebron.graduationpro1.ui.activity.MainActivity;
+import com.lebron.graduationpro1.utils.AppLog;
 import com.lebron.graduationpro1.utils.NetStatusUtils;
 
 import java.io.IOException;
@@ -108,7 +109,7 @@ public class VideoFragment extends Fragment {
         }else {
             throw new IllegalArgumentException("The context must to be instanceof MainActivity");
         }
-        Log.i(TAG, "onAttach: 执行了");
+        AppLog.i(TAG, "onAttach: 执行了");
     }
 
     @Override
@@ -119,6 +120,7 @@ public class VideoFragment extends Fragment {
             mVideoUrl = "http://" + "192.168.1.100" + ":8080/?action=snapshot";
         }
         mMyHandler = new MyHandler(this);
+        AppLog.i(TAG, "onCreate: 执行了");
     }
 
     @Override
@@ -129,6 +131,7 @@ public class VideoFragment extends Fragment {
         mWidth = mMainActivity.getWindowManager().getDefaultDisplay().getWidth();
         mHeight = mMainActivity.getWindowManager().getDefaultDisplay().getHeight();
         Log.i(TAG, "onCreateView: mWidth = " + mWidth + ", mHeight = " + mHeight);
+        AppLog.i(TAG, "onCreateView: 执行了");
         return view;
     }
 
@@ -136,17 +139,50 @@ public class VideoFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initSurfaceView();
+        AppLog.i(TAG, "onActivityCreated: 执行了");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        AppLog.i(TAG, "onStart: 执行了");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AppLog.i(TAG, "onResume: 执行了");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AppLog.i(TAG, "onPause: 执行了");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        AppLog.i(TAG, "onStop: 执行了");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        AppLog.i(TAG, "onDestroyView: 执行了");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AppLog.i(TAG, "onDestroy: 执行了");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        AppLog.i(TAG, "onDetach: 执行了");
     }
 
     /**
