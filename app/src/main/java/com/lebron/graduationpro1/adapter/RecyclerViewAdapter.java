@@ -56,7 +56,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        if (mList != null) {
+            return mList.size();
+        } else {
+            throw new NullPointerException("please init mList<HeatInfo>!");
+        }
     }
 
     /**
@@ -78,6 +82,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (mListener != null) {
             int position = mRecyclerView.getChildAdapterPosition(v);
             mListener.childClick(v, position, mList.get(position));
+        }
+    }
+    /**
+     * 将list中position位置的数据移除后，更新Ui
+     * @param position 对应item的位置
+     */
+    public void removeData(int position) {
+        if (mList != null) {
+            mList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    /**
+     * 在position位置插入数据data，然后更新UI
+     * @param position 对应item的位置
+     * @param data 加入的数据model
+     */
+    public void add(int position, HeatInfo data){
+        if (mList != null) {
+            mList.add(position, data);
+            notifyItemInserted(position);
         }
     }
 
@@ -103,15 +129,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
         void setData(final int position) {
-            tvAverageTemp.setText(mList.get(position).getAverageTemp());
-            ivShare.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.childClick(v, position, mList.get(position));
+            if (mList != null) {
+                tvAverageTemp.setText(mList.get(position).getAverageTemp());
+                tvMaxTemp.setText(mList.get(position).getMaxTemp());
+                tvMinTemp.setText(mList.get(position).getMinTemp());
+                tvAverageRate.setText(mList.get(position).getAverageRate());
+                tvMaxRate.setText(mList.get(position).getMaxRate());
+                tvMinTate.setText(mList.get(position).getMinRate());
+                tvDate.setText(mList.get(position).getCurrentTime());
+                /**
+                 * 分享按键的点击事件，将结果回调到Fragment中进行处理
+                 */
+                ivShare.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mListener != null) {
+                            mListener.childClick(v, position, mList.get(position));
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                throw new NullPointerException("please init mList<HeatInfo>!");
+            }
         }
     }
 

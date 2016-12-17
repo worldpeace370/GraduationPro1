@@ -26,6 +26,11 @@ public class HeatInfo {
     private String mThresholdTopRate;
     private String mThresholdBottomRate;
 
+    /**
+     * 服务器计算上面那些值，并存储的时间点
+     */
+    private String mCurrentTime;
+
     public  HeatInfo() {
 
     }
@@ -108,5 +113,13 @@ public class HeatInfo {
 
     public void setThresholdBottomRate(String thresholdBottomRate) {
         mThresholdBottomRate = thresholdBottomRate;
+    }
+
+    public String getCurrentTime() {
+        return mCurrentTime;
+    }
+
+    public void setCurrentTime(String currentTime) {
+        mCurrentTime = currentTime;
     }
 }
