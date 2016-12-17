@@ -2,14 +2,15 @@ package com.lebron.graduationpro1.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.ui.activity.MainActivity;
+import com.lebron.graduationpro1.utils.AppLog;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -20,15 +21,12 @@ import butterknife.Unbinder;
  * create an instance of this fragment.
  */
 public class DetailFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
+    private static final String ARG_PARAM = "param";
+    private String mParam;
     private MainActivity mMainActivity;
     private String TAG = "DetailFragment";
     private Unbinder mBind;
+    private View mRootView;
 
     public DetailFragment() {
     }
@@ -36,15 +34,13 @@ public class DetailFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param param Parameter 2.
      * @return A new instance of fragment DetailFragment.
      */
-    public static DetailFragment newInstance(String param1, String param2) {
+    public static DetailFragment newInstance(String param) {
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM, param);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,40 +53,76 @@ public class DetailFragment extends Fragment {
         }else {
             throw new IllegalArgumentException("The context must to be instanceof MainActivity");
         }
-        Log.i(TAG, "onAttach: 执行了");
+        AppLog.i(TAG, "onAttach: 执行了");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mParam = getArguments().getString(ARG_PARAM);
         }
+        AppLog.i(TAG, "onCreate: 执行了");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_detail, container, false);
-        mBind = ButterKnife.bind(this, view);
-        return view;
+        if (mRootView == null) {
+            mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
+            mBind = ButterKnife.bind(this, mRootView);
+        }
+        AppLog.i(TAG, "onCreateView: 执行了");
+        return mRootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        AppLog.i(TAG, "onActivityCreated: 执行了");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        AppLog.i(TAG, "onStart: 执行了");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AppLog.i(TAG, "onResume: 执行了");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AppLog.i(TAG, "onPause: 执行了");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        AppLog.i(TAG, "onStop: 执行了");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
+        AppLog.i(TAG, "onDestroyView: 执行了");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        AppLog.i(TAG, "onDestroyView: 执行了");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        AppLog.i(TAG, "onDestroyView: 执行了");
     }
 
 }

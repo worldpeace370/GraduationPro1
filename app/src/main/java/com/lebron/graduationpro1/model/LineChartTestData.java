@@ -1,4 +1,4 @@
-package com.lebron.graduationpro1.beans;
+package com.lebron.graduationpro1.model;
 
 /**
  * Created by lebron on 16-11-12.
