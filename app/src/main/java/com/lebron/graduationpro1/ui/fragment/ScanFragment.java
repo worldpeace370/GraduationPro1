@@ -26,7 +26,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.lebron.graduationpro1.R;
-import com.lebron.graduationpro1.beans.LineChartTestData;
+import com.lebron.graduationpro1.model.LineChartTestData;
 import com.lebron.graduationpro1.interfaces.RequestFinishedListener;
 import com.lebron.graduationpro1.net.VolleyRequest;
 import com.lebron.graduationpro1.ui.activity.MainActivity;

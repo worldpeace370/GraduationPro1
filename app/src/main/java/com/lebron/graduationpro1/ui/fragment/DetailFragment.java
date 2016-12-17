@@ -20,31 +20,24 @@ import butterknife.Unbinder;
  * create an instance of this fragment.
  */
 public class DetailFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
+    private static final String ARG_PARAM = "param";
+    private String mParam;
     private MainActivity mMainActivity;
     private String TAG = "DetailFragment";
     private Unbinder mBind;
-
     public DetailFragment() {
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param param Parameter 2.
      * @return A new instance of fragment DetailFragment.
      */
-    public static DetailFragment newInstance(String param1, String param2) {
+    public static DetailFragment newInstance(String param) {
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM, param);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,8 +57,7 @@ public class DetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mParam = getArguments().getString(ARG_PARAM);
         }
     }
 

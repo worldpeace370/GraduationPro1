@@ -37,4 +37,8 @@
     <string name="select_node">选择节点</string>
     <string name="save_image">保存图像</string>
     <string name="refresh_data">刷新数据</string>
+    <string name="loading_text">努力加载中……</string>
+    <string name="label_average_temp">平均值：</string>
+    <string name="label_max_temp">最大值：</string>
+    <string name="label_min_temp">最小值：</string>
 </resources>
