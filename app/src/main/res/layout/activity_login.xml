@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.lebron.graduationpro1.ui.activity.LoginActivity">
+    <com.lebron.graduationpro1.view.ClearEditText
+        android:id="@+id/editText_userName"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:drawablePadding="20dp"
+        android:hint="@string/user_name_hint"
+        android:maxLines="1">
+
+    </com.lebron.graduationpro1.view.ClearEditText>
+    <com.lebron.graduationpro1.view.ClearEditText
+        android:id="@+id/editText_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:drawablePadding="20dp"
+        android:background="@color/white"
+        android:textCursorDrawable="@drawable/cursor"
+        android:drawableLeft="@mipmap/login_pwd_icon"
+        android:paddingLeft="20dp"
+        android:paddingRight="5dp"
+        android:hint="密码"
+        android:inputType="textPassword"
+        android:maxLines="1"/>
+    <View android:layout_width="match_parent"
+        android:background="@color/colorGray"
+        android:layout_height="1px"/>
+</LinearLayout>

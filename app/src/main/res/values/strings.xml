@@ -41,4 +41,5 @@
     <string name="label_average_temp">平均值：</string>
     <string name="label_max_temp">最大值：</string>
     <string name="label_min_temp">最小值：</string>
+    <string name="user_name_hint">用户名</string>
 </resources>
