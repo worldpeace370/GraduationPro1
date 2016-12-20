@@ -41,4 +41,9 @@
     <string name="label_average_temp">平均值：</string>
     <string name="label_max_temp">最大值：</string>
     <string name="label_min_temp">最小值：</string>
+    <string name="user_name_hint">用户名</string>
+    <string name="user_pwd_hint">密码</string>
+    <string name="login_log_btn_text">登录</string>
+    <string name="login_forget_pwd">忘记密码？</string>
+    <string name="login_reg_btn_text">注册</string>
 </resources>
