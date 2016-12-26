@@ -2,19 +2,19 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_enabled="false"><shape>
-            <gradient android:angle="270" android:endColor="@color/yellow" android:startColor="@color/yellow" />
+            <gradient android:angle="270" android:endColor="@color/color_std_disenable" android:startColor="@color/color_std_disenable" />
 
-            <corners android:radius="@dimen/commen_radius" />
+            <corners android:radius="@dimen/common_radius" />
         </shape></item>
     <item android:state_pressed="true"><shape>
-            <gradient android:angle="270" android:endColor="@color/holo_orange_light" android:startColor="@color/holo_orange_light" />
+            <gradient android:angle="270" android:endColor="@color/color_std_yellow_pressed" android:startColor="@color/color_std_yellow_pressed" />
 
-            <corners android:radius="@dimen/commen_radius" />
+            <corners android:radius="@dimen/common_radius" />
         </shape></item>
     <item><shape>
-            <gradient android:angle="270" android:endColor="@color/yellow" android:startColor="@color/yellow" />
+            <gradient android:angle="270" android:endColor="@color/color_std_yellow" android:startColor="@color/color_std_yellow" />
 
-            <corners android:radius="@dimen/commen_radius" />
+            <corners android:radius="@dimen/common_radius" />
         </shape></item>
 
 </selector>
