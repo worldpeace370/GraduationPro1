@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.lebron.graduationpro1.ui.fragment.ControlFragment">
+
+        <include android:id="@+id/toolbar"
+            layout="@layout/layout_toolbar"/>
+
         <TextView
             android:layout_marginTop="30dp"
             android:layout_width="match_parent"

@@ -16,6 +16,7 @@ import com.lebron.graduationpro1.R;
  */
 public class AddPopWindow extends PopupWindow {
 	private OnPopupWindowItemClickListener mListener;
+	private final int mScreenWidth;
 
 	public void setOnPopupWindowItemClickListener(OnPopupWindowItemClickListener listener) {
 		mListener = listener;
@@ -25,12 +26,11 @@ public class AddPopWindow extends PopupWindow {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View contentView = inflater.inflate(R.layout.add_popup_dialog, null);
-		int h = context.getWindowManager().getDefaultDisplay().getHeight();
-		int w = context.getWindowManager().getDefaultDisplay().getWidth();
+		mScreenWidth = context.getWindowManager().getDefaultDisplay().getWidth();
 		//设置AddPopWindow的View
 		this.setContentView(contentView);
 		//设置AddPopWindow的弹出窗体的宽
-		this.setWidth(w / 2 - 70);
+		this.setWidth(mScreenWidth / 2 - 70);
 		//设置AddPopWindow的弹出窗体的高
 		this.setHeight(LayoutParams.WRAP_CONTENT);
 		//设置AddPopWindow的弹出窗体的可点击
@@ -87,7 +87,7 @@ public class AddPopWindow extends PopupWindow {
 	public void showPopupWindow(View parent) {
 		if (!this.isShowing()) {
 			//以下拉方式显示PopupWindow
-			this.showAsDropDown(parent, parent.getLayoutParams().width / 2, 18);
+			this.showAsDropDown(parent, mScreenWidth - getWidth(), 0);
 		} else {
 			this.dismiss();
 		}

@@ -1,6 +1,7 @@
 package com.lebron.graduationpro1.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,10 +12,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -32,9 +33,11 @@ import com.lebron.graduationpro1.interfaces.RequestFinishedListener;
 import com.lebron.graduationpro1.model.LineChartTestData;
 import com.lebron.graduationpro1.net.VolleyRequest;
 import com.lebron.graduationpro1.ui.activity.MainActivity;
+import com.lebron.graduationpro1.ui.activity.NodeChoiceActivity;
 import com.lebron.graduationpro1.utils.AppLog;
 import com.lebron.graduationpro1.utils.ConstantValue;
 import com.lebron.graduationpro1.utils.ShowToast;
+import com.lebron.graduationpro1.view.AddPopWindow;
 import com.lebron.graduationpro1.view.MyMarkerView;
 
 import java.lang.ref.WeakReference;
@@ -47,7 +50,6 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * 概览界面
@@ -77,9 +79,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mRefreshLayout;
 
-    private CircleImageView mImageView;
-    private TextView mTextViewTitle;
-    private ImageView mImageViewAddMenu;
     //节点名字,放置到mTextViewTitle中
     private String mNodeName = "";
 
@@ -113,48 +112,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     public ScanFragment() {
 
     }
-
-    //    case R.id.user_head:
-    //            //打开抽屉布局
-    //            mDragLayout.openDrag();
-    //    break;
-    //    case R.id.add_menu:
-    //            //弹出PopWindow,选择新节点or保存当前节点图到内存卡
-    //            //                showPopWindowAndDealEvent();
-    //            break;
-    //    /**
-    //     * 弹出PopupWindow,然后执行对应的操作
-    //     */
-    //    private void showPopWindowAndDealEvent() {
-    //        AddPopWindow addPopWindow = new AddPopWindow(this);
-    //        addPopWindow.showPopupWindow(mImageViewAddMenu);
-    //        addPopWindow.setOnPopupWindowItemClickListener(new AddPopWindow.OnPopupWindowItemClickListener() {
-    //            @Override
-    //            public void onItemClick(int id) {
-    //                if (id == R.id.select_new_node) {
-    //                    startNodeChoiceActivity();
-    //                } else if (id == R.id.save_image_sd_card) {
-    //                    //保存折线图到SD卡
-    //                    ScanFragment fragment = (ScanFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
-    //                    fragment.saveLineChartToSDCard();
-    //                } else if (id == R.id.refresh_data) {
-    //                    ScanFragment fragment = (ScanFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
-    //                    fragment.refreshData();
-    //                }
-    //            }
-    //        });
-    //    }
-    //
-    //    /**
-    //     * 跳转到节点选择的Activity中去
-    //     */
-    //    private void startNodeChoiceActivity() {
-    //        //跳转到供暖节点选择Activity
-    //        Intent intent = new Intent(MainActivity.this, NodeChoiceActivity.class);
-    //        startActivityForResult(intent, ConstantValue.NODE_CHOICE_REQUEST_CODE);
-    //        //Activity启动动画
-    //        MainActivity.this.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
-    //    }
 
     //    //得到选择的节点,设置到mTextViewTitle中
     //    @Override
@@ -196,11 +153,11 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
             mUnbinder = ButterKnife.bind(this, mRootView);
             initViewAndListener();
         }
-//        // 此段代码有待研究
-//        ViewGroup parent = ((ViewGroup) mRootView.getParent());
-//        if (parent != null) {
-//            parent.removeView(mRootView);
-//        }
+        //        // 此段代码有待研究
+        //        ViewGroup parent = ((ViewGroup) mRootView.getParent());
+        //        if (parent != null) {
+        //            parent.removeView(mRootView);
+        //        }
         AppLog.i(TAG, "onCreateView: 执行了");
         return mRootView;
     }
@@ -316,6 +273,49 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
 
     private void initToolBar() {
         mToolbar.setTitle("当前节点");
+        mToolbar.setTitleMargin(10, 30, 0, 10);
+        mToolbar.inflateMenu(R.menu.menu_scan_fragment);
+        mToolbar.setPadding(20, 30, 10, 12);
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_add:
+                        showPopWindowAndDealEvent();
+                        break;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void showPopWindowAndDealEvent() {
+        AddPopWindow addPopWindow = new AddPopWindow(mMainActivity);
+        addPopWindow.showPopupWindow(mToolbar);
+        addPopWindow.setOnPopupWindowItemClickListener(new AddPopWindow.OnPopupWindowItemClickListener() {
+            @Override
+            public void onItemClick(int id) {
+                if (id == R.id.select_new_node) {
+                    startNodeChoiceActivity();
+                } else if (id == R.id.save_image_sd_card) {
+                    //保存折线图到SD卡
+                    saveLineChartToSDCard();
+                } else if (id == R.id.refresh_data) {
+                    refreshData();
+                }
+            }
+        });
+    }
+
+    /**
+     * 跳转到节点选择的Activity中去
+     */
+    private void startNodeChoiceActivity() {
+        //跳转到供暖节点选择Activity
+        Intent intent = new Intent(mMainActivity, NodeChoiceActivity.class);
+        startActivityForResult(intent, ConstantValue.NODE_CHOICE_REQUEST_CODE);
+        //Activity启动动画
+        mMainActivity.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
     }
 
     private void initViewAndListener() {

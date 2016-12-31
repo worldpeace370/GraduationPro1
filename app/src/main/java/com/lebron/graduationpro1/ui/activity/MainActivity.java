@@ -1,5 +1,6 @@
 package com.lebron.graduationpro1.ui.activity;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.CycleInterpolator;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -27,6 +29,7 @@ import com.lebron.graduationpro1.view.MainLinearLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
     private static final String TAG = "MainActivity";
@@ -36,6 +39,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     MainLinearLayout mMainLinearLayout;
     @BindView(R.id.radioGroup)
     RadioGroup mRadioGroup;
+    @BindView(R.id.image_head_left)
+    CircleImageView mImageHeadLeft;
 
     private final int TAB_SCAN = R.id.scan;
     private final int TAB_VIDEO = R.id.video;
@@ -211,22 +216,22 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         mDragLayout.setDragStatusChangedListener(new DragLayout.OnDragStatusChangedListener() {
             @Override
             public void onClosed() {
-                //关闭抽屉的时候让头像晃动
-//                ObjectAnimator animator = ObjectAnimator.ofFloat(mImageView, "translationX", 12.0f);
-//                animator.setInterpolator(new CycleInterpolator(4.0f));
-//                animator.setDuration(500);
-//                animator.start();
+
             }
 
             @Override
             public void onOpened() {
-                //do nothing
+                //打开抽屉的时候让头像晃动
+                ObjectAnimator animator = ObjectAnimator.ofFloat(mImageHeadLeft, "translationX", 12.0f);
+                animator.setInterpolator(new CycleInterpolator(4.0f));
+                animator.setDuration(500);
+                animator.start();
             }
 
             @Override
             public void onDragging(float percent) {
                 //设置在拖拽过程中的头像透明度渐变效果
-//                mImageView.setAlpha(1 - percent);
+                mImageHeadLeft.setAlpha(percent);
             }
         });
         mMainLinearLayout.setDragLayout(mDragLayout);
