@@ -16,10 +16,10 @@ import com.lebron.mvp.presenter.Presenter;
  * This view is example of how a view should control it's presenter.
  * You can inherit from this class or copy/paste this class's code
  * to your own view' implementation.
+ * Created by wuxiangkun on 2017/1/8.
+ * Contact way wuxiangkun2015@163.com
  *
  * @param <P> a type of presenter to return with {@link #getPresenter}.
- *            Created by wuxiangkun on 2017/1/8.
- *            Contact way wuxiangkun2015@163.com
  */
 
 public class LebronMvpLayout<P extends Presenter> extends FrameLayout implements ViewWithPresenter<P> {

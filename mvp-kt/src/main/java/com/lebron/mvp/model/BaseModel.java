@@ -6,6 +6,8 @@ import java.util.HashMap;
 /**
  * Created by wuxiangkun on 2017/1/8.
  * Contact way wuxiangkun2015@163.com
+ *
+ * @param <T> a type of callback to get data from net.
  */
 
 public abstract class BaseModel<T> {

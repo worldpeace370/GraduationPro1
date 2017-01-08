@@ -16,10 +16,11 @@ import com.lebron.mvp.presenter.Presenter;
  * You can inherit from this class or copy/paste this class's code
  * to your own view' implementation.Abstract class implements interface
  * class can not implements it's method.(抽象类实现接口的时候可以不去实现接口的方法)
+ * <p>
+ * Created by wuxiangkun on 2017/1/2.
+ * Contact way wuxiangkun2015@163.com
  *
  * @param <P> a type of presenter to return with {@link #getPresenter}.
- *            Created by wuxiangkun on 2017/1/2.
- *            Contact way wuxiangkun2015@163.com
  */
 
 public abstract class LebronMvpFragment<P extends Presenter> extends Fragment implements ViewWithPresenter<P> {
