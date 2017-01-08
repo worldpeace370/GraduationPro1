@@ -15,12 +15,12 @@ public interface ViewWithPresenter<P extends Presenter> {
     PresenterFactory<P> getPresenterFactory();
 
     /**
-     * Sets a presenter factory.
+     * Sets a presenter presenterFactory.
      * Call this method before onCreate/onFinishInflate to override default
-     * {@link com.lebron.mvp.factory.ReflectionPresenterFactory} presenter factory.
+     * {@link com.lebron.mvp.factory.ReflectionPresenterFactory} presenter presenterFactory.
      * Use this method for presenter dependency injection.
      */
-    void setPresenterFactory(PresenterFactory<P> factory);
+    void setPresenterFactory(PresenterFactory<P> presenterFactory);
 
     P getPresenter();
 }

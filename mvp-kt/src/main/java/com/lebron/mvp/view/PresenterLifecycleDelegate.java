@@ -1,5 +1,6 @@
 package com.lebron.mvp.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -90,5 +91,82 @@ public class PresenterLifecycleDelegate<P extends Presenter> {
             bundle.putString(PRESENTER_ID_KEY, PresenterStorage.INSTANCE.getId(presenter));
         }
         return bundle;
+    }
+
+    /**
+     * {@link android.app.Activity#onCreate(Bundle)}, {@link android.app.Fragment#onCreate(Bundle)}, {@link android.view.View#onRestoreInstanceState(Parcelable)}.
+     */
+    public void onRestoreInstanceState(Bundle presenterState) {
+        this.bundle = ParcelFn.unmarshall(ParcelFn.marshall(presenterState));
+    }
+
+    public void onTakeView(Object view) {
+        getPresenter();
+        if (presenter != null) {
+            presenter.takeView(view);
+        }
+    }
+
+    /**
+     * {@link android.app.Activity#onDestroy()}, {@link android.app.Fragment#onDestroy()}, {@link android.view.View#onAttachedToWindow()}
+     */
+    public void onDropView() {
+        getPresenter();
+        if (presenter != null) {
+            presenter.dropView();
+        }
+    }
+
+    /**
+     * {@link android.app.Activity#onResume()}, {@link android.app.Fragment#onResume()}
+     */
+    public void onResume() {
+        getPresenter();
+        if (presenter != null) {
+            presenter.resume();
+        }
+    }
+
+    /**
+     * {@link android.app.Activity#onPause()}, {@link android.app.Fragment#onPause()}, {@link android.view.View#onDetachedFromWindow()}
+     */
+    public void onPause() {
+        if (presenter != null) {
+            presenter.pause();
+        }
+    }
+
+    /**
+     * {@link android.app.Activity#onPause()}, {@link android.app.Fragment#onPause()}, {@link android.view.View#onDetachedFromWindow()}
+     */
+    public void onDestroy(boolean isFinish) {
+        if (presenter != null) {
+            onDropView();
+            if (isFinish) {
+                presenter.destroy();
+                presenter = null;
+            }
+        }
+    }
+
+    public void onNewIntent(Intent intent) {
+        if (presenter != null) {
+            presenter.newIntent(intent);
+        }
+    }
+
+
+    public void onVisible() {
+        getPresenter();
+        if (presenter != null) {
+            presenter.onVisible();
+        }
+    }
+
+    public void onInVisible() {
+        getPresenter();
+        if (presenter != null) {
+            presenter.onInVisible();
+        }
     }
 }
