@@ -14,11 +14,13 @@ import com.lebron.mvp.presenter.Presenter;
  * You can inherit from this class or copy/paste this class's code
  * to your own view' implementation.Abstract class implements interface
  * class can not implements it's method.(抽象类实现接口的时候可以不去实现接口的方法)
- * Created by wuxiangkun on 2017/1/2.
- * Contact way wuxiangkun2015@163.com
+ *
+ * @param <P> a type of presenter to return with {@link #getPresenter}.
+ *            Created by wuxiangkun on 2017/1/2.
+ *            Contact way wuxiangkun2015@163.com
  */
 
-public abstract class LebronMvpActivity<P extends Presenter> extends AppCompatActivity implements ViewWithPresenter<P>{
+public abstract class LebronMvpActivity<P extends Presenter> extends AppCompatActivity implements ViewWithPresenter<P> {
     private static final String PRESENTER_STATE_KEY = "presenter_state";
     private PresenterLifecycleDelegate<P> mPresenterDelegate =
             new PresenterLifecycleDelegate<>(ReflectionPresenterFactory.<P>fromViewClass(getClass())); // getClass()为运行时实际的Fragment实例class
