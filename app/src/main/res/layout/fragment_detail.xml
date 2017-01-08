@@ -6,9 +6,13 @@
     android:gravity="center"
     tools:context="com.lebron.graduationpro1.ui.fragment.DetailFragment">
 
+    <include android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar"/>
+
     <RelativeLayout android:id="@+id/layout_loading"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/tabRelease"
         android:layout_gravity="center">
         <ImageView
             android:id="@+id/iv_loading"
@@ -24,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_loading"
+            android:layout_centerInParent="true"
             android:text="@string/loading_text"
             android:textColor="@color/text_color_grey"
             android:textSize="15sp"/>

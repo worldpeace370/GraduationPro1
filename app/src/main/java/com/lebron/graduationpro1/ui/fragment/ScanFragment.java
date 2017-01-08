@@ -1,6 +1,7 @@
 package com.lebron.graduationpro1.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,8 +9,10 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -26,13 +29,15 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.lebron.graduationpro1.R;
-import com.lebron.graduationpro1.model.LineChartTestData;
 import com.lebron.graduationpro1.interfaces.RequestFinishedListener;
+import com.lebron.graduationpro1.model.LineChartTestData;
 import com.lebron.graduationpro1.net.VolleyRequest;
 import com.lebron.graduationpro1.ui.activity.MainActivity;
+import com.lebron.graduationpro1.ui.activity.NodeChoiceActivity;
 import com.lebron.graduationpro1.utils.AppLog;
 import com.lebron.graduationpro1.utils.ConstantValue;
 import com.lebron.graduationpro1.utils.ShowToast;
+import com.lebron.graduationpro1.view.AddPopWindow;
 import com.lebron.graduationpro1.view.MyMarkerView;
 
 import java.lang.ref.WeakReference;
@@ -47,12 +52,12 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link ScanFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 概览界面
  */
 public class ScanFragment extends Fragment implements RequestFinishedListener, SeekBar.OnSeekBarChangeListener
-, View.OnClickListener{
+        , View.OnClickListener {
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
     @BindView(R.id.latest_day)
     Button mButtonDay;
     @BindView(R.id.latest_week)
@@ -73,18 +78,20 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     TextView mTextViewY;
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mRefreshLayout;
+
+    //节点名字,放置到mTextViewTitle中
+    private String mNodeName = "";
+
     private Unbinder mUnbinder;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private String mParam1;
-    private String mParam2;
     private static final String TAG = "ScanFragment";
     private MainActivity mMainActivity;
     private MyHandler mHandler;
+    private View mRootView;
 
-    private static class MyHandler extends Handler{
+    private static class MyHandler extends Handler {
         WeakReference<ScanFragment> weakReference;
-        public MyHandler(ScanFragment fragment){
+
+        public MyHandler(ScanFragment fragment) {
             weakReference = new WeakReference<>(fragment);
         }
 
@@ -92,8 +99,8 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             ScanFragment fragment = weakReference.get();
-            if (fragment != null){//如果activity仍然在弱引用中,执行...
-                switch (msg.what){
+            if (fragment != null) {//如果activity仍然在弱引用中,执行...
+                switch (msg.what) {
                     case 0x01:
                         fragment.setEnabledRefreshAnim(false);
                         break;
@@ -106,21 +113,24 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
 
     }
 
-    public static ScanFragment newInstance(String param1, String param2) {
-        ScanFragment fragment = new ScanFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    //    //得到选择的节点,设置到mTextViewTitle中
+    //    @Override
+    //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    //        super.onActivityResult(requestCode, resultCode, data);
+    //        //获得 mNodeName
+    //        if (requestCode == ConstantValue.NODE_CHOICE_REQUEST_CODE && resultCode == ConstantValue.NODE_CHOICE_RESULT_CODE) {
+    //            if (data != null) {
+    //                mNodeName = data.getStringExtra("nodeName");
+    //                mTextViewTitle.setText(mNodeName);
+    //            }
+    //        }
+    //    }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof MainActivity){
+        if (context instanceof MainActivity) {
             mMainActivity = (MainActivity) getActivity();
-        }else {
+        } else {
             throw new IllegalArgumentException("The context must to be instanceof MainActivity");
         }
         AppLog.i(TAG, "onAttach: 执行了");
@@ -129,10 +139,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
         VolleyRequest volleyRequest = new VolleyRequest();
         volleyRequest.getJsonFromServer(ConstantValue.TESTURL, this);
         mHandler = new MyHandler(this);
@@ -142,11 +148,18 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_scan, container, false);
-        mUnbinder = ButterKnife.bind(this, view);
-        initViewAndListener();
+        if (mRootView == null) {
+            mRootView = inflater.inflate(R.layout.fragment_scan, container, false);
+            mUnbinder = ButterKnife.bind(this, mRootView);
+            initViewAndListener();
+        }
+        //        // 此段代码有待研究
+        //        ViewGroup parent = ((ViewGroup) mRootView.getParent());
+        //        if (parent != null) {
+        //            parent.removeView(mRootView);
+        //        }
         AppLog.i(TAG, "onCreateView: 执行了");
-        return view;
+        return mRootView;
     }
 
     @Override
@@ -176,6 +189,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
                 + ",mLineChart.getHeight() = " + mLineChart.getHeight());
         AppLog.i(TAG, "onResume: 执行了");
     }
+
     //在onResume()方法之后,Fragment才是active的状态,所以mLineChart的宽和高只有在onResume()之后才有值
     @Override
     public void onPause() {
@@ -221,7 +235,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     /**
      * 手动刷新数据,下拉刷新和点击折线图有事件冲突,这样也可以
      */
-    public void refreshData(){
+    public void refreshData() {
         mRefreshLayout.setRefreshing(true);
         //网络下载数据,耗时操作(下面是示例代码),数据下载完成,在回调接口中更新UI
         new Thread(new Runnable() {
@@ -231,7 +245,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }finally {
+                } finally {
                     Message message = Message.obtain();
                     message.what = 0x01;
                     mHandler.sendMessage(message);
@@ -242,21 +256,70 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
 
     /**
      * 设置是否停止刷新的动画操作
+     *
      * @param enabledRefresh true represents show animation; false stop showing animation
      */
-    private void setEnabledRefreshAnim(boolean enabledRefresh){
-        if (!enabledRefresh){
-            if (mRefreshLayout.isRefreshing()){
+    private void setEnabledRefreshAnim(boolean enabledRefresh) {
+        if (!enabledRefresh) {
+            if (mRefreshLayout.isRefreshing()) {
                 mRefreshLayout.setRefreshing(false);
             }
-        }else {
-            if (!mRefreshLayout.isRefreshing()){
+        } else {
+            if (!mRefreshLayout.isRefreshing()) {
                 mRefreshLayout.setRefreshing(true);
             }
         }
     }
 
+    private void initToolBar() {
+        mToolbar.setTitle("当前节点");
+        mToolbar.setTitleMargin(10, 30, 0, 10);
+        mToolbar.inflateMenu(R.menu.menu_scan_fragment);
+        mToolbar.setPadding(20, 30, 10, 12);
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_add:
+                        showPopWindowAndDealEvent();
+                        break;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void showPopWindowAndDealEvent() {
+        AddPopWindow addPopWindow = new AddPopWindow(mMainActivity);
+        addPopWindow.showPopupWindow(mToolbar);
+        addPopWindow.setOnPopupWindowItemClickListener(new AddPopWindow.OnPopupWindowItemClickListener() {
+            @Override
+            public void onItemClick(int id) {
+                if (id == R.id.select_new_node) {
+                    startNodeChoiceActivity();
+                } else if (id == R.id.save_image_sd_card) {
+                    //保存折线图到SD卡
+                    saveLineChartToSDCard();
+                } else if (id == R.id.refresh_data) {
+                    refreshData();
+                }
+            }
+        });
+    }
+
+    /**
+     * 跳转到节点选择的Activity中去
+     */
+    private void startNodeChoiceActivity() {
+        //跳转到供暖节点选择Activity
+        Intent intent = new Intent(mMainActivity, NodeChoiceActivity.class);
+        startActivityForResult(intent, ConstantValue.NODE_CHOICE_REQUEST_CODE);
+        //Activity启动动画
+        mMainActivity.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
+    }
+
     private void initViewAndListener() {
+        initToolBar();
         //原生下拉刷新控件
         mRefreshLayout.setColorSchemeResources(R.color.holo_blue_bright,
                 R.color.holo_green_light,
@@ -301,14 +364,14 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         ArrayList<LineDataSet> dataSetList = new ArrayList<>();
         dataSetList.add(initTemperatureLine(new ArrayList<LineChartTestData>()));
         dataSetList.add(initFlowLine(new ArrayList<LineChartTestData>()));
-        String xVals[] = new String[]{"0h","1h","2h","3h","4h","5h","6h","7h","8h","9h","10h","11h","12h"
-        , "13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h"};
+        String xVals[] = new String[]{"0h", "1h", "2h", "3h", "4h", "5h", "6h", "7h", "8h", "9h", "10h", "11h", "12h"
+                , "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"};
         LineData lineData = new LineData(xVals, dataSetList);
         mLineChart.setData(lineData);
         //X方向动画效果
         mLineChart.animateX(1500, Easing.EasingOption.EaseInOutQuart);
         //X,Y方向同时动画
-//        mLineChart.animateXY(3000, 3000);
+        //        mLineChart.animateXY(3000, 3000);
         mLineChart.invalidate();
     }
 
@@ -328,12 +391,12 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         leftAxis.setAxisMaxValue(100f);
         leftAxis.setDrawLimitLinesBehindData(true);
         //自定义格式的标签,显示温度等
-//        leftAxis.setValueFormatter(new YAxisValueFormatter() {
-//            @Override
-//            public String getFormattedValue(float value, YAxis yAxis) {
-//                return value + "℃";
-//            }
-//        });
+        //        leftAxis.setValueFormatter(new YAxisValueFormatter() {
+        //            @Override
+        //            public String getFormattedValue(float value, YAxis yAxis) {
+        //                return value + "℃";
+        //            }
+        //        });
         LimitLine limitLineWater = new LimitLine(70, "水温阈值");
         limitLineWater.setLineColor(Color.RED);
         limitLineWater.setLineWidth(1f);
@@ -341,7 +404,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         limitLineWater.setTextSize(12f);
         limitLineWater.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
         //设置虚线
-//        limitLineWater.enableDashedLine(6f, 10f, 0f);
+        //        limitLineWater.enableDashedLine(6f, 10f, 0f);
         leftAxis.addLimitLine(limitLineWater);
         LimitLine limitLineRotateSpeed = new LimitLine(40, "转速阈值");
         limitLineRotateSpeed.setLineColor(Color.GREEN);
@@ -350,7 +413,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         limitLineRotateSpeed.setTextSize(12f);
         limitLineRotateSpeed.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
         //设置虚线
-//        limitLineRotateSpeed.enableDashedLine(6f, 10f, 0f);
+        //        limitLineRotateSpeed.enableDashedLine(6f, 10f, 0f);
         leftAxis.addLimitLine(limitLineRotateSpeed);
         //X轴设置在底部
         XAxis xAxis = lineChart.getXAxis();
@@ -366,21 +429,22 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         //设置Legend,左下角的东西,可以是横线,方形
         Legend legend = lineChart.getLegend();
         legend.setForm(Legend.LegendForm.LINE);
-//        legend.setTextColor(Color.RED);
+        //        legend.setTextColor(Color.RED);
     }
 
     /**
      * 初始化水温折线
+     *
      * @param list 传入的数据,网络下载
      * @return 返回LineDataSet
      */
-    private LineDataSet initTemperatureLine(ArrayList<LineChartTestData> list){
+    private LineDataSet initTemperatureLine(ArrayList<LineChartTestData> list) {
         LineChartTestData[] datas = new LineChartTestData[24];
         for (int i = 0; i < datas.length; i++) {
             datas[i] = new LineChartTestData(i, 80 + (int) (Math.random() * 10));
         }
         List<Entry> entries = new ArrayList<>();
-        for (LineChartTestData data:datas) {
+        for (LineChartTestData data : datas) {
             entries.add(new Entry(data.getyValue(), data.getxValue()));//左:Y值,右:X值
         }
 
@@ -405,16 +469,17 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
 
     /**
      * 初始化转速折线
+     *
      * @param list 传入的数据,网络下载
      * @return 返回LineDataSet
      */
-    private LineDataSet initFlowLine(ArrayList<LineChartTestData> list){
+    private LineDataSet initFlowLine(ArrayList<LineChartTestData> list) {
         LineChartTestData[] datas = new LineChartTestData[24];
         for (int i = 0; i < datas.length; i++) {
             datas[i] = new LineChartTestData(i, 50 + (int) (Math.random() * 10));
         }
         List<Entry> entries = new ArrayList<>();
-        for (LineChartTestData data:datas) {
+        for (LineChartTestData data : datas) {
             entries.add(new Entry(data.getyValue(), data.getxValue()));//左:Y值,右:X值
         }
 
@@ -436,17 +501,17 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         return dataSet;
     }
 
-    public void saveLineChartToSDCard(){
+    public void saveLineChartToSDCard() {
         Date date = new Date(System.currentTimeMillis());
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
         String dateString = format.format(date);
-        if (mLineChart != null){
-            if (mLineChart.saveToGallery("lineChart-" + dateString + ".jpg", 100)){
+        if (mLineChart != null) {
+            if (mLineChart.saveToGallery("lineChart-" + dateString + ".jpg", 100)) {
                 ShowToast.shortTime("保存成功!");
-            }else {
+            } else {
                 ShowToast.shortTime("保存失败!");
             }
-        }else {
+        } else {
             Log.i("ScanFragment", "saveLineChartToSDCard: mLineChart is null");
             ShowToast.shortTime("mLineChart is null!");
         }
@@ -487,7 +552,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id){
+        switch (id) {
             case R.id.latest_day:
                 //UI变化
                 ShowToast.shortTime("近一天");

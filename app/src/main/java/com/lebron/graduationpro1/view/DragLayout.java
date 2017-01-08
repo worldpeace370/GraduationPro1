@@ -12,7 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-/**自定义抽屉布局,侧滑面板.
+/**
+ * 自定义抽屉布局,侧滑面板.
  * 基于ViewDragHelper,google2013年io大会提出的,解决界面控件拖拽问题
  * action_down,action_up,action_move
  * 应用场景:扩展主面板功能
@@ -37,10 +38,11 @@ public class DragLayout extends FrameLayout {
     //初始状态
     private Status mStatus = Status.Closed;
     private OnDragStatusChangedListener mDragStatusChangedListener;
+
     /**
      * 需要监听的状态枚举
      */
-    public enum Status{
+    public enum Status {
         Closed, Opened, Dragging
     }
 
@@ -55,9 +57,11 @@ public class DragLayout extends FrameLayout {
     /**
      * 定义回调接口,用于事件监听
      */
-    public interface OnDragStatusChangedListener{
+    public interface OnDragStatusChangedListener {
         void onClosed();
+
         void onOpened();
+
         void onDragging(float percent);
     }
 
@@ -105,6 +109,7 @@ public class DragLayout extends FrameLayout {
                 super.onViewCaptured(capturedChild, activePointerId);
                 Log.i(TAG, "onViewCaptured: " + activePointerId);
             }
+
             //水平位置至多可移动的范围,mRange值为屏幕宽带的0.6倍
             //不对拖拽进行真正的生效,仅仅是决定了动画执行速度
             @Override
@@ -124,7 +129,7 @@ public class DragLayout extends FrameLayout {
             @Override
             public int clampViewPositionHorizontal(View child, int left, int dx) {
                 Log.i(TAG, "clampViewPositionHorizontal: " + left);
-                if (child == mMainContent){
+                if (child == mMainContent) {
                     left = fixLeft(left);
                 }
                 return left;
@@ -137,9 +142,9 @@ public class DragLayout extends FrameLayout {
              * @return 二选一的值
              */
             private int fixLeft(int left) {
-                if (left < 0){
+                if (left < 0) {
                     return 0;
-                }else if (left > mRange){//如果超过mRange,最大到mRange
+                } else if (left > mRange) {//如果超过mRange,最大到mRange
                     return mRange;
                 }
                 return left;
@@ -176,7 +181,7 @@ public class DragLayout extends FrameLayout {
                 mLeftContent.setVisibility(View.VISIBLE);
                 //将拖拽左面板的动作传递给主面板
                 int newLeft = left;
-                if (changedView == mLeftContent){
+                if (changedView == mLeftContent) {
                     newLeft = mMainContent.getLeft() + dx;
                     newLeft = fixLeft(newLeft);
                     //即让左面板始终布局在原来的位置,为了控制左面板不动(强制放回)
@@ -199,11 +204,11 @@ public class DragLayout extends FrameLayout {
             @Override
             public void onViewReleased(View releasedChild, float xvel, float yvel) {
                 super.onViewReleased(releasedChild, xvel, yvel);
-                if (xvel > 0){
+                if (xvel > 0) {
                     openDrag();
-                }else if (xvel == 0 && releasedChild.getLeft() > mRange / 2.0f){
+                } else if (xvel == 0 && releasedChild.getLeft() > mRange / 2.0f) {
                     openDrag();
-                }else {
+                } else {
                     closeDrag();
                 }
             }
@@ -220,6 +225,7 @@ public class DragLayout extends FrameLayout {
      * 1.左面板:缩放动画,平移动画,透明度动画
      * 2.主面板:缩放动画
      * 3.背景动画:亮度变化(颜色变化)
+     *
      * @param newLeft view移动的left距离
      */
     private void dealDragEventAnimationAndListener(int newLeft) {
@@ -232,29 +238,30 @@ public class DragLayout extends FrameLayout {
 
     /**
      * 更新状态,处理回调事件
+     *
      * @param percent 当前的拖拽情况
      */
     private void processListener(float percent) {
         //由于能执行此方法说明一直在on dragging,所以一直回调该函数
-        if (mDragStatusChangedListener != null){
+        if (mDragStatusChangedListener != null) {
             mDragStatusChangedListener.onDragging(percent);
         }
         //记录之前的状态,跟现在的状态判断,来决定是否执行close or open
         Status pre = mStatus;
         mStatus = updateStatus(percent);
-        if (mStatus != pre){
-            if (mStatus == Status.Opened && mDragStatusChangedListener != null){
+        if (mStatus != pre) {
+            if (mStatus == Status.Opened && mDragStatusChangedListener != null) {
                 mDragStatusChangedListener.onOpened();
-            }else if (mStatus == Status.Closed && mDragStatusChangedListener != null){
+            } else if (mStatus == Status.Closed && mDragStatusChangedListener != null) {
                 mDragStatusChangedListener.onClosed();
             }
         }
     }
 
     private Status updateStatus(float percent) {
-        if (percent == 0f){
+        if (percent == 0f) {
             return Status.Closed;
-        }else if (percent == 1.0f){
+        } else if (percent == 1.0f) {
             return Status.Opened;
         }
         return Status.Dragging;
@@ -262,6 +269,7 @@ public class DragLayout extends FrameLayout {
 
     /**
      * 运行动画
+     *
      * @param percent 移动的距离占总距离的百分比
      */
     private void runAnimation(float percent) {
@@ -303,7 +311,7 @@ public class DragLayout extends FrameLayout {
         //最好加上try catch输出异常信息
         try {
             mViewDragHelper.processTouchEvent(event);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         //返回true,表示持久接受事件
@@ -317,10 +325,10 @@ public class DragLayout extends FrameLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        if (getChildCount() < 2){
+        if (getChildCount() < 2) {
             throw new IllegalStateException("Your ViewGroup must have two children at least!");
         }
-        if (!(getChildAt(0) instanceof ViewGroup && getChildAt(1) instanceof ViewGroup)){
+        if (!(getChildAt(0) instanceof ViewGroup && getChildAt(1) instanceof ViewGroup)) {
             throw new IllegalArgumentException("Your child view must be instanceof ViewGroup");
         }
         //左面板
@@ -328,7 +336,9 @@ public class DragLayout extends FrameLayout {
         //主面板
         mMainContent = ((ViewGroup) getChildAt(1));
     }
-    /**获取屏幕的宽高方法,除了用onMeasure()之外
+
+    /**
+     * 获取屏幕的宽高方法,除了用onMeasure()之外
      * 当尺寸发生变化的时候调用
      */
     @Override
@@ -347,7 +357,7 @@ public class DragLayout extends FrameLayout {
     public void computeScroll() {
         super.computeScroll();
         //持续平滑动画,高频调用
-        if (mViewDragHelper.continueSettling(true)){
+        if (mViewDragHelper.continueSettling(true)) {
             //如果返回true,动画还需要持续执行
             ViewCompat.postInvalidateOnAnimation(this);
         }
@@ -362,21 +372,22 @@ public class DragLayout extends FrameLayout {
 
     /**
      * 是否是平滑的关闭抽屉
+     *
      * @param isSmooth true or false
      */
     public void closeDrag(boolean isSmooth) {
         mLeftContent.setVisibility(View.INVISIBLE);
         int finalLeft = 0;
-        if (isSmooth){
+        if (isSmooth) {
             /**
              * 动画步骤1,触发一个平滑动画
              */
-            if (mViewDragHelper.smoothSlideViewTo(mMainContent, finalLeft, 0)){
+            if (mViewDragHelper.smoothSlideViewTo(mMainContent, finalLeft, 0)) {
                 //返回true表示还没有移动到指定的位置,需要刷新界面
                 //参数this(child 所在的ViewGroup)
                 ViewCompat.postInvalidateOnAnimation(this);
             }
-        }else {
+        } else {
             mMainContent.layout(finalLeft, 0, finalLeft + mMeasuredWidth, mMeasuredHeight);
         }
     }
@@ -390,16 +401,16 @@ public class DragLayout extends FrameLayout {
 
     private void openDrag(boolean isSmooth) {
         int finalLeft = mRange;
-        if (isSmooth){
+        if (isSmooth) {
             /**
              * 动画步骤1,触发一个平滑动画
              */
-            if (mViewDragHelper.smoothSlideViewTo(mMainContent, finalLeft, 0)){
+            if (mViewDragHelper.smoothSlideViewTo(mMainContent, finalLeft, 0)) {
                 //返回true表示还没有移动到指定的位置,需要刷新界面
                 //参数this(child 所在的ViewGroup)
                 ViewCompat.postInvalidateOnAnimation(this);
             }
-        }else {
+        } else {
             mMainContent.layout(finalLeft, 0, finalLeft + mMeasuredWidth, mMeasuredHeight);
         }
     }
@@ -422,9 +433,9 @@ public class DragLayout extends FrameLayout {
         int endG = (endInt >> 8) & 0xff;
         int endB = endInt & 0xff;
 
-        return (int)((startA + (int)(fraction * (endA - startA))) << 24) |
-                (int)((startR + (int)(fraction * (endR - startR))) << 16) |
-                (int)((startG + (int)(fraction * (endG - startG))) << 8) |
-                (int)((startB + (int)(fraction * (endB - startB))));
+        return (int) ((startA + (int) (fraction * (endA - startA))) << 24) |
+                (int) ((startR + (int) (fraction * (endR - startR))) << 16) |
+                (int) ((startG + (int) (fraction * (endG - startG))) << 8) |
+                (int) ((startB + (int) (fraction * (endB - startB))));
     }
 }

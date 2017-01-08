@@ -46,4 +46,6 @@
     <string name="login_log_btn_text">登录</string>
     <string name="login_forget_pwd">忘记密码？</string>
     <string name="login_reg_btn_text">注册</string>
+    <string name="add_menu">add_menu</string>
+    <string name="add_function">添加功能</string>
 </resources>

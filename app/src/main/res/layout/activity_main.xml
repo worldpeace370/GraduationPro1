@@ -22,11 +22,11 @@
             android:layout_width="match_parent"
             android:layout_height="60dp">
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_head"
+                android:id="@+id/image_head_left"
                 android:onClick="click"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@mipmap/shanzhi"/>
+                android:src="@mipmap/user_head"/>
             <TextView android:id="@+id/nick_name"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
@@ -34,7 +34,7 @@
                 android:gravity="center"
                 android:textColor="#ffffff"
                 android:textSize="20sp"
-                android:layout_toRightOf="@id/image_head"
+                android:layout_toRightOf="@id/image_head_left"
                 android:layout_marginLeft="20dp"
                 android:text="@string/nick_name"/>
         </RelativeLayout>
@@ -161,41 +161,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffffff">
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:background="#18b6ef">
-            <TextView android:id="@+id/tab_title"
-                android:layout_marginTop="30dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:textSize="22sp"
-                android:textColor="#ffffff"
-                android:textStyle="normal"
-                android:text="@string/tab_title"
-                android:visibility="visible"/>
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_head_main"
-                android:layout_marginTop="25dp"
-                android:layout_marginLeft="5dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:onClick="click"
-                android:layout_gravity="left"
-                android:visibility="visible"
-                android:src="@mipmap/shanzhi"/>
-            <ImageView android:id="@+id/add_menu"
-                android:layout_marginTop="33dp"
-                android:layout_marginRight="10dp"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="right"
-                android:onClick="click"
-                android:src="@mipmap/add_node"/>
-        </android.support.v7.widget.Toolbar>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -207,7 +173,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="#ffeeeeee"/>
+                android:background="@color/cut_off_line"/>
             <RadioGroup android:id="@+id/radioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
