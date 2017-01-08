@@ -10,4 +10,6 @@
     <dimen name="toolbarHeight">70dp</dimen>
     <dimen name="custom_medium_text_size">20sp</dimen>
     <dimen name="custom_mini_text_size">14sp</dimen>
+    <dimen name="custom_small_text_size">13sp</dimen>
+    <dimen name="custom_mini_plus_text_size">12sp</dimen>
 </resources>

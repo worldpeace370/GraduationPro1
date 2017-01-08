@@ -38,4 +38,5 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.20'
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile project(':mvp-kt')
 }

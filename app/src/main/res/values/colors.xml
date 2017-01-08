@@ -28,4 +28,5 @@
     <color name="colorGray">#eeeeee</color>
     <color name="cursorGreen">#9bd435</color>
     <color name="text_color_blue">#5e8bbb</color>
+    <color name="common_toast_bg">#AF000000</color>
 </resources>

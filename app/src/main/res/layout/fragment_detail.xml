@@ -1,46 +1,32 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
-    tools:context="com.lebron.graduationpro1.ui.fragment.DetailFragment">
+    tools:context="com.lebron.graduationpro1.detailpage.view.DetailFragment">
 
-    <include android:id="@+id/toolbar"
-        layout="@layout/layout_toolbar"/>
-
-    <RelativeLayout android:id="@+id/layout_loading"
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/tabRelease"
-        android:layout_gravity="center">
-        <ImageView
-            android:id="@+id/iv_loading"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_gravity="center"
-            android:layout_centerInParent="true"
-            android:contentDescription="@string/loading_text"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/iv_loading"/>
+        android:layout_height="@dimen/toolbarHeight"
+        android:layout_alignParentTop="true" />
 
-        <TextView android:id="@+id/tv_notice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_loading"
-            android:layout_centerInParent="true"
-            android:text="@string/loading_text"
-            android:textColor="@color/text_color_grey"
-            android:textSize="15sp"/>
-    </RelativeLayout>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_details"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
-</LinearLayout>
+
+    <include
+        layout="@layout/layout_no_standard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar" />
+</RelativeLayout>

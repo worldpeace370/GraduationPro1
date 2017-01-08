@@ -1,4 +1,4 @@
-package com.lebron.graduationpro1.ui.fragment;
+package com.lebron.graduationpro1.detailpage.view;
 
 import android.content.Context;
 import android.os.Bundle;
