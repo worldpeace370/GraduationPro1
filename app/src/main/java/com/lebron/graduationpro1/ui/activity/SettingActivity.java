@@ -1,34 +1,32 @@
 package com.lebron.graduationpro1.ui.activity;
 
-import android.view.View;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseActivity;
 
-import butterknife.OnClick;
-
 public class SettingActivity extends BaseActivity {
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_setting);
+        bindViews();
+    }
 
     @Override
-    protected void initView() {
+    protected void bindViews() {
+        initToolbar(R.string.settings);
+    }
+
+    @Override
+    protected void setListener() {
 
     }
 
     @Override
-    protected void initData() {
+    protected void init() {
 
-    }
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_setting;
-    }
-
-    @OnClick(R.id.setting_back)
-    public void back(View view){
-        if (view.getId() == R.id.setting_back){
-            finish();
-        }
     }
 }

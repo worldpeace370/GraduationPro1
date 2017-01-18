@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_week_custom_calendar_view"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/CalendarWeekTextStyle"
+            android:text="@string/sunday"
+            android:textColor="@color/color_reply_text_grey"/>
+        <TextView
+            style="@style/CalendarWeekTextStyle"
+            android:text="@string/monday"
+            android:textColor="@color/text_color_light_black"/>
+        <TextView
+            style="@style/CalendarWeekTextStyle"
+            android:text="@string/tuesday"
+            android:textColor="@color/text_color_light_black"/>
+        <TextView
+            style="@style/CalendarWeekTextStyle"
+            android:text="@string/wednesday"
+            android:textColor="@color/text_color_light_black"/>
+        <TextView
+            style="@style/CalendarWeekTextStyle"
+            android:text="@string/thursday"
+            android:textColor="@color/text_color_light_black"/>
+        <TextView
+            style="@style/CalendarWeekTextStyle"
+            android:text="@string/friday"
+            android:textColor="@color/text_color_light_black"/>
+        <TextView
+            style="@style/CalendarWeekTextStyle"
+            android:text="@string/saturday"
+            android:textColor="@color/color_reply_text_grey"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/div_line_color"/>
+
+</LinearLayout>

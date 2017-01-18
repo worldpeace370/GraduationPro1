@@ -52,8 +52,8 @@ public class ClearEditText extends EditText implements View.OnFocusChangeListene
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mHasFocused) {
-            boolean isTouched = event.getX() > (getWidth() - getTotalPaddingRight()) &&
-                    event.getX() < (getWidth() - getPaddingRight());
+            boolean isTouched = event.getX() > (getWidth() - getTotalPaddingRight())
+                    && event.getX() < (getWidth() - getPaddingRight());
             if (isTouched) {
                 setText("");
                 final MotionEvent cancelEvent = MotionEvent.obtain(event);

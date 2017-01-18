@@ -1,4 +1,4 @@
-package com.lebron.graduationpro1.ui.activity;
+package com.lebron.graduationpro1.main;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
@@ -18,9 +18,10 @@ import android.widget.RadioGroup;
 
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseActivity;
+import com.lebron.graduationpro1.ui.activity.SettingActivity;
 import com.lebron.graduationpro1.ui.fragment.ControlFragment;
-import com.lebron.graduationpro1.ui.fragment.DetailFragment;
-import com.lebron.graduationpro1.ui.fragment.ScanFragment;
+import com.lebron.graduationpro1.detailpage.view.DetailFragment;
+import com.lebron.graduationpro1.scanpage.view.ScanFragment;
 import com.lebron.graduationpro1.ui.fragment.VideoFragment;
 import com.lebron.graduationpro1.utils.MyActivityManager;
 import com.lebron.graduationpro1.utils.ShowToast;
@@ -35,17 +36,17 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     private static final String TAG = "MainActivity";
     @BindView(R.id.drawer_layout)
     DragLayout mDragLayout;
-    @BindView(R.id.main_linearLayout)
+    @BindView(R.id.main_content)
     MainLinearLayout mMainLinearLayout;
     @BindView(R.id.radioGroup)
     RadioGroup mRadioGroup;
     @BindView(R.id.image_head_left)
     CircleImageView mImageHeadLeft;
 
-    private final int TAB_SCAN = R.id.scan;
-    private final int TAB_VIDEO = R.id.video;
-    private final int TAB_CONTROL = R.id.control;
-    private final int TAB_DETAILS = R.id.details;
+    private final int tabScan = R.id.scan;
+    private final int tabVideo = R.id.video;
+    private final int tabControl = R.id.control;
+    private final int tabDetails = R.id.details;
     private int currentSelectedTab = R.id.scan;
     private ScanFragment mScanFragment;
     private VideoFragment mVideoFragment;
@@ -58,6 +59,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         if (savedInstanceState != null) {
             mScanFragment = findFragmentByClassName(ScanFragment.class);
             mVideoFragment = findFragmentByClassName(VideoFragment.class);
@@ -72,6 +74,45 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                     WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         }
         getWindow().setBackgroundDrawable(null);
+        bindViews();
+        setListener();
+        init();
+    }
+
+    @Override
+    protected void bindViews() {
+        ButterKnife.bind(this);
+        mMainLinearLayout.setDragLayout(mDragLayout);
+    }
+
+    @Override
+    protected void setListener() {
+        mDragLayout.setDragStatusChangedListener(new DragLayout.OnDragStatusChangedListener() {
+            @Override
+            public void onClosed() {
+            }
+
+            @Override
+            public void onOpened() {
+                //打开抽屉的时候让头像晃动
+                ObjectAnimator animator = ObjectAnimator.ofFloat(mImageHeadLeft, "translationX", 12.0f);
+                animator.setInterpolator(new CycleInterpolator(4.0f));
+                animator.setDuration(500);
+                animator.start();
+            }
+
+            @Override
+            public void onDragging(float percent) {
+                //设置在拖拽过程中的头像透明度渐变效果
+                mImageHeadLeft.setAlpha(percent);
+            }
+        });
+        mRadioGroup.setOnCheckedChangeListener(this);
+    }
+
+    @Override
+    protected void init() {
+        changeTargetFragment(currentSelectedTab);
     }
 
     @Override
@@ -152,16 +193,16 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         hideFragment(ft);
         switch (checkedId) {
-            case TAB_SCAN:
+            case tabScan:
                 change2Scan(ft);
                 break;
-            case TAB_VIDEO:
+            case tabVideo:
                 change2Video(ft);
                 break;
-            case TAB_CONTROL:
+            case tabControl:
                 change2Control(ft);
                 break;
-            case TAB_DETAILS:
+            case tabDetails:
                 change2Details(ft);
                 break;
             default:
@@ -203,45 +244,6 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         } else {
             ft.show(mDetailFragment).commitAllowingStateLoss();
         }
-    }
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_main;
-    }
-
-    @Override
-    protected void initView() {
-        ButterKnife.bind(this);
-        mDragLayout.setDragStatusChangedListener(new DragLayout.OnDragStatusChangedListener() {
-            @Override
-            public void onClosed() {
-
-            }
-
-            @Override
-            public void onOpened() {
-                //打开抽屉的时候让头像晃动
-                ObjectAnimator animator = ObjectAnimator.ofFloat(mImageHeadLeft, "translationX", 12.0f);
-                animator.setInterpolator(new CycleInterpolator(4.0f));
-                animator.setDuration(500);
-                animator.start();
-            }
-
-            @Override
-            public void onDragging(float percent) {
-                //设置在拖拽过程中的头像透明度渐变效果
-                mImageHeadLeft.setAlpha(percent);
-            }
-        });
-        mMainLinearLayout.setDragLayout(mDragLayout);
-        changeTargetFragment(currentSelectedTab);
-        mRadioGroup.setOnCheckedChangeListener(this);
-    }
-
-    @Override
-    protected void initData() {
-
     }
 
     public void click(View view) {
