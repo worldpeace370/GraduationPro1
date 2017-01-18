@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="quick_trade_panel_root" type="id" />
+    <item name="tab_time_today" type="id" />
+    <item name="tab_time_5day" type="id" />
+    <item name="tab_kline_day" type="id" />
+    <item name="tab_kline_week" type="id" />
+    <item name="tab_kline_month" type="id" />
+    <item name="tab_kline_minute" type="id" />
+    <item name="tab_kline_3minute" type="id" />
+    <item name="tab_kline_5minute" type="id" />
+    <item name="tab_kline_15minute" type="id" />
+    <item name="tab_kline_30minute" type="id" />
+    <item name="tab_kline_hour" type="id" />
+    <item name="tab_kline_2hour" type="id" />
+    <item name="tab_kline_3hour" type="id" />
+    <item name="tab_kline_4hour" type="id" />
+    <item name="cv_pager" type="id" />
+</resources>

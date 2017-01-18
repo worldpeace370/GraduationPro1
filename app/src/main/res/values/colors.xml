@@ -12,6 +12,7 @@
     <color name="backChecked">#18b6ff</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="div_line_color">#e6e6e6</color>
     <color name="greenyellow">#ADFF2F</color>
     <color name="yellow">#ffee2f</color>
     <color name="color_std_disenable">#c2c2c2</color>
@@ -29,4 +30,10 @@
     <color name="cursorGreen">#9bd435</color>
     <color name="text_color_blue">#5e8bbb</color>
     <color name="common_toast_bg">#AF000000</color>
+    <color name="colorStatusBar">#31baec</color>
+    <color name="text_color_black">#333333</color>
+    <color name="text_color_light_black">#666666</color>
+    <color name="color_reply_text_grey">#c1c1c1</color>
+    <color name="color_v3_text_blue">#3c8aea</color>
+    <color name="color_std_light_black">#666666</color>
 </resources>

@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
-
+apply plugin: 'checkstyle'
+apply plugin: "findbugs"
 android {
     compileSdkVersion 24
     buildToolsVersion "25.0.0"
@@ -35,8 +36,36 @@ dependencies {
     compile 'com.android.support:cardview-v7:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.4'
     compile 'com.alibaba:fastjson:1.2.20'
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile project(':mvp-kt')
+}
+
+task checkstyle(type: Checkstyle) {
+    ignoreFailures = true
+    configFile file("${project.rootDir}/app/config/checkstyle/checkstyle.xml")
+    source = fileTree("${project.rootDir}/app/src/main/java/com/")
+    classpath = files()
+    reports {
+        xml {
+            destination "${project.rootDir}/app/build/reports/checkstyle/checkstyle_result.xml"
+        }
+    }
+}
+
+task findbugs(type: FindBugs) {
+    ignoreFailures = true
+    effort = "max"
+    reportLevel = "low"
+    excludeFilter = new File("${project.rootDir}/app/config/findbugs/findbugs_filter.xml")
+    classes = files("${project.rootDir}/app/build/intermediates/classes")
+    source = fileTree('src/main/java')
+    classpath = files()
+    reports {
+        xml {
+            destination "${project.rootDir}/app/build/reports/findbugs/findbugs_result.xml"
+        }
+    }
 }

@@ -1,16 +1,25 @@
 package com.lebron.graduationpro1.base;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,6 +28,7 @@ import android.widget.Toast;
 import com.lebron.graduationpro1.R;
 import com.lebron.mvp.presenter.Presenter;
 import com.lebron.mvp.view.LebronMvpFragment;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 /**
  * Created by wuxiangkun on 2017/1/8.
@@ -26,10 +36,32 @@ import com.lebron.mvp.view.LebronMvpFragment;
  */
 
 public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragment<P> {
-    public Toolbar mToolbar;
-    private LinearLayout mLayoutLoading;
-    private LinearLayout mLayoutEmpty;
-    private LinearLayout mLayoutError;
+    protected Toolbar mToolbar;
+    protected LinearLayout mLayoutLoading;
+    protected LinearLayout mLayoutEmpty;
+    protected LinearLayout mLayoutError;
+    protected SystemBarTintManager mSystemBarTintManager;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity) {
+            mSystemBarTintManager = ((BaseActivity) activity).getSystemBarTintManager();
+        } else {
+            mSystemBarTintManager = new SystemBarTintManager(activity);
+        }
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    protected void addOnTouchListener(View view) {
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+    }
 
     /**
      * bind views
@@ -89,6 +121,15 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
     }
 
     /**
+     * 显示正常内容
+     */
+    protected void showCommonLayout() {
+        mLayoutEmpty.setVisibility(View.GONE);
+        mLayoutLoading.setVisibility(View.GONE);
+        mLayoutError.setVisibility(View.GONE);
+    }
+
+    /**
      * 初始化Toolbar
      *
      * @param rootView 根View
@@ -120,7 +161,8 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
     /**
      * 初始化Toolbar
      *
-     * @param rootView  {@link android.support.v4.app.Fragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}
+     * @param rootView  {@link android.support.v4.app.Fragment#onCreateView(LayoutInflater,
+     *                  ViewGroup, Bundle)}
      * @param title     mToolbar title
      * @param toolbarId layout中的id
      */
@@ -136,6 +178,7 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
                 getActivity().finish();
             }
         });
+        setStatusStyleResource(R.color.colorStatusBar);
     }
 
     /**
@@ -211,5 +254,99 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
             toast.setView(layout);
             toast.show();
         }
+    }
+
+    /**
+     * 设置状态栏的颜色（color）
+     *
+     * @param color @ColorInt
+     */
+    public void setStatusbarColor(@ColorInt int color) {
+        setStatusStyleColor(color);
+    }
+
+    /**
+     * 设置状态栏的颜色
+     *
+     * @param resid @ColorRes or @DrawableRes
+     */
+    public void setStatusbarResource(int resid) {
+        setStatusStyleResource(resid);
+    }
+
+    @TargetApi(19)
+    protected void setTranslucentStatus(boolean on) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+                && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            Window win = getActivity().getWindow();
+            WindowManager.LayoutParams winParams = win.getAttributes();
+            final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+            if (on) {
+                winParams.flags |= bits;
+            } else {
+                winParams.flags &= ~bits;
+            }
+            win.setAttributes(winParams);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @SuppressLint("NewApi")
+    protected void setStatusStyleColor(int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(color);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (mSystemBarTintManager != null) {
+                setTranslucentStatus(true);
+                mSystemBarTintManager.setStatusBarTintEnabled(true);
+                mSystemBarTintManager.setStatusBarTintColor(color);
+            }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @SuppressLint("NewApi")
+    protected void setStatusStyleResource(int resId) { // @ColorRes or @DrawableRes
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(getActivity(), resId));
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (mSystemBarTintManager != null) {
+                setTranslucentStatus(true);
+                mSystemBarTintManager.setStatusBarTintEnabled(true);
+                mSystemBarTintManager.setStatusBarTintResource(resId);
+            }
+        }
+    }
+
+    protected int getInsertTop() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+                && mSystemBarTintManager != null) {
+            SystemBarTintManager.SystemBarConfig config = mSystemBarTintManager.getConfig();
+            return config.getPixelInsetTop(false);
+        }
+        return 0;
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @SuppressLint("NewApi")
+    protected void dismissStatusStyle() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+                && mSystemBarTintManager != null) {
+            setTranslucentStatus(true);
+            mSystemBarTintManager.setStatusBarTintEnabled(false);
+        }
+    }
+
+    /**
+     * 子类调用该方法来判断 当前attach的Activity是否还alive
+     *
+     * @return true or false
+     */
+    public boolean checkState() {
+        return getActivity() != null && !getActivity().isFinishing() && isAdded();
     }
 }

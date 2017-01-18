@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -43,9 +44,31 @@ public class ShowVideoActivity extends BaseActivity {
     private Bitmap mBitmap;
     private int mWidth;
     private int mHeight;
-    private String TAG = "ShowVideoActivity";
+    private static final String TAG = "ShowVideoActivity";
     private MyHandler mMyHandler;
     private SurfaceThread mSurfaceThread;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_show_video);
+    }
+
+    @Override
+    protected void bindViews() {
+        unbinder = ButterKnife.bind(this);
+        initSurfaceView();
+    }
+
+    @Override
+    protected void setListener() {
+
+    }
+
+    @Override
+    protected void init() {
+        mMyHandler = new MyHandler(this);
+    }
 
     private static class MyHandler extends Handler{
         WeakReference<ShowVideoActivity> weakReference;
@@ -65,22 +88,6 @@ public class ShowVideoActivity extends BaseActivity {
                 }
             }
         }
-    }
-
-    @Override
-    protected void initView() {
-        unbinder = ButterKnife.bind(this);
-        initSurfaceView();
-    }
-
-    @Override
-    protected void initData() {
-        mMyHandler = new MyHandler(this);
-    }
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_show_video;
     }
 
     @Override
@@ -144,12 +151,14 @@ public class ShowVideoActivity extends BaseActivity {
                 .callback(new MaterialDialog.Callback() {
                     @Override
                     public void onPositive(MaterialDialog dialog) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/worldpeace370")));
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("https://github.com/worldpeace370")));
                     }
 
                     @Override
                     public void onNegative(MaterialDialog dialog) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.zhihu.com/people/hu-qi-xing-66")));
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("https://www.zhihu.com/people/hu-qi-xing-66")));
                     }
                 }).build();
         dialog.show();

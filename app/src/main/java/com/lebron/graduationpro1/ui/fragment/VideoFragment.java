@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.AppApplication;
-import com.lebron.graduationpro1.ui.activity.MainActivity;
+import com.lebron.graduationpro1.main.MainActivity;
 import com.lebron.graduationpro1.utils.AppLog;
 import com.lebron.graduationpro1.utils.NetStatusUtils;
 
@@ -197,12 +197,14 @@ public class VideoFragment extends Fragment {
                 .callback(new MaterialDialog.Callback() {
                     @Override
                     public void onPositive(MaterialDialog dialog) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/worldpeace370")));
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("https://github.com/worldpeace370")));
                     }
 
                     @Override
                     public void onNegative(MaterialDialog dialog) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.zhihu.com/people/hu-qi-xing-66")));
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("https://www.zhihu.com/people/hu-qi-xing-66")));
                     }
                 }).build();
         dialog.show();

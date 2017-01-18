@@ -66,13 +66,13 @@ public abstract class LebronMvpActivity<P extends Presenter> extends AppCompatAc
     }
 
     @Override
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         mPresenterDelegate.onResume();
     }
 
     @Override
-    public void onPause() {
+    protected void onPause() {
         super.onPause();
         mPresenterDelegate.onPause();
     }
@@ -90,7 +90,7 @@ public abstract class LebronMvpActivity<P extends Presenter> extends AppCompatAc
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBundle(PRESENTER_STATE_KEY, mPresenterDelegate.onSaveInstanceState());
     }

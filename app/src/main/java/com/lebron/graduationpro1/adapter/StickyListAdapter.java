@@ -21,7 +21,8 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
     private LayoutInflater layoutInflater;
     private ChineseToPinyinHelper pinyinHelper;
     public StickyListAdapter(Context context, String[] countries){
-        this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.layoutInflater = (LayoutInflater)
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.countries = countries;
         pinyinHelper = ChineseToPinyinHelper.getInstance();
     }
@@ -68,7 +69,8 @@ public class StickyListAdapter extends BaseAdapter implements StickyListHeadersA
         }else {
             headerViewHolder = (HeaderViewHolder) convertView.getTag();
         }
-        String headerText = "" + pinyinHelper.getPinyin(countries[position].substring(0,1)).toUpperCase().charAt(0);
+        String headerText = "" + pinyinHelper.
+                getPinyin(countries[position].substring(0,1)).toUpperCase().charAt(0);
         headerViewHolder.textView.setText(headerText);
         return convertView;
     }

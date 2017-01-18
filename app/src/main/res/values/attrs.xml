@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomCalendarView">
+        <attr name="cv_leftArrowMask" format="reference" />
+        <attr name="cv_rightArrowMask" format="reference" />
+        <attr name="cv_arrowColor" format="color" />
+        <attr name="cv_tileHeight" format="dimension" >
+            <enum name="match_parent" value="-1" />
+        </attr>
+        <attr name="cv_tileWidth" format="dimension" >
+            <enum name="match_parent" value="-1" />
+        </attr>
+    </declare-styleable>
+</resources>

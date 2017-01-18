@@ -9,8 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lebron.graduationpro1.R;
-import com.lebron.graduationpro1.ui.activity.MainActivity;
+import com.lebron.graduationpro1.base.BaseFragment;
+import com.lebron.graduationpro1.detailpage.presenter.DetailPresenter;
+import com.lebron.graduationpro1.main.MainActivity;
 import com.lebron.graduationpro1.utils.AppLog;
+import com.lebron.mvp.factory.RequiresPresenter;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -20,11 +23,12 @@ import butterknife.Unbinder;
  * Use the {@link DetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DetailFragment extends Fragment {
+@RequiresPresenter(DetailPresenter.class)
+public class DetailFragment extends BaseFragment<DetailPresenter> {
     private static final String ARG_PARAM = "param";
     private String mParam;
     private MainActivity mMainActivity;
-    private String TAG = "DetailFragment";
+    private static final String TAG = "DetailFragment";
     private Unbinder mBind;
     private View mRootView;
 
@@ -34,7 +38,7 @@ public class DetailFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     * @param param Parameter 2.
+     * @param param Parameter.
      * @return A new instance of fragment DetailFragment.
      */
     public static DetailFragment newInstance(String param) {
@@ -72,8 +76,26 @@ public class DetailFragment extends Fragment {
             mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
             mBind = ButterKnife.bind(this, mRootView);
         }
+        bindViews(mRootView);
         AppLog.i(TAG, "onCreateView: 执行了");
         return mRootView;
+    }
+
+    @Override
+    protected void bindViews(View view) {
+        initNoStandardUI(view);
+        initToolbar(view);
+        getToolbar().setTitle("");
+    }
+
+    @Override
+    protected void setListener() {
+
+    }
+
+    @Override
+    protected void init() {
+
     }
 
     @Override
@@ -124,5 +146,4 @@ public class DetailFragment extends Fragment {
         super.onDetach();
         AppLog.i(TAG, "onDestroyView: 执行了");
     }
-
 }

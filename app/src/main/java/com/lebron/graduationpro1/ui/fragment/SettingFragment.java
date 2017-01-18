@@ -22,11 +22,11 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     private static final String ABOUT_APP = "about_app";
     private static final String APP_VERSION = "app_version";
 
-    private Preference clear_cache;
-    private CheckBoxPreference net_mode;
-    private CheckBoxPreference scan_mode;
-    private Preference about_app;
-    private Preference app_version;
+    private Preference mClearCache;
+    private CheckBoxPreference mNetMode;
+    private CheckBoxPreference mScanMode;
+    private Preference mAboutApp;
+    private Preference mAppVersion;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,17 +37,16 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
     }
 
     private void initView() {
-        clear_cache = findPreference(CLEAR_CACHE);
-        net_mode = (CheckBoxPreference) findPreference(NET_MODE);
-        scan_mode = (CheckBoxPreference) findPreference(SCAN_MODE);
-        about_app = findPreference(ABOUT_APP);
-        app_version = findPreference(APP_VERSION);
-        app_version.setTitle("版本:" + AppInfoUtils.getVersionName(getActivity()));
-
+        mClearCache = findPreference(CLEAR_CACHE);
+        mNetMode = (CheckBoxPreference) findPreference(NET_MODE);
+        mScanMode = (CheckBoxPreference) findPreference(SCAN_MODE);
+        mAboutApp = findPreference(ABOUT_APP);
+        mAppVersion = findPreference(APP_VERSION);
+        mAppVersion.setTitle("版本:" + AppInfoUtils.getVersionName(getActivity()));
     }
 
     private void initListener() {
-        net_mode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        mNetMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if((Boolean) newValue){
@@ -59,7 +58,7 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
             }
         });
 
-        scan_mode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        mScanMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if((Boolean) newValue){
@@ -71,8 +70,8 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
             }
         });
 
-        clear_cache.setOnPreferenceClickListener(this);
-        about_app.setOnPreferenceClickListener(this);
+        mClearCache.setOnPreferenceClickListener(this);
+        mAboutApp.setOnPreferenceClickListener(this);
     }
 
     @Override

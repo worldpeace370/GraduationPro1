@@ -244,6 +244,7 @@ public class AppLog {
         break;
       case E:
         Log.e(tag, msg);
+        break;
       default:
         break;
     }

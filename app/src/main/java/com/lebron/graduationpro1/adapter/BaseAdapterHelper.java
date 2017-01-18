@@ -51,7 +51,8 @@ public abstract class BaseAdapterHelper<T> extends BaseAdapter{
      * @param inflater 由于为私有属性，所以通过参数传递的方式进行使用
      * @return
      */
-    public abstract View getItemView(int position, View convertView, ViewGroup parent, List<T> list, LayoutInflater inflater);
+    public abstract View getItemView(int position, View convertView, ViewGroup parent,
+                                     List<T> list, LayoutInflater inflater);
 
     /**将参数data加入list，并更新UI
      * isClear表示了两种情况，true清空后再加入

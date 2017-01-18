@@ -133,8 +133,7 @@ public class ChineseToPinyinHelper {
 			}
 		} catch (Exception e) {
 			System.out
-					.println("ERROR:ChineseSpelling.class-getChsAscii(String chs)"
-							+ e);
+					.println("ERROR:ChineseSpelling.class-getChsAscii(String chs)" + e);
 		}
 		return asc;
 	}

@@ -1,4 +1,4 @@
-package com.lebron.graduationpro1.ui.fragment;
+package com.lebron.graduationpro1.scanpage.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -29,16 +27,19 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.lebron.graduationpro1.R;
-import com.lebron.graduationpro1.interfaces.RequestFinishedListener;
+import com.lebron.graduationpro1.base.BaseFragment;
+import com.lebron.graduationpro1.main.MainActivity;
 import com.lebron.graduationpro1.model.LineChartTestData;
-import com.lebron.graduationpro1.net.VolleyRequest;
-import com.lebron.graduationpro1.ui.activity.MainActivity;
+import com.lebron.graduationpro1.scanpage.contracts.ScanContracts;
+import com.lebron.graduationpro1.scanpage.model.CollectInfoBean;
+import com.lebron.graduationpro1.scanpage.presenter.ScanPresenter;
 import com.lebron.graduationpro1.ui.activity.NodeChoiceActivity;
 import com.lebron.graduationpro1.utils.AppLog;
 import com.lebron.graduationpro1.utils.ConstantValue;
 import com.lebron.graduationpro1.utils.ShowToast;
 import com.lebron.graduationpro1.view.AddPopWindow;
 import com.lebron.graduationpro1.view.MyMarkerView;
+import com.lebron.mvp.factory.RequiresPresenter;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -54,19 +55,12 @@ import butterknife.Unbinder;
 /**
  * 概览界面
  */
-public class ScanFragment extends Fragment implements RequestFinishedListener, SeekBar.OnSeekBarChangeListener
-        , View.OnClickListener {
+@RequiresPresenter(ScanPresenter.class)
+public class ScanFragment extends BaseFragment<ScanPresenter>
+        implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, ScanContracts.View {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.latest_day)
-    Button mButtonDay;
-    @BindView(R.id.latest_week)
-    Button mButtonWeek;
-    @BindView(R.id.latest_month)
-    Button mButtonMonth;
-    @BindView(R.id.latest_year)
-    Button mButtonYear;
-    @BindView(R.id.lineChart1)
+    @BindView(R.id.lineChart)
     LineChart mLineChart;
     @BindView(R.id.seekBar_X)
     SeekBar mSeekBarX;
@@ -82,7 +76,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     //节点名字,放置到mTextViewTitle中
     private String mNodeName = "";
 
-    private Unbinder mUnbinder;
+    private Unbinder mUnBinder;
     private static final String TAG = "ScanFragment";
     private MainActivity mMainActivity;
     private MyHandler mHandler;
@@ -90,8 +84,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
 
     private static class MyHandler extends Handler {
         WeakReference<ScanFragment> weakReference;
-
-        public MyHandler(ScanFragment fragment) {
+        MyHandler(ScanFragment fragment) {
             weakReference = new WeakReference<>(fragment);
         }
 
@@ -108,6 +101,9 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
             }
         }
     }
+
+
+
 
     public ScanFragment() {
 
@@ -139,8 +135,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        VolleyRequest volleyRequest = new VolleyRequest();
-        volleyRequest.getJsonFromServer(ConstantValue.TESTURL, this);
         mHandler = new MyHandler(this);
         AppLog.i(TAG, "onCreate: 执行了");
     }
@@ -150,22 +144,132 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
                              Bundle savedInstanceState) {
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.fragment_scan, container, false);
-            mUnbinder = ButterKnife.bind(this, mRootView);
-            initViewAndListener();
+            mUnBinder = ButterKnife.bind(this, mRootView);
+            bindViews(mRootView);
+            setListener();
+            init();
         }
-        //        // 此段代码有待研究
-        //        ViewGroup parent = ((ViewGroup) mRootView.getParent());
-        //        if (parent != null) {
-        //            parent.removeView(mRootView);
-        //        }
         AppLog.i(TAG, "onCreateView: 执行了");
         return mRootView;
     }
 
     @Override
+    protected void bindViews(View view) {
+        initToolbar(view);
+        mToolbar.setTitle("当前节点");
+        mToolbar.inflateMenu(R.menu.menu_scan_fragment);
+        //原生下拉刷新控件
+        mRefreshLayout.setColorSchemeResources(R.color.holo_blue_bright,
+                R.color.holo_green_light,
+                R.color.holo_orange_light,
+                R.color.holo_red_light);
+        mRefreshLayout.setEnabled(false);
+        mSeekBarX.setProgress(49);
+        mSeekBarY.setProgress(40);
+
+        mLineChart.setDescription("节点信息");//右下角说明
+        mLineChart.setNoDataTextDescription("You need to provide data for the chart");
+        mLineChart.setTouchEnabled(true);//enable touch gesture
+        mLineChart.setDragEnabled(true);//enable scaling and dragging
+        mLineChart.setScaleEnabled(true);
+        mLineChart.setPinchZoom(true);
+        mLineChart.setDoubleTapToZoomEnabled(true);
+        //create a custom MarkerView (extends MarkerView) and specify the layout
+        MyMarkerView markerView = new MyMarkerView(mMainActivity, R.layout.custom_marker_view);
+        mLineChart.setMarkerView(markerView);
+    }
+
+    @Override
+    protected void setListener() {
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_add:
+
+                        break;
+                }
+                return false;
+            }
+        });
+        mSeekBarX.setOnSeekBarChangeListener(this);
+        mSeekBarX.setOnSeekBarChangeListener(this);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //重新加载数据,绘制图形
+                initLineChartData();
+            }
+        });
+    }
+
+    @Override
+    protected void init() {
+        //初始化X,Y轴
+        initAxis(mLineChart);
+        initLineChartData();
+    }
+
+    @Override
+    public void showLoading() {
+        showCommonLoadingLayout();
+    }
+
+    @Override
+    public void showError() {
+        showCommonNetErrorLayout();
+    }
+
+    @Override
+    public void showEmpty() {
+        showCommonEmptyLayout();
+    }
+
+    @Override
+    public void showContent(List<CollectInfoBean> infoList) {
+        showCommonLayout();
+    }
+
+    @Override
+    public void saveLineImageToSDCard() {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+        String dateString = format.format(date);
+        if (mLineChart != null) {
+            if (mLineChart.saveToGallery("lineChart-" + dateString + ".jpg", 100)) {
+                ShowToast.shortTime("保存成功!");
+            } else {
+                ShowToast.shortTime("保存失败!");
+            }
+        } else {
+            Log.i("ScanFragment", "saveLineChartToSDCard: mLineChart is null");
+            ShowToast.shortTime("mLineChart is null!");
+        }
+    }
+
+    @Override
+    public void showPopWindowAndHandleChoice() {
+        AddPopWindow addPopWindow = new AddPopWindow(mMainActivity);
+        addPopWindow.showPopupWindow(mToolbar);
+        addPopWindow.setOnPopupWindowItemClickListener(new AddPopWindow.OnPopupWindowItemClickListener() {
+            @Override
+            public void onItemClick(int id) {
+                if (id == R.id.select_new_node) {
+                    startNodeChoiceActivity();
+                } else if (id == R.id.save_image_sd_card) {
+                    //保存折线图到SD卡
+//                    getPresenter()
+                } else if (id == R.id.refresh_data) {
+                    refreshData();
+                }
+            }
+        });
+    }
+
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initLineChartData();
         //宽高为0
         Log.i("ScanFragment", "onActivityCreated：mLineChart.getWidth() = " + mLineChart.getWidth()
                 + ",mLineChart.getHeight() = " + mLineChart.getHeight());
@@ -215,7 +319,7 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         //宽高不为0
         Log.i("ScanFragment", "onDestroyView：mLineChart.getWidth() = " + mLineChart.getWidth()
                 + ",mLineChart.getHeight() = " + mLineChart.getHeight());
-        mUnbinder.unbind();
+        mUnBinder.unbind();
         AppLog.i(TAG, "onDestroyView: 执行了");
     }
 
@@ -271,42 +375,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         }
     }
 
-    private void initToolBar() {
-        mToolbar.setTitle("当前节点");
-        mToolbar.setTitleMargin(10, 30, 0, 10);
-        mToolbar.inflateMenu(R.menu.menu_scan_fragment);
-        mToolbar.setPadding(20, 30, 10, 12);
-        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_add:
-                        showPopWindowAndDealEvent();
-                        break;
-                }
-                return false;
-            }
-        });
-    }
-
-    private void showPopWindowAndDealEvent() {
-        AddPopWindow addPopWindow = new AddPopWindow(mMainActivity);
-        addPopWindow.showPopupWindow(mToolbar);
-        addPopWindow.setOnPopupWindowItemClickListener(new AddPopWindow.OnPopupWindowItemClickListener() {
-            @Override
-            public void onItemClick(int id) {
-                if (id == R.id.select_new_node) {
-                    startNodeChoiceActivity();
-                } else if (id == R.id.save_image_sd_card) {
-                    //保存折线图到SD卡
-                    saveLineChartToSDCard();
-                } else if (id == R.id.refresh_data) {
-                    refreshData();
-                }
-            }
-        });
-    }
-
     /**
      * 跳转到节点选择的Activity中去
      */
@@ -317,48 +385,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         //Activity启动动画
         mMainActivity.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
     }
-
-    private void initViewAndListener() {
-        initToolBar();
-        //原生下拉刷新控件
-        mRefreshLayout.setColorSchemeResources(R.color.holo_blue_bright,
-                R.color.holo_green_light,
-                R.color.holo_orange_light,
-                R.color.holo_red_light);
-        mRefreshLayout.setEnabled(false);
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //重新加载数据,绘制图形
-                initLineChartData();
-            }
-        });
-
-
-        mButtonDay.setBackgroundColor(Color.parseColor("#b4afaf"));
-        mButtonDay.setOnClickListener(this);
-        mButtonWeek.setOnClickListener(this);
-        mButtonMonth.setOnClickListener(this);
-        mButtonYear.setOnClickListener(this);
-        mSeekBarX.setProgress(49);
-        mSeekBarY.setProgress(40);
-        mSeekBarX.setOnSeekBarChangeListener(this);
-        mSeekBarX.setOnSeekBarChangeListener(this);
-
-        mLineChart.setDescription("节点信息");//右下角说明
-        mLineChart.setNoDataTextDescription("You need to provide data for the chart");
-        mLineChart.setTouchEnabled(true);//enable touch gesture
-        mLineChart.setDragEnabled(true);//enable scaling and dragging
-        mLineChart.setScaleEnabled(true);
-        mLineChart.setPinchZoom(true);
-        mLineChart.setDoubleTapToZoomEnabled(true);
-        //create a custom MarkerView (extends MarkerView) and specify the layout
-        MyMarkerView markerView = new MyMarkerView(mMainActivity, R.layout.custom_marker_view);
-        mLineChart.setMarkerView(markerView);
-        //初始化X,Y轴
-        initAxis(mLineChart);
-    }
-
 
     private void initLineChartData() {
         ArrayList<LineDataSet> dataSetList = new ArrayList<>();
@@ -501,31 +527,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
         return dataSet;
     }
 
-    public void saveLineChartToSDCard() {
-        Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
-        String dateString = format.format(date);
-        if (mLineChart != null) {
-            if (mLineChart.saveToGallery("lineChart-" + dateString + ".jpg", 100)) {
-                ShowToast.shortTime("保存成功!");
-            } else {
-                ShowToast.shortTime("保存失败!");
-            }
-        } else {
-            Log.i("ScanFragment", "saveLineChartToSDCard: mLineChart is null");
-            ShowToast.shortTime("mLineChart is null!");
-        }
-    }
-
-    @Override
-    public void onRequestSucceed(String responseString) {
-
-    }
-
-    @Override
-    public void onRequestError(String errorString) {
-
-    }
 
     /**
      * SeekBar三个拖动接口相关方法
@@ -551,48 +552,6 @@ public class ScanFragment extends Fragment implements RequestFinishedListener, S
 
     @Override
     public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.latest_day:
-                //UI变化
-                ShowToast.shortTime("近一天");
-                mButtonDay.setBackgroundColor(Color.parseColor("#b4afaf"));
-                mButtonWeek.setBackgroundColor(Color.parseColor("#dfdbdb"));
-                mButtonMonth.setBackgroundColor(Color.parseColor("#dfdbdb"));
-                mButtonYear.setBackgroundColor(Color.parseColor("#dfdbdb"));
-                //数据变化 待写
 
-                break;
-            case R.id.latest_week:
-                //UI变化
-                ShowToast.shortTime("近一周");
-                mButtonWeek.setBackgroundColor(Color.parseColor("#b4afaf"));
-                mButtonDay.setBackgroundColor(Color.parseColor("#dfdbdb"));
-                mButtonMonth.setBackgroundColor(Color.parseColor("#dfdbdb"));
-                mButtonYear.setBackgroundColor(Color.parseColor("#dfdbdb"));
-                //数据变化 待写
-
-                break;
-            case R.id.latest_month:
-                //UI变化
-                ShowToast.shortTime("近一月");
-                mButtonMonth.setBackgroundColor(Color.parseColor("#b4afaf"));
-                mButtonDay.setBackgroundColor(Color.parseColor("#dfdbdb"));
-                mButtonWeek.setBackgroundColor(Color.parseColor("#dfdbdb"));
-                mButtonYear.setBackgroundColor(Color.parseColor("#dfdbdb"));
-                //数据变化 待写
-
-                break;
-            case R.id.latest_year:
-                //UI变化
-                ShowToast.shortTime("近一年");
-                mButtonYear.setBackgroundColor(Color.parseColor("#b4afaf"));
-                mButtonDay.setBackgroundColor(Color.parseColor("#dfdbdb"));
-                mButtonWeek.setBackgroundColor(Color.parseColor("#dfdbdb"));
-                mButtonMonth.setBackgroundColor(Color.parseColor("#dfdbdb"));
-                //数据变化 待写
-
-                break;
-        }
     }
 }

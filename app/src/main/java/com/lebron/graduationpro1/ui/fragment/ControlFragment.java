@@ -15,7 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.lebron.graduationpro1.R;
-import com.lebron.graduationpro1.ui.activity.MainActivity;
+import com.lebron.graduationpro1.main.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,7 +55,7 @@ public class ControlFragment extends Fragment implements SeekBar.OnSeekBarChange
     private String mParam2;
     private Unbinder mBind;
     private MainActivity mMainActivity;
-    private String TAG = "ControlFragment";
+    private static final String TAG = "ControlFragment";
 
     public ControlFragment() {
     }

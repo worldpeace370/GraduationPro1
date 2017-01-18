@@ -23,7 +23,7 @@ import android.widget.FrameLayout;
  */
 
 public class DragLayout extends FrameLayout {
-    private String TAG = "DragLayout";
+    private static final String TAG = "DragLayout";
     private ViewDragHelper mViewDragHelper;
     //左面板
     private ViewGroup mLeftContent;
@@ -289,7 +289,8 @@ public class DragLayout extends FrameLayout {
 
         //> 3.背景
         //背景动画:亮度变化(颜色变化),第一个参数颜色值,第二个参数是混合模式
-        getBackground().setColorFilter((Integer) evaluateColor(percent, Color.BLACK, Color.TRANSPARENT), PorterDuff.Mode.SRC_OVER);
+        getBackground().setColorFilter((Integer) evaluateColor(percent,
+                Color.BLACK, Color.TRANSPARENT), PorterDuff.Mode.SRC_OVER);
     }
 
     /**
@@ -433,9 +434,9 @@ public class DragLayout extends FrameLayout {
         int endG = (endInt >> 8) & 0xff;
         int endB = endInt & 0xff;
 
-        return (int) ((startA + (int) (fraction * (endA - startA))) << 24) |
-                (int) ((startR + (int) (fraction * (endR - startR))) << 16) |
-                (int) ((startG + (int) (fraction * (endG - startG))) << 8) |
-                (int) ((startB + (int) (fraction * (endB - startB))));
+        return (int) ((startA + (int) (fraction * (endA - startA))) << 24)
+                | (int) ((startR + (int) (fraction * (endR - startR))) << 16)
+                | (int) ((startG + (int) (fraction * (endG - startG))) << 8)
+                | (int) ((startB + (int) (fraction * (endB - startB))));
     }
 }
