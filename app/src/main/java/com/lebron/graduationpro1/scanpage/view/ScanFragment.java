@@ -84,7 +84,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mRefreshLayout;
     @BindView(R.id.iv_show_select_date)
-    ImageView mIvShowSelectDate; // 日期选择
+    ImageView mIvShowSelectDate; // 日历选择提示图标
 
     public final static int POSITION_FIRST_DAY = 1;
     public final static int POSITION_SECOND_DAY = 2;
@@ -109,8 +109,6 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     private MyHandler mHandler;
     private View mRootView;
     private CustomCalendarView mCalendarView;
-    private LinearLayout mLayoutBottom; //日历选择PopupWindow显示的时候下面的布局区域
-    private ImageView mIvHideSelectDate; //隐藏日历选择的图标(日历选择window弹出之后出现的)
 
     private static class MyHandler extends Handler {
         WeakReference<ScanFragment> weakReference;
@@ -331,7 +329,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     @Override
     public void showAddMenuWindow() {
         AddPopWindow addPopWindow = new AddPopWindow(mMainActivity);
-        addPopWindow.showPopupWindow(mToolbar);
+        addPopWindow.showPopupWindow(getToolbar());
         addPopWindow.setOnPopupWindowItemClickListener(new AddPopWindow.OnPopupWindowItemClickListener() {
             @Override
             public void onItemClick(int id) {
@@ -355,13 +353,13 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
             mSelectDateWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT);
             mCalendarView = (CustomCalendarView) view.findViewById(R.id.custom_calendar_view);
-            mLayoutBottom = (LinearLayout) view.findViewById(R.id.layout_pop_window_bottom);
-            mIvHideSelectDate = (ImageView) view.findViewById(R.id.iv_hide_select_date);
+            LinearLayout layoutBottom = (LinearLayout) view.findViewById(R.id.layout_pop_window_bottom);
+            ImageView ivHideSelectDate = (ImageView) view.findViewById(R.id.iv_hide_select_date);
             mTvBackToday = (TextView) view.findViewById(R.id.tv_back_today);
             mCalendarView.setMonthChangedListener(this);
             mCalendarView.setDateSelectedListener(this);
-            mLayoutBottom.setOnClickListener(this);
-            mIvHideSelectDate.setOnClickListener(this);
+            layoutBottom.setOnClickListener(this);
+            ivHideSelectDate.setOnClickListener(this);
             mTvBackToday.setOnClickListener(this);
             mSelectDateWindow.setAnimationStyle(R.style.PopupSelectDateAnimation);
             mSelectDateWindow.setBackgroundDrawable(new BitmapDrawable());
