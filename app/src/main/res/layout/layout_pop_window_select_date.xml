@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:customcalendarview="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#4e111111"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/layout_top"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/iv_hide_select_date"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:scaleType="center"
+            android:src="@mipmap/icon_calendar_select" />
+
+        <View
+            android:id="@+id/div_line"
+            android:layout_width="1px"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="64dp"
+            android:background="@color/div_line_color" />
+
+        <TextView
+            android:id="@+id/tv_back_today"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="14dp"
+            android:paddingBottom="6dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:paddingTop="6dp"
+            android:text="@string/back_today"
+            android:textColor="@color/text_color_grey"
+            android:textSize="@dimen/custom_mini_text_size" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/div_line_color" />
+
+    <com.lebron.graduationpro1.view.customcalendarview.CustomCalendarView
+        android:id="@+id/custom_calendar_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingBottom="20dp"
+        customcalendarview:cv_tileHeight="50dp"
+        customcalendarview:cv_tileWidth="50dp" />
+
+    <LinearLayout
+        android:id="@+id/layout_pop_window_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical" />
+</LinearLayout>

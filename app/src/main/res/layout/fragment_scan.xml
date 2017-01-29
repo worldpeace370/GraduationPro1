@@ -9,240 +9,234 @@
         android:id="@+id/toolbar"
         layout="@layout/layout_toolbar" />
 
-    <ScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="match_parent">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefreshLayout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/layout_top"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="54dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.0">
+
+                    <ImageView
+                        android:id="@+id/iv_show_select_date"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_centerInParent="true"
+                        android:src="@mipmap/icon_calendar_select" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/div_line_color" />
 
                 <LinearLayout
-                    android:id="@+id/layout_top"
-                    android:layout_width="match_parent"
-                    android:layout_height="54dp"
-                    android:background="@color/white"
+                    android:id="@+id/layout_day1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.0"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1.0">
+                    <TextView
+                        android:id="@+id/tv_week1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="周五"
+                        android:textColor="@color/selector_chart_tab_text"
+                        android:textSize="@dimen/custom_tiny_text_size" />
 
-                        <ImageView
-                            android:id="@+id/iv_show_select_date"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_centerInParent="true"
-                            android:src="@mipmap/icon_calendar_select" />
-
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="1px"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@color/div_line_color" />
-
-                    <LinearLayout
-                        android:id="@+id/layout_day1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1.0"
+                    <TextView
+                        android:id="@+id/tv_day1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/tv_week1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="周五"
-                            android:textColor="@color/selector_chart_tab_text"
-                            android:textSize="@dimen/custom_tiny_text_size" />
-
-                        <TextView
-                            android:id="@+id/tv_day1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="01.19"
-                            android:textColor="@color/selector_chart_tab_text"
-                            android:textSize="@dimen/custom_small_text_size" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="1px"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@color/div_line_color" />
-
-                    <LinearLayout
-                        android:id="@+id/layout_day2"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1.0"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/tv_week2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="周六"
-                            android:textColor="@color/selector_chart_tab_text"
-                            android:textSize="@dimen/custom_tiny_text_size" />
-
-                        <TextView
-                            android:id="@+id/tv_day2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="01.20"
-                            android:textColor="@color/selector_chart_tab_text"
-                            android:textSize="@dimen/custom_small_text_size" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="1px"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@color/div_line_color" />
-
-                    <LinearLayout
-                        android:id="@+id/layout_day3"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1.0"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/tv_week3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="周日"
-                            android:textColor="@color/selector_chart_tab_text"
-                            android:textSize="@dimen/custom_tiny_text_size" />
-
-                        <TextView
-                            android:id="@+id/tv_day3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="01.21"
-                            android:textColor="@color/selector_chart_tab_text"
-                            android:textSize="@dimen/custom_small_text_size" />
-                    </LinearLayout>
-
+                        android:text="01.19"
+                        android:textColor="@color/selector_chart_tab_text"
+                        android:textSize="@dimen/custom_small_text_size" />
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/div_line2"
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
+                    android:layout_width="1px"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical"
                     android:background="@color/div_line_color" />
 
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/lineChart"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="1.0" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp">
+                <LinearLayout
+                    android:id="@+id/layout_day2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.0"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:id="@+id/tv_week2"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
                         android:gravity="center"
-                        android:onClick=""
-                        android:text="@string/scroll_to_scale" />
+                        android:text="周六"
+                        android:textColor="@color/selector_chart_tab_text"
+                        android:textSize="@dimen/custom_tiny_text_size" />
 
-                    <LinearLayout
-                        android:id="@+id/linearLayout_X"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/tv_day2"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="25dp"
                         android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingEnd="5dp"
-                        android:paddingStart="5dp">
+                        android:text="01.20"
+                        android:textColor="@color/selector_chart_tab_text"
+                        android:textSize="@dimen/custom_small_text_size" />
+                </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/textView_labelX"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="X轴:" />
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/div_line_color" />
 
-                        <SeekBar
-                            android:id="@+id/seekBar_X"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.0"
-                            android:max="100"
-                            android:progressDrawable="@drawable/progress_holo_light"
-                            android:thumb="@mipmap/seek_bar_icon" />
+                <LinearLayout
+                    android:id="@+id/layout_day3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.0"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/textView_X_MAX"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/x_500" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/linearLayout_Y"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/tv_week3"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/linearLayout_X"
-                        android:layout_marginTop="10dp"
                         android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingEnd="5dp"
-                        android:paddingStart="5dp">
+                        android:text="周日"
+                        android:textColor="@color/selector_chart_tab_text"
+                        android:textSize="@dimen/custom_tiny_text_size" />
 
-                        <TextView
-                            android:id="@+id/textView_labelY"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Y轴:" />
+                    <TextView
+                        android:id="@+id/tv_day3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="01.21"
+                        android:textColor="@color/selector_chart_tab_text"
+                        android:textSize="@dimen/custom_small_text_size" />
+                </LinearLayout>
 
-                        <SeekBar
-                            android:id="@+id/seekBar_Y"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.0"
-                            android:max="100"
-                            android:progressDrawable="@drawable/progress_holo_light"
-                            android:thumb="@mipmap/seek_bar_icon" />
-
-                        <TextView
-                            android:id="@+id/textView_Y_MAX"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/y_500" />
-                    </LinearLayout>
-                </RelativeLayout>
             </LinearLayout>
-        </android.support.v4.widget.SwipeRefreshLayout>
-    </ScrollView>
+
+            <View
+                android:id="@+id/div_line2"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/div_line_color" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1.0" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:onClick=""
+                    android:text="@string/scroll_to_scale" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout_X"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp">
+
+                    <TextView
+                        android:id="@+id/textView_labelX"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="X轴:" />
+
+                    <SeekBar
+                        android:id="@+id/seekBar_X"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:max="100"
+                        android:progressDrawable="@drawable/progress_holo_light"
+                        android:thumb="@mipmap/seek_bar_icon" />
+
+                    <TextView
+                        android:id="@+id/textView_X_MAX"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/x_500" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout_Y"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/linearLayout_X"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp">
+
+                    <TextView
+                        android:id="@+id/textView_labelY"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Y轴:" />
+
+                    <SeekBar
+                        android:id="@+id/seekBar_Y"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:max="100"
+                        android:progressDrawable="@drawable/progress_holo_light"
+                        android:thumb="@mipmap/seek_bar_icon" />
+
+                    <TextView
+                        android:id="@+id/textView_Y_MAX"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/y_500" />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>
