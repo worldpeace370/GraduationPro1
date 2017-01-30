@@ -3,10 +3,13 @@ package com.lebron.graduationpro1.scanpage.view;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,6 +17,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -27,6 +33,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.lebron.graduationpro1.R;
+import com.lebron.graduationpro1.base.AppApplication;
 import com.lebron.graduationpro1.base.BaseFragment;
 import com.lebron.graduationpro1.main.MainActivity;
 import com.lebron.graduationpro1.model.LineChartTestData;
@@ -39,11 +46,14 @@ import com.lebron.graduationpro1.utils.ConstantValue;
 import com.lebron.graduationpro1.utils.ShowToast;
 import com.lebron.graduationpro1.view.AddPopWindow;
 import com.lebron.graduationpro1.view.MyMarkerView;
+import com.lebron.graduationpro1.view.customcalendarview.CalendarTools;
+import com.lebron.graduationpro1.view.customcalendarview.CustomCalendarView;
 import com.lebron.mvp.factory.RequiresPresenter;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -57,7 +67,8 @@ import butterknife.Unbinder;
  */
 @RequiresPresenter(ScanPresenter.class)
 public class ScanFragment extends BaseFragment<ScanPresenter>
-        implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, ScanContracts.View {
+        implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, ScanContracts.View
+        , CustomCalendarView.OnDateSelectedListener, CustomCalendarView.OnMonthChangedListener {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.lineChart)
@@ -72,7 +83,23 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     TextView mTextViewY;
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mRefreshLayout;
+    @BindView(R.id.iv_show_select_date)
+    ImageView mIvShowSelectDate; // 日历选择提示图标
 
+    public final static int POSITION_FIRST_DAY = 1;
+    public final static int POSITION_SECOND_DAY = 2;
+    public final static int POSITION_THIRD_DAY = 3;
+
+    private static final int COLOR_SELECTED = ContextCompat.getColor(AppApplication.getAppContext()
+            , R.color.color_v3_text_blue);
+    private static final int COLOR_NOT_SELECTED = ContextCompat.getColor(AppApplication.getAppContext()
+            , R.color.color_std_light_black);
+
+    private static final SimpleDateFormat SDF_M_D = new SimpleDateFormat("MM.dd", Locale.getDefault());
+    private LinearLayout mLayoutDay1, mLayoutDay2, mLayoutDay3;
+    private TextView mTvWeek1, mTvDay1, mTvWeek2, mTvDay2, mTvWeek3, mTvDay3;
+    private PopupWindow mSelectDateWindow;
+    private TextView mTvBackToday;
     //节点名字,放置到mTextViewTitle中
     private String mNodeName = "";
 
@@ -81,9 +108,11 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     private MainActivity mMainActivity;
     private MyHandler mHandler;
     private View mRootView;
+    private CustomCalendarView mCalendarView;
 
     private static class MyHandler extends Handler {
         WeakReference<ScanFragment> weakReference;
+
         MyHandler(ScanFragment fragment) {
             weakReference = new WeakReference<>(fragment);
         }
@@ -101,8 +130,6 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
             }
         }
     }
-
-
 
 
     public ScanFragment() {
@@ -142,6 +169,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.fragment_scan, container, false);
             mUnBinder = ButterKnife.bind(this, mRootView);
@@ -155,9 +183,21 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
 
     @Override
     protected void bindViews(View view) {
+        //        initNoStandardUI(view);
         initToolbar(view);
         mToolbar.setTitle("当前节点");
         mToolbar.inflateMenu(R.menu.menu_scan_fragment);
+
+        mLayoutDay1 = (LinearLayout) view.findViewById(R.id.layout_day1);
+        mLayoutDay2 = (LinearLayout) view.findViewById(R.id.layout_day2);
+        mLayoutDay3 = (LinearLayout) view.findViewById(R.id.layout_day3);
+        mTvWeek1 = (TextView) view.findViewById(R.id.tv_week1);
+        mTvWeek2 = (TextView) view.findViewById(R.id.tv_week2);
+        mTvWeek3 = (TextView) view.findViewById(R.id.tv_week3);
+        mTvDay1 = (TextView) view.findViewById(R.id.tv_day1);
+        mTvDay2 = (TextView) view.findViewById(R.id.tv_day2);
+        mTvDay3 = (TextView) view.findViewById(R.id.tv_day3);
+
         //原生下拉刷新控件
         mRefreshLayout.setColorSchemeResources(R.color.holo_blue_bright,
                 R.color.holo_green_light,
@@ -201,10 +241,49 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
                 initLineChartData();
             }
         });
+
+        mIvShowSelectDate.setOnClickListener(this);
+        mLayoutDay1.setOnClickListener(this);
+        mLayoutDay2.setOnClickListener(this);
+        mLayoutDay3.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_show_select_date: //显示
+                getPresenter().showSelectDateWindow();
+                break;
+            case R.id.iv_hide_select_date: //隐藏
+            case R.id.layout_pop_window_bottom:
+                dismissSelectDateWindow();
+                break;
+            case R.id.tv_back_today:
+                getPresenter().backToToday();
+                break;
+            case R.id.layout_day1:
+                getPresenter().changeToFirstPositionDay();
+                break;
+            case R.id.layout_day2:
+                getPresenter().changeToSecondPositionDay();
+                break;
+            case R.id.layout_day3:
+                getPresenter().changeToThirdPositionDay();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void dismissSelectDateWindow() {
+        if (mSelectDateWindow != null && mSelectDateWindow.isShowing()) {
+            mSelectDateWindow.dismiss();
+        }
     }
 
     @Override
     protected void init() {
+        getPresenter().initTodayData();
         //初始化X,Y轴
         initAxis(mLineChart);
         initLineChartData();
@@ -248,9 +327,9 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     }
 
     @Override
-    public void showPopWindowAndHandleChoice() {
+    public void showAddMenuWindow() {
         AddPopWindow addPopWindow = new AddPopWindow(mMainActivity);
-        addPopWindow.showPopupWindow(mToolbar);
+        addPopWindow.showPopupWindow(getToolbar());
         addPopWindow.setOnPopupWindowItemClickListener(new AddPopWindow.OnPopupWindowItemClickListener() {
             @Override
             public void onItemClick(int id) {
@@ -258,12 +337,113 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
                     startNodeChoiceActivity();
                 } else if (id == R.id.save_image_sd_card) {
                     //保存折线图到SD卡
-//                    getPresenter()
+                    //                    getPresenter()
                 } else if (id == R.id.refresh_data) {
                     refreshData();
                 }
             }
         });
+    }
+
+    @Override
+    public void showSelectDateWindow(int year, int month, int day) {
+        if (mSelectDateWindow == null) {
+            View view = LayoutInflater.from(getContext())
+                    .inflate(R.layout.layout_pop_window_select_date, null);
+            mSelectDateWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            mCalendarView = (CustomCalendarView) view.findViewById(R.id.custom_calendar_view);
+            LinearLayout layoutBottom = (LinearLayout) view.findViewById(R.id.layout_pop_window_bottom);
+            ImageView ivHideSelectDate = (ImageView) view.findViewById(R.id.iv_hide_select_date);
+            mTvBackToday = (TextView) view.findViewById(R.id.tv_back_today);
+            mCalendarView.setMonthChangedListener(this);
+            mCalendarView.setDateSelectedListener(this);
+            layoutBottom.setOnClickListener(this);
+            ivHideSelectDate.setOnClickListener(this);
+            mTvBackToday.setOnClickListener(this);
+            mSelectDateWindow.setAnimationStyle(R.style.PopupSelectDateAnimation);
+            mSelectDateWindow.setBackgroundDrawable(new BitmapDrawable());
+            mSelectDateWindow.setTouchable(true);
+            mSelectDateWindow.setOutsideTouchable(true);
+            mSelectDateWindow.setFocusable(true);
+            mCalendarView.state().edit().setMinimumDate(CalendarTools.createCalendar(2016, 8, 7)).commit();  //设置最小日期为2016年9月7号
+        }
+        mCalendarView.setCurrentDate(CalendarTools.createCalendar(year, month, day));
+        mCalendarView.setSelectedDate(CalendarTools.createCalendar(year, month, day));
+        mSelectDateWindow.showAsDropDown(getToolbar());
+        mSelectDateWindow.update();
+    }
+
+    @Override
+    public void backToToday(int year, int month, int day) {
+        if (mCalendarView != null) {
+            mCalendarView.setCurrentDate(CalendarTools.createCalendar(year, month, day));
+        }
+    }
+
+    @Override
+    public void setBackTodayVisibility(boolean visible) {
+        if (visible) {
+            mTvBackToday.setVisibility(View.VISIBLE);
+        } else {
+            mTvBackToday.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void setTopDateLayout(int year, int month, int day) {
+        Calendar calendar = CalendarTools.createCalendar(year, month, day);
+        mTvDay3.setText(SDF_M_D.format(calendar.getTime()));
+        mTvWeek3.setText(CalendarTools.getWeek(calendar));
+        calendar.add(Calendar.DATE, -1);
+        mTvDay2.setText(SDF_M_D.format(calendar.getTime()));
+        mTvWeek2.setText(CalendarTools.getWeek(calendar));
+        calendar.add(Calendar.DATE, -1);
+        mTvDay1.setText(SDF_M_D.format(calendar.getTime()));
+        mTvWeek1.setText(CalendarTools.getWeek(calendar));
+    }
+
+    @Override
+    public void changeTopDateColor(int selectDatePosition) {
+        switch (selectDatePosition) {
+            case POSITION_FIRST_DAY:
+                mTvDay1.setTextColor(COLOR_SELECTED);
+                mTvWeek1.setTextColor(COLOR_SELECTED);
+                mTvDay2.setTextColor(COLOR_NOT_SELECTED);
+                mTvWeek2.setTextColor(COLOR_NOT_SELECTED);
+                mTvDay3.setTextColor(COLOR_NOT_SELECTED);
+                mTvWeek3.setTextColor(COLOR_NOT_SELECTED);
+                break;
+            case POSITION_SECOND_DAY:
+                mTvDay1.setTextColor(COLOR_NOT_SELECTED);
+                mTvWeek1.setTextColor(COLOR_NOT_SELECTED);
+                mTvDay2.setTextColor(COLOR_SELECTED);
+                mTvWeek2.setTextColor(COLOR_SELECTED);
+                mTvDay3.setTextColor(COLOR_NOT_SELECTED);
+                mTvWeek3.setTextColor(COLOR_NOT_SELECTED);
+                break;
+            case POSITION_THIRD_DAY:
+                mTvDay1.setTextColor(COLOR_NOT_SELECTED);
+                mTvWeek1.setTextColor(COLOR_NOT_SELECTED);
+                mTvDay2.setTextColor(COLOR_NOT_SELECTED);
+                mTvWeek2.setTextColor(COLOR_NOT_SELECTED);
+                mTvDay3.setTextColor(COLOR_SELECTED);
+                mTvWeek3.setTextColor(COLOR_SELECTED);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onDateSelected(@NonNull CustomCalendarView widget, @NonNull Calendar calendar) {
+        getPresenter().changeToSelectDay(calendar);
+        dismissSelectDateWindow();
+    }
+
+    @Override
+    public void onMonthChanged(CustomCalendarView widget, Calendar calendar) {
+        getPresenter().setBackTodayVisibility(calendar);
     }
 
 
@@ -547,11 +727,6 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onClick(View v) {
 
     }
 }

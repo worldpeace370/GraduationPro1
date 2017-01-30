@@ -40,5 +40,8 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>
     </style>
-
+    <style name="PopupSelectDateAnimation" mce_bogus="1" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/popup_select_date_enter</item>
+        <item name="android:windowExitAnimation">@anim/popup_select_date_exit</item>
+    </style>
 </resources>
