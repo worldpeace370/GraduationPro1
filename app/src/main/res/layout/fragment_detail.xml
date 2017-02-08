@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:fitsSystemWindows="true"
     android:gravity="center"
     tools:context="com.lebron.graduationpro1.detailpage.view.DetailFragment">
 

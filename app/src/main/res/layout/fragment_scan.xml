@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="com.lebron.graduationpro1.scanpage.view.ScanFragment">
 
@@ -181,7 +179,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:onClick=""
                     android:text="@string/scroll_to_scale" />
 
                 <LinearLayout
