@@ -15,7 +15,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.lebron.graduationpro1.R;
+import com.lebron.graduationpro1.base.BaseFragment;
 import com.lebron.graduationpro1.main.MainActivity;
+import com.lebron.mvp.factory.RequiresPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +28,9 @@ import butterknife.Unbinder;
  * Use the {@link ControlFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ControlFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener{
+@RequiresPresenter(ControlPresenter.class)
+public class ControlFragment extends BaseFragment<ControlPresenter> implements
+        SeekBar.OnSeekBarChangeListener, View.OnClickListener{
     @BindView(R.id.seekBar_water_temp)
     SeekBar mSeekBarWaterTemp;
     @BindView(R.id.seekBar_water_rate)
@@ -48,6 +52,9 @@ public class ControlFragment extends Fragment implements SeekBar.OnSeekBarChange
     Button mButtonWaterPost;
     @BindView(R.id.rate_post)
     Button mButtonRatePost;
+
+    private View mRootView;
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -100,15 +107,27 @@ public class ControlFragment extends Fragment implements SeekBar.OnSeekBarChange
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_control, container, false);
-        mBind = ButterKnife.bind(this, view);
-        initView();
-        return view;
+        super.onCreateView(inflater, container, savedInstanceState);
+        if (mRootView == null) {
+            mRootView = inflater.inflate(R.layout.fragment_control, container, false);
+            bindViews(mRootView);
+            setListener();
+            init();
+        }
+        return mRootView;
     }
 
-    private void initView() {
+    @Override
+    protected void bindViews(View view) {
+        mBind = ButterKnife.bind(this, mRootView);
+        initToolbar(mRootView);
+        mToolbar.setTitle("");
         mTextViewWaterTemp.setText(mSeekBarWaterTemp.getProgress() + "℃");
         mTextViewWaterRate.setText(mSeekBarWaterRate.getProgress() + "n/s");
+    }
+
+    @Override
+    protected void setListener() {
         mSeekBarWaterTemp.setOnSeekBarChangeListener(this);
         mSeekBarWaterRate.setOnSeekBarChangeListener(this);
         mButtonWaterDecrease.setOnClickListener(this);
@@ -117,6 +136,11 @@ public class ControlFragment extends Fragment implements SeekBar.OnSeekBarChange
         mButtonRateIncrease.setOnClickListener(this);
         mButtonWaterPost.setOnClickListener(this);
         mButtonRatePost.setOnClickListener(this);
+    }
+
+    @Override
+    protected void init() {
+
     }
 
     @Override

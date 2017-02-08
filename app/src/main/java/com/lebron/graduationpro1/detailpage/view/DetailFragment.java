@@ -72,9 +72,9 @@ public class DetailFragment extends BaseFragment<DetailPresenter> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
-            mBind = ButterKnife.bind(this, mRootView);
         }
         bindViews(mRootView);
         AppLog.i(TAG, "onCreateView: 执行了");
@@ -83,6 +83,7 @@ public class DetailFragment extends BaseFragment<DetailPresenter> {
 
     @Override
     protected void bindViews(View view) {
+        mBind = ButterKnife.bind(this, mRootView);
         initNoStandardUI(view);
         initToolbar(view);
         getToolbar().setTitle("");

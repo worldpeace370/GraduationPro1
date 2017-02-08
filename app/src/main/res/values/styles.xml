@@ -32,7 +32,6 @@
         <item name="android:windowEnterAnimation">@anim/fade_in</item>
         <item name="android:windowExitAnimation">@anim/fade_out</item>
     </style>
-
     <style name="CalendarWeekTextStyle" >
         <item name="android:textSize">9sp</item>
         <item name="android:layout_width">0dp</item>

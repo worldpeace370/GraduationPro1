@@ -133,6 +133,5 @@ public interface ScanContracts {
              */
             void onFail(int retCode, String retDesc);
         }
-
     }
 }

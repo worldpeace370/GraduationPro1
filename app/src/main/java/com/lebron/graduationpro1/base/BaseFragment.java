@@ -44,7 +44,8 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         Activity activity = getActivity();
         if (activity instanceof BaseActivity) {
             mSystemBarTintManager = ((BaseActivity) activity).getSystemBarTintManager();
@@ -270,7 +271,7 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
      *
      * @param resid @ColorRes or @DrawableRes
      */
-    public void setStatusbarResource(int resid) {
+    public void setStatusBarResource(int resid) {
         setStatusStyleResource(resid);
     }
 
@@ -298,8 +299,8 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(color);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
             if (mSystemBarTintManager != null) {
-                setTranslucentStatus(true);
                 mSystemBarTintManager.setStatusBarTintEnabled(true);
                 mSystemBarTintManager.setStatusBarTintColor(color);
             }
@@ -314,8 +315,8 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(ContextCompat.getColor(getActivity(), resId));
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
             if (mSystemBarTintManager != null) {
-                setTranslucentStatus(true);
                 mSystemBarTintManager.setStatusBarTintEnabled(true);
                 mSystemBarTintManager.setStatusBarTintResource(resId);
             }

@@ -1,13 +1,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="com.lebron.graduationpro1.scanpage.view.ScanFragment">
 
-    <include
+    <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        layout="@layout/layout_toolbar" />
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbarHeight"
+        android:background="@color/toolBarBackground"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/scan"
+            android:textColor="@color/text_color_white"
+            android:textSize="20sp" />
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
@@ -59,18 +76,18 @@
                         android:id="@+id/tv_week1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="周五"
                         android:textColor="@color/selector_chart_tab_text"
-                        android:textSize="@dimen/custom_tiny_text_size" />
+                        android:textSize="@dimen/custom_tiny_text_size"
+                        tools:text="周五" />
 
                     <TextView
                         android:id="@+id/tv_day1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="01.19"
                         android:textColor="@color/selector_chart_tab_text"
-                        android:textSize="@dimen/custom_small_text_size" />
+                        android:textSize="@dimen/custom_small_text_size"
+                        tools:text="01.19" />
                 </LinearLayout>
 
                 <View
@@ -92,18 +109,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="周六"
                         android:textColor="@color/selector_chart_tab_text"
-                        android:textSize="@dimen/custom_tiny_text_size" />
+                        android:textSize="@dimen/custom_tiny_text_size"
+                        tools:text="周六" />
 
                     <TextView
                         android:id="@+id/tv_day2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="01.20"
                         android:textColor="@color/selector_chart_tab_text"
-                        android:textSize="@dimen/custom_small_text_size" />
+                        android:textSize="@dimen/custom_small_text_size"
+                        tools:text="01.20" />
                 </LinearLayout>
 
                 <View
@@ -125,18 +142,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="周日"
                         android:textColor="@color/selector_chart_tab_text"
-                        android:textSize="@dimen/custom_tiny_text_size" />
+                        android:textSize="@dimen/custom_tiny_text_size"
+                        tools:text="周日" />
 
                     <TextView
                         android:id="@+id/tv_day3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="01.21"
                         android:textColor="@color/selector_chart_tab_text"
-                        android:textSize="@dimen/custom_small_text_size" />
+                        android:textSize="@dimen/custom_small_text_size"
+                        tools:text="01.21" />
                 </LinearLayout>
 
             </LinearLayout>

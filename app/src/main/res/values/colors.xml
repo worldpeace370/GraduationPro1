@@ -8,8 +8,6 @@
     <color name="tabRelease">#8a8a8a</color>
     <color name="cut_off_line">#dadada</color>
     <color name="transparent">#00000000</color>
-    <color name="backPressed">#18b6ff</color>
-    <color name="backChecked">#18b6ff</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="div_line_color">#e6e6e6</color>
@@ -30,7 +28,7 @@
     <color name="cursorGreen">#9bd435</color>
     <color name="text_color_blue">#5e8bbb</color>
     <color name="common_toast_bg">#AF000000</color>
-    <color name="colorStatusBar">#31baec</color>
+    <color name="colorStatusBar">#049fd7</color>
     <color name="text_color_black">#333333</color>
     <color name="text_color_light_black">#666666</color>
     <color name="color_reply_text_grey">#c1c1c1</color>
