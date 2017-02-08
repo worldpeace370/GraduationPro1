@@ -2,14 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center_horizontal"
     android:background="@mipmap/pop"
-    android:orientation="vertical" >
+    android:orientation="vertical">
     <LinearLayout
         android:id="@+id/pop_layout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:gravity="center_horizontal"
         android:orientation="vertical"
@@ -26,12 +27,13 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:scaleType="fitCenter"
-                android:src="@mipmap/refresh" />
+                android:src="@mipmap/refresh"
+                tools:ignore="contentDescription" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:gravity="center"
                 android:text="@string/refresh_data"
                 android:textColor="@color/white"
@@ -54,12 +56,13 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:scaleType="fitCenter"
-                android:src="@mipmap/skip" />
+                android:src="@mipmap/skip"
+                tools:ignore="contentDescription" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:gravity="center"
                 android:text="@string/select_node"
                 android:textColor="@color/white"
@@ -82,12 +85,13 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:scaleType="fitCenter"
-                android:src="@mipmap/save" />
+                android:src="@mipmap/save"
+                tools:ignore="contentDescription" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:gravity="center"
                 android:text="@string/save_image"
                 android:textColor="@color/white"

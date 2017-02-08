@@ -51,8 +51,9 @@ public class PresenterLifecycleDelegate<P extends Presenter> {
      * {@link ViewWithPresenter#setPresenterFactory(PresenterFactory)}
      */
     public void setPresenterFactory(@Nullable PresenterFactory<P> presenterFactory) {
-        if (presenter != null)
+        if (presenter != null) {
             throw new IllegalArgumentException("setPresenterFactory() should be called before onResume()");
+        }
         this.presenterFactory = presenterFactory;
     }
 

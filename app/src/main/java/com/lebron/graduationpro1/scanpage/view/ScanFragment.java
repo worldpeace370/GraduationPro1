@@ -172,7 +172,6 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         super.onCreateView(inflater, container, savedInstanceState);
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.fragment_scan, container, false);
-            mUnBinder = ButterKnife.bind(this, mRootView);
             bindViews(mRootView);
             setListener();
             init();
@@ -183,11 +182,11 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
 
     @Override
     protected void bindViews(View view) {
+        mUnBinder = ButterKnife.bind(this, mRootView);
         //        initNoStandardUI(view);
         initToolbar(view);
-        mToolbar.setTitle("当前节点");
+        mToolbar.setTitle("");
         mToolbar.inflateMenu(R.menu.menu_scan_fragment);
-
         mLayoutDay1 = (LinearLayout) view.findViewById(R.id.layout_day1);
         mLayoutDay2 = (LinearLayout) view.findViewById(R.id.layout_day2);
         mLayoutDay3 = (LinearLayout) view.findViewById(R.id.layout_day3);
@@ -215,8 +214,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         mLineChart.setPinchZoom(true);
         mLineChart.setDoubleTapToZoomEnabled(true);
         //create a custom MarkerView (extends MarkerView) and specify the layout
-        MyMarkerView markerView = new MyMarkerView(mMainActivity, R.layout.custom_marker_view);
-        mLineChart.setMarkerView(markerView);
+        mLineChart.setMarkerView(new MyMarkerView(mMainActivity, R.layout.custom_marker_view));
     }
 
     @Override
@@ -226,7 +224,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_add:
-
+                        getPresenter().showAddMenuWindow();
                         break;
                 }
                 return false;
@@ -336,8 +334,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
                 if (id == R.id.select_new_node) {
                     startNodeChoiceActivity();
                 } else if (id == R.id.save_image_sd_card) {
-                    //保存折线图到SD卡
-                    //                    getPresenter()
+                    saveLineImageToSDCard();
                 } else if (id == R.id.refresh_data) {
                     refreshData();
                 }

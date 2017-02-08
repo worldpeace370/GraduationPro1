@@ -44,7 +44,8 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         Activity activity = getActivity();
         if (activity instanceof BaseActivity) {
             mSystemBarTintManager = ((BaseActivity) activity).getSystemBarTintManager();
@@ -178,7 +179,7 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
                 getActivity().finish();
             }
         });
-        setStatusStyleResource(R.color.colorStatusBar);
+        setStatusBarResource(R.color.colorStatusBar);
     }
 
     /**
@@ -270,24 +271,8 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
      *
      * @param resid @ColorRes or @DrawableRes
      */
-    public void setStatusbarResource(int resid) {
+    public void setStatusBarResource(int resid) {
         setStatusStyleResource(resid);
-    }
-
-    @TargetApi(19)
-    protected void setTranslucentStatus(boolean on) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-                && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            Window win = getActivity().getWindow();
-            WindowManager.LayoutParams winParams = win.getAttributes();
-            final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-            if (on) {
-                winParams.flags |= bits;
-            } else {
-                winParams.flags &= ~bits;
-            }
-            win.setAttributes(winParams);
-        }
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -299,7 +284,6 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
             window.setStatusBarColor(color);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (mSystemBarTintManager != null) {
-                setTranslucentStatus(true);
                 mSystemBarTintManager.setStatusBarTintEnabled(true);
                 mSystemBarTintManager.setStatusBarTintColor(color);
             }
@@ -315,7 +299,6 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
             window.setStatusBarColor(ContextCompat.getColor(getActivity(), resId));
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (mSystemBarTintManager != null) {
-                setTranslucentStatus(true);
                 mSystemBarTintManager.setStatusBarTintEnabled(true);
                 mSystemBarTintManager.setStatusBarTintResource(resId);
             }
@@ -336,7 +319,6 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
     protected void dismissStatusStyle() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
                 && mSystemBarTintManager != null) {
-            setTranslucentStatus(true);
             mSystemBarTintManager.setStatusBarTintEnabled(false);
         }
     }

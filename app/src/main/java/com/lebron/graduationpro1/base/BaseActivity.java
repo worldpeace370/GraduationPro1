@@ -32,6 +32,14 @@ public abstract class BaseActivity<P extends Presenter> extends LebronMvpActivit
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /**
+         * 此段代码获取SystemBarTintManager对象之前执行,否则SystemBarTintManager中的mStatusBarAvailable
+         * 一直为false,导致setStatusBarTintResource(int resid)无效,(遇到了坑)
+         */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+                && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            setTranslucentStatus(true);
+        }
         try {
             mSystemBarTintManager = new SystemBarTintManager(this);
         } catch (NoSuchMethodError e) {
@@ -235,7 +243,6 @@ public abstract class BaseActivity<P extends Presenter> extends LebronMvpActivit
             window.setStatusBarColor(color);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (mSystemBarTintManager != null) {
-                setTranslucentStatus(true);
                 mSystemBarTintManager.setStatusBarTintEnabled(true);
                 mSystemBarTintManager.setStatusBarTintColor(color);
             }
@@ -252,7 +259,6 @@ public abstract class BaseActivity<P extends Presenter> extends LebronMvpActivit
             window.setStatusBarColor(ContextCompat.getColor(this, resId));
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (mSystemBarTintManager != null) {
-                setTranslucentStatus(true);
                 mSystemBarTintManager.setStatusBarTintEnabled(true);
                 mSystemBarTintManager.setStatusBarTintResource(resId);
             }

@@ -113,6 +113,11 @@ public interface ScanContracts {
          * 显示日期选择的PopupWindow
          */
         void showSelectDateWindow();
+
+        /**
+         * 点击菜单项 + , 弹出PopWindow.根据选择项进行不同操作
+         */
+        void showAddMenuWindow();
     }
 
     interface Model {
@@ -133,6 +138,5 @@ public interface ScanContracts {
              */
             void onFail(int retCode, String retDesc);
         }
-
     }
 }
