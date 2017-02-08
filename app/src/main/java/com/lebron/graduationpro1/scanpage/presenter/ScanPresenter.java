@@ -149,6 +149,13 @@ public class ScanPresenter extends Presenter<ScanContracts.View> implements
     }
 
     @Override
+    public void showAddMenuWindow() {
+        if (getView() != null) {
+            getView().showAddMenuWindow();
+        }
+    }
+
+    @Override
     public void onSuccess(List<CollectInfoBean> infoList) {
         if (getView() != null) {
             if (infoList.isEmpty()) {

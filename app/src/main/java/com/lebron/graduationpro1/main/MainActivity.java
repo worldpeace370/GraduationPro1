@@ -1,5 +1,7 @@
 package com.lebron.graduationpro1.main;
 
+import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,22 +10,39 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.CycleInterpolator;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseActivity;
+import com.lebron.graduationpro1.ui.activity.SettingActivity;
+import com.lebron.graduationpro1.ui.fragment.ControlFragment;
 import com.lebron.graduationpro1.detailpage.view.DetailFragment;
 import com.lebron.graduationpro1.scanpage.view.ScanFragment;
-import com.lebron.graduationpro1.ui.fragment.ControlFragment;
 import com.lebron.graduationpro1.ui.fragment.VideoFragment;
 import com.lebron.graduationpro1.utils.MyActivityManager;
 import com.lebron.graduationpro1.utils.ShowToast;
+import com.lebron.graduationpro1.view.DragLayout;
+import com.lebron.graduationpro1.view.MainLinearLayout;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
     private static final String TAG = "MainActivity";
-    private RadioGroup mRadioGroup;
+    @BindView(R.id.drawer_layout)
+    DragLayout mDragLayout;
+    @BindView(R.id.main_content)
+    MainLinearLayout mMainLinearLayout;
+    @BindView(R.id.radioGroup)
+    RadioGroup mRadioGroup;
+    @BindView(R.id.image_head_left)
+    CircleImageView mImageHeadLeft;
+
     private final int tabScan = R.id.scan;
     private final int tabVideo = R.id.video;
     private final int tabControl = R.id.control;
@@ -40,7 +59,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_new);
+        setContentView(R.layout.activity_main);
         if (savedInstanceState != null) {
             mScanFragment = findFragmentByClassName(ScanFragment.class);
             mVideoFragment = findFragmentByClassName(VideoFragment.class);
@@ -62,11 +81,32 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     @Override
     protected void bindViews() {
-        mRadioGroup = ((RadioGroup) findViewById(R.id.radioGroup));
+        ButterKnife.bind(this);
+        mMainLinearLayout.setDragLayout(mDragLayout);
     }
 
     @Override
     protected void setListener() {
+        mDragLayout.setDragStatusChangedListener(new DragLayout.OnDragStatusChangedListener() {
+            @Override
+            public void onClosed() {
+            }
+
+            @Override
+            public void onOpened() {
+                //打开抽屉的时候让头像晃动
+                ObjectAnimator animator = ObjectAnimator.ofFloat(mImageHeadLeft, "translationX", 12.0f);
+                animator.setInterpolator(new CycleInterpolator(4.0f));
+                animator.setDuration(500);
+                animator.start();
+            }
+
+            @Override
+            public void onDragging(float percent) {
+                //设置在拖拽过程中的头像透明度渐变效果
+                mImageHeadLeft.setAlpha(percent);
+            }
+        });
         mRadioGroup.setOnCheckedChangeListener(this);
     }
 
@@ -203,6 +243,45 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
             addFragment(R.id.content_container, mDetailFragment, ft);
         } else {
             ft.show(mDetailFragment).commitAllowingStateLoss();
+        }
+    }
+
+    public void click(View view) {
+        int id = view.getId();
+        switch (id) {
+            case R.id.image_head_left:
+                ShowToast.shortTime("image_head");
+                break;
+            case R.id.nick_name:
+                ShowToast.shortTime("nick_name");
+                break;
+            case R.id.my_device:
+                ShowToast.shortTime("my_device");
+                break;
+            case R.id.my_collect:
+                ShowToast.shortTime("my_collect");
+                break;
+            case R.id.my_note:
+                ShowToast.shortTime("my_note");
+                break;
+            case R.id.my_contracts:
+                ShowToast.shortTime("my_contracts");
+                break;
+            case R.id.my_data:
+                ShowToast.shortTime("my_data");
+                break;
+            case R.id.exit:
+                ShowToast.shortTime("exit");
+                break;
+            case R.id.settings:
+                //进入设置Activity
+                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                break;
+            case R.id.night_mode:
+                ShowToast.shortTime("night_mode");
+                break;
+            default:
+                break;
         }
     }
 

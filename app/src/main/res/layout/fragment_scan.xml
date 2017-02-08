@@ -52,7 +52,8 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerInParent="true"
-                        android:src="@mipmap/icon_calendar_select" />
+                        android:src="@mipmap/icon_calendar_select"
+                        tools:ignore="contentDescription" />
 
                 </RelativeLayout>
 

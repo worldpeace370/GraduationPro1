@@ -224,7 +224,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_add:
-
+                        getPresenter().showAddMenuWindow();
                         break;
                 }
                 return false;
@@ -334,8 +334,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
                 if (id == R.id.select_new_node) {
                     startNodeChoiceActivity();
                 } else if (id == R.id.save_image_sd_card) {
-                    //保存折线图到SD卡
-                    //                    getPresenter()
+                    saveLineImageToSDCard();
                 } else if (id == R.id.refresh_data) {
                     refreshData();
                 }

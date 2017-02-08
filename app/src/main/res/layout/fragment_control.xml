@@ -82,7 +82,8 @@
             android:layout_alignParentLeft="true"
             android:layout_gravity="left"
             android:background="@drawable/inc_dec_selector"
-            android:src="@mipmap/decrease" />
+            android:src="@mipmap/decrease"
+            tools:ignore="contentDescription" />
 
         <ImageView
             android:id="@+id/water_increase"
@@ -91,7 +92,8 @@
             android:layout_alignParentRight="true"
             android:layout_gravity="right"
             android:background="@drawable/inc_dec_selector"
-            android:src="@mipmap/increase" />
+            android:src="@mipmap/increase"
+            tools:ignore="contentDescription" />
     </RelativeLayout>
 
     <Button
@@ -169,7 +171,8 @@
             android:layout_alignParentLeft="true"
             android:layout_gravity="left"
             android:background="@drawable/inc_dec_selector"
-            android:src="@mipmap/decrease" />
+            android:src="@mipmap/decrease"
+            tools:ignore="contentDescription" />
 
         <ImageView
             android:id="@+id/rate_increase"
@@ -178,7 +181,8 @@
             android:layout_alignParentRight="true"
             android:layout_gravity="right"
             android:background="@drawable/inc_dec_selector"
-            android:src="@mipmap/increase" />
+            android:src="@mipmap/increase"
+            tools:ignore="contentDescription" />
     </RelativeLayout>
 
     <Button
