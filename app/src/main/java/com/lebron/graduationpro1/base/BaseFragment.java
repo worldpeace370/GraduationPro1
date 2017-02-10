@@ -238,7 +238,7 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
      *
      * @param iconRes  DrawableRes
      * @param msg      String
-     * @param duration 0 or 1
+     * @param duration 0 short or 1 long
      */
     public void showCustomToast(@DrawableRes int iconRes, String msg, int duration) {
         if (getActivity() != null) {

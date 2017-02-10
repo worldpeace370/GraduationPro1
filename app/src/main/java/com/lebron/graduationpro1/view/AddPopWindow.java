@@ -2,10 +2,12 @@ package com.lebron.graduationpro1.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
@@ -33,13 +35,12 @@ public class AddPopWindow extends PopupWindow {
 		this.setWidth(mScreenWidth / 2 - 70);
 		//设置AddPopWindow的弹出窗体的高
 		this.setHeight(LayoutParams.WRAP_CONTENT);
+		setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 		//设置AddPopWindow的弹出窗体的可点击
 		this.setFocusable(true);
 		//刷新状态
 		this.update();
-		//实例化一个ColorDrawable颜色为半透明
-//		ColorDrawable dw = new ColorDrawable(0);
-//		this.setBackgroundDrawable(dw);
+		this.setBackgroundDrawable(new BitmapDrawable()); //此句话不设置的话,按下返回键和点击空白区域都不会引起window的消失
 		//设置SelectPicPopWindow弹出窗体动画效果
 		this.setAnimationStyle(R.style.PopupWindowAnimation);
 		LinearLayout selectNewNode = (LinearLayout) contentView

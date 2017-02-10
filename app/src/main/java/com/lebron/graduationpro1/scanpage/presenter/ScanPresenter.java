@@ -35,8 +35,9 @@ public class ScanPresenter extends Presenter<ScanContracts.View> implements
     @Override
     public void getCollectInfo(String date) {
         if (getView() != null) {
-            //            getView().showLoading();
+            getView().showLoading();
             mRequestModel.getCollectInfo(date);//请求数据,然后回调到onSuccess中,在这里面更新UI
+            getView().showCommon();
         }
     }
 
@@ -63,6 +64,13 @@ public class ScanPresenter extends Presenter<ScanContracts.View> implements
             getView().changeTopDateColor(POSITION_THIRD_DAY);
             getView().setTopDateLayout(mTodayYear, mTodayMonth, mTodayDay);
             getCollectInfo(CalendarTools.dateToString(mTodayYear, mTodayMonth, mTodayDay));
+        }
+    }
+
+    @Override
+    public void refreshTodayData() {
+        if (getView() != null) {
+            getCollectInfo(CalendarTools.dateToString(mSelectYear, mSelectMonth, mSelectDay));
         }
     }
 
@@ -152,6 +160,13 @@ public class ScanPresenter extends Presenter<ScanContracts.View> implements
     public void showAddMenuWindow() {
         if (getView() != null) {
             getView().showAddMenuWindow();
+        }
+    }
+
+    @Override
+    public void saveLineImageToSDCard() {
+        if (getView() != null) {
+            getView().saveLineImageToSDCard();
         }
     }
 

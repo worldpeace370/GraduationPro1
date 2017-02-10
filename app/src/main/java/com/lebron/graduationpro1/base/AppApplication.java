@@ -15,6 +15,7 @@ public class AppApplication extends Application{
     public void onCreate() {
         super.onCreate();
         mContext = this;
+        BasePreference.getInstance().setContext(mContext);
     }
 
     public static Context getAppContext(){
