@@ -28,6 +28,11 @@ public interface ScanContracts {
         void showEmpty();
 
         /**
+         * 显示除了 加载中,网络错误,空内容的正常页面
+         */
+        void showCommon();
+
+        /**
          * 显示正常加载出来的内容
          */
         void showContent(List<CollectInfoBean> infoList);
@@ -80,6 +85,11 @@ public interface ScanContracts {
         void initTodayData();
 
         /**
+         * 重新刷新今天相关的数据
+         */
+        void refreshTodayData();
+
+        /**
          * 变为第一天，处理相关显示和数据
          */
         void changeToFirstPositionDay();
@@ -118,6 +128,11 @@ public interface ScanContracts {
          * 点击菜单项 + , 弹出PopWindow.根据选择项进行不同操作
          */
         void showAddMenuWindow();
+
+        /**
+         * 保存折线图到sd卡
+         */
+        void saveLineImageToSDCard();
     }
 
     interface Model {

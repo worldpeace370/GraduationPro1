@@ -10,7 +10,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -43,6 +43,7 @@ import com.lebron.graduationpro1.scanpage.presenter.ScanPresenter;
 import com.lebron.graduationpro1.ui.activity.NodeChoiceActivity;
 import com.lebron.graduationpro1.utils.AppLog;
 import com.lebron.graduationpro1.utils.ConstantValue;
+import com.lebron.graduationpro1.utils.LebronPreference;
 import com.lebron.graduationpro1.utils.ShowToast;
 import com.lebron.graduationpro1.view.AddPopWindow;
 import com.lebron.graduationpro1.view.MyMarkerView;
@@ -81,8 +82,6 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     TextView mTextViewX;
     @BindView(R.id.textView_Y_MAX)
     TextView mTextViewY;
-    @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout mRefreshLayout;
     @BindView(R.id.iv_show_select_date)
     ImageView mIvShowSelectDate; // 日历选择提示图标
 
@@ -91,7 +90,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     public final static int POSITION_THIRD_DAY = 3;
 
     private static final int COLOR_SELECTED = ContextCompat.getColor(AppApplication.getAppContext()
-            , R.color.color_v3_text_blue);
+            , R.color.toolBarBackground);
     private static final int COLOR_NOT_SELECTED = ContextCompat.getColor(AppApplication.getAppContext()
             , R.color.color_std_light_black);
 
@@ -101,7 +100,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     private PopupWindow mSelectDateWindow;
     private TextView mTvBackToday;
     //节点名字,放置到mTextViewTitle中
-    private String mNodeName = "";
+    private String mNodeName;
 
     private Unbinder mUnBinder;
     private static final String TAG = "ScanFragment";
@@ -112,11 +111,9 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
 
     private static class MyHandler extends Handler {
         WeakReference<ScanFragment> weakReference;
-
         MyHandler(ScanFragment fragment) {
             weakReference = new WeakReference<>(fragment);
         }
-
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -124,30 +121,16 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
             if (fragment != null) {//如果activity仍然在弱引用中,执行...
                 switch (msg.what) {
                     case 0x01:
-                        fragment.setEnabledRefreshAnim(false);
+
                         break;
                 }
             }
         }
     }
 
-
     public ScanFragment() {
-
     }
 
-    //    //得到选择的节点,设置到mTextViewTitle中
-    //    @Override
-    //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    //        super.onActivityResult(requestCode, resultCode, data);
-    //        //获得 mNodeName
-    //        if (requestCode == ConstantValue.NODE_CHOICE_REQUEST_CODE && resultCode == ConstantValue.NODE_CHOICE_RESULT_CODE) {
-    //            if (data != null) {
-    //                mNodeName = data.getStringExtra("nodeName");
-    //                mTextViewTitle.setText(mNodeName);
-    //            }
-    //        }
-    //    }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -163,6 +146,10 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mHandler = new MyHandler(this);
+        mNodeName = LebronPreference.getInstance().getNodeChoice();
+        if (mNodeName.equals("")) {
+            mNodeName = "朝阳区节点1";
+        }
         AppLog.i(TAG, "onCreate: 执行了");
     }
 
@@ -183,10 +170,21 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     @Override
     protected void bindViews(View view) {
         mUnBinder = ButterKnife.bind(this, mRootView);
-        //        initNoStandardUI(view);
-        initToolbar(view);
-        mToolbar.setTitle("");
-        mToolbar.inflateMenu(R.menu.menu_scan_fragment);
+        mSeekBarX.setProgress(49);
+        mSeekBarY.setProgress(40);
+        initNoStandardUI(view);
+        initToolBarUI(view);
+        initSelectDateUI(view);
+        initLineChartUI();
+        initAxisUI(mLineChart);
+    }
+
+    /**
+     * findViewById 日期切换那块的View
+     *
+     * @param view mRootView
+     */
+    private void initSelectDateUI(View view) {
         mLayoutDay1 = (LinearLayout) view.findViewById(R.id.layout_day1);
         mLayoutDay2 = (LinearLayout) view.findViewById(R.id.layout_day2);
         mLayoutDay3 = (LinearLayout) view.findViewById(R.id.layout_day3);
@@ -196,16 +194,24 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         mTvDay1 = (TextView) view.findViewById(R.id.tv_day1);
         mTvDay2 = (TextView) view.findViewById(R.id.tv_day2);
         mTvDay3 = (TextView) view.findViewById(R.id.tv_day3);
+    }
 
-        //原生下拉刷新控件
-        mRefreshLayout.setColorSchemeResources(R.color.holo_blue_bright,
-                R.color.holo_green_light,
-                R.color.holo_orange_light,
-                R.color.holo_red_light);
-        mRefreshLayout.setEnabled(false);
-        mSeekBarX.setProgress(49);
-        mSeekBarY.setProgress(40);
+    /**
+     * 初始化 ToolBar 相关UI,title 和 menu
+     *
+     * @param view mRootView
+     */
+    private void initToolBarUI(View view) {
+        initToolbar(view);
+        mToolbar.setTitle(mNodeName);
+        mToolbar.setTitleTextAppearance(mMainActivity, R.style.ToolBarTitleAppearance);
+        mToolbar.inflateMenu(R.menu.menu_scan_fragment);
+    }
 
+    /**
+     * 初始化LineChart的相关视觉属性
+     */
+    private void initLineChartUI() {
         mLineChart.setDescription("节点信息");//右下角说明
         mLineChart.setNoDataTextDescription("You need to provide data for the chart");
         mLineChart.setTouchEnabled(true);//enable touch gesture
@@ -215,6 +221,63 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         mLineChart.setDoubleTapToZoomEnabled(true);
         //create a custom MarkerView (extends MarkerView) and specify the layout
         mLineChart.setMarkerView(new MyMarkerView(mMainActivity, R.layout.custom_marker_view));
+    }
+
+    /**
+     * 设置x,y轴和Legend显示的属性
+     */
+    private void initAxisUI(LineChart lineChart) {
+        //获取右侧Y轴
+        YAxis rightAxis = lineChart.getAxisRight();
+        //取消右侧Y轴显示
+        rightAxis.setEnabled(false);
+        //获取左侧Y轴
+        YAxis leftAxis = lineChart.getAxisLeft();
+        //设置网格线虚线模式
+        leftAxis.enableGridDashedLine(2f, 3f, 0);
+        //设置Y轴最大值
+        leftAxis.setAxisMaxValue(100f);
+        leftAxis.setDrawLimitLinesBehindData(true);
+        //自定义格式的标签,显示温度等
+        //        leftAxis.setValueFormatter(new YAxisValueFormatter() {
+        //            @Override
+        //            public String getFormattedValue(float value, YAxis yAxis) {
+        //                return value + "℃";
+        //            }
+        //        });
+        LimitLine limitLineWater = new LimitLine(70, "水温阈值");
+        limitLineWater.setLineColor(Color.RED);
+        limitLineWater.setLineWidth(1f);
+        limitLineWater.setTextColor(Color.BLACK);
+        limitLineWater.setTextSize(12f);
+        limitLineWater.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+        //设置虚线
+        //        limitLineWater.enableDashedLine(6f, 10f, 0f);
+        leftAxis.addLimitLine(limitLineWater);
+        LimitLine limitLineRotateSpeed = new LimitLine(40, "转速阈值");
+        limitLineRotateSpeed.setLineColor(Color.GREEN);
+        limitLineRotateSpeed.setLineWidth(1f);
+        limitLineRotateSpeed.setTextColor(Color.BLACK);
+        limitLineRotateSpeed.setTextSize(12f);
+        limitLineRotateSpeed.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+        //设置虚线
+        //        limitLineRotateSpeed.enableDashedLine(6f, 10f, 0f);
+        leftAxis.addLimitLine(limitLineRotateSpeed);
+        //X轴设置在底部
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        //设置网格线虚线模式
+        xAxis.enableGridDashedLine(2f, 3f, 0f);
+        //设置标签字符间的空隙,默认是4字符间距
+        xAxis.setSpaceBetweenLabels(2);
+        //设置在"绘制下一个标签时",要忽略的标签数
+        xAxis.setLabelsToSkip(1);
+        //避免剪掉x轴上第一个和最后一个坐标项
+        xAxis.setAvoidFirstLastClipping(true);
+        //设置Legend,左下角的东西,可以是横线,方形
+        Legend legend = lineChart.getLegend();
+        legend.setForm(Legend.LegendForm.LINE);
+        //        legend.setTextColor(Color.RED);
     }
 
     @Override
@@ -231,15 +294,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
             }
         });
         mSeekBarX.setOnSeekBarChangeListener(this);
-        mSeekBarX.setOnSeekBarChangeListener(this);
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //重新加载数据,绘制图形
-                initLineChartData();
-            }
-        });
-
+        mSeekBarY.setOnSeekBarChangeListener(this);
         mIvShowSelectDate.setOnClickListener(this);
         mLayoutDay1.setOnClickListener(this);
         mLayoutDay2.setOnClickListener(this);
@@ -273,6 +328,9 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         }
     }
 
+    /**
+     * 让日历选择窗体消失
+     */
     private void dismissSelectDateWindow() {
         if (mSelectDateWindow != null && mSelectDateWindow.isShowing()) {
             mSelectDateWindow.dismiss();
@@ -282,8 +340,6 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     @Override
     protected void init() {
         getPresenter().initTodayData();
-        //初始化X,Y轴
-        initAxis(mLineChart);
         initLineChartData();
     }
 
@@ -300,6 +356,11 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     @Override
     public void showEmpty() {
         showCommonEmptyLayout();
+    }
+
+    @Override
+    public void showCommon() {
+        showCommonLayout();
     }
 
     @Override
@@ -334,9 +395,10 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
                 if (id == R.id.select_new_node) {
                     startNodeChoiceActivity();
                 } else if (id == R.id.save_image_sd_card) {
-                    saveLineImageToSDCard();
+                    getPresenter().saveLineImageToSDCard();
                 } else if (id == R.id.refresh_data) {
-                    refreshData();
+                    showCustomToast(R.mipmap.toast_done_icon, "刷新中...", Toast.LENGTH_LONG);
+                    getPresenter().refreshTodayData();
                 }
             }
         });
@@ -438,64 +500,45 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         dismissSelectDateWindow();
     }
 
+    //主要是设置 "回到今天" 的可见性
     @Override
     public void onMonthChanged(CustomCalendarView widget, Calendar calendar) {
         getPresenter().setBackTodayVisibility(calendar);
     }
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //宽高为0
-        Log.i("ScanFragment", "onActivityCreated：mLineChart.getWidth() = " + mLineChart.getWidth()
-                + ",mLineChart.getHeight() = " + mLineChart.getHeight());
         AppLog.i(TAG, "onActivityCreated: 执行了");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        //宽高为0
-        Log.i("ScanFragment", "onStart：mLineChart.getWidth() = " + mLineChart.getWidth()
-                + ",mLineChart.getHeight() = " + mLineChart.getHeight());
         AppLog.i(TAG, "onStart: 执行了");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //宽高为0
-        Log.i("ScanFragment", "onResume：mLineChart.getWidth() = " + mLineChart.getWidth()
-                + ",mLineChart.getHeight() = " + mLineChart.getHeight());
         AppLog.i(TAG, "onResume: 执行了");
     }
 
-    //在onResume()方法之后,Fragment才是active的状态,所以mLineChart的宽和高只有在onResume()之后才有值
     @Override
     public void onPause() {
         super.onPause();
-        //宽高不为0
-        Log.i("ScanFragment", "onPause：mLineChart.getWidth() = " + mLineChart.getWidth()
-                + ",mLineChart.getHeight() = " + mLineChart.getHeight());
         AppLog.i(TAG, "onPause: 执行了");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        //宽高不为0
-        Log.i("ScanFragment", "onStop：mLineChart.getWidth() = " + mLineChart.getWidth()
-                + ",mLineChart.getHeight() = " + mLineChart.getHeight());
         AppLog.i(TAG, "onStop: 执行了");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        //宽高不为0
-        Log.i("ScanFragment", "onDestroyView：mLineChart.getWidth() = " + mLineChart.getWidth()
-                + ",mLineChart.getHeight() = " + mLineChart.getHeight());
         mUnBinder.unbind();
         AppLog.i(TAG, "onDestroyView: 执行了");
     }
@@ -512,46 +555,6 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         AppLog.i(TAG, "onDetach: 执行了");
     }
 
-
-    /**
-     * 手动刷新数据,下拉刷新和点击折线图有事件冲突,这样也可以
-     */
-    public void refreshData() {
-        mRefreshLayout.setRefreshing(true);
-        //网络下载数据,耗时操作(下面是示例代码),数据下载完成,在回调接口中更新UI
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    Message message = Message.obtain();
-                    message.what = 0x01;
-                    mHandler.sendMessage(message);
-                }
-            }
-        }).start();
-    }
-
-    /**
-     * 设置是否停止刷新的动画操作
-     *
-     * @param enabledRefresh true represents show animation; false stop showing animation
-     */
-    private void setEnabledRefreshAnim(boolean enabledRefresh) {
-        if (!enabledRefresh) {
-            if (mRefreshLayout.isRefreshing()) {
-                mRefreshLayout.setRefreshing(false);
-            }
-        } else {
-            if (!mRefreshLayout.isRefreshing()) {
-                mRefreshLayout.setRefreshing(true);
-            }
-        }
-    }
-
     /**
      * 跳转到节点选择的Activity中去
      */
@@ -561,6 +564,21 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         startActivityForResult(intent, ConstantValue.NODE_CHOICE_REQUEST_CODE);
         //Activity启动动画
         mMainActivity.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
+    }
+
+    //得到选择的节点,设置到ToolBat title中
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //获得 mNodeName
+        if (requestCode == ConstantValue.NODE_CHOICE_REQUEST_CODE
+                && resultCode == ConstantValue.NODE_CHOICE_RESULT_CODE) {
+            if (data != null) {
+                mNodeName = data.getStringExtra("nodeName");
+                LebronPreference.getInstance().saveNodeChoice(mNodeName);
+                mToolbar.setTitle(mNodeName);
+            }
+        }
     }
 
     private void initLineChartData() {
@@ -574,65 +592,8 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         //X方向动画效果
         mLineChart.animateX(1500, Easing.EasingOption.EaseInOutQuart);
         //X,Y方向同时动画
-        //        mLineChart.animateXY(3000, 3000);
+        //mLineChart.animateXY(3000, 3000);
         mLineChart.invalidate();
-    }
-
-    /**
-     * 设置x,y轴和Legend显示的属性
-     */
-    private void initAxis(LineChart lineChart) {
-        //获取右侧Y轴
-        YAxis rightAxis = lineChart.getAxisRight();
-        //取消右侧Y轴显示
-        rightAxis.setEnabled(false);
-        //获取左侧Y轴
-        YAxis leftAxis = lineChart.getAxisLeft();
-        //设置网格线虚线模式
-        leftAxis.enableGridDashedLine(2f, 3f, 0);
-        //设置Y轴最大值
-        leftAxis.setAxisMaxValue(100f);
-        leftAxis.setDrawLimitLinesBehindData(true);
-        //自定义格式的标签,显示温度等
-        //        leftAxis.setValueFormatter(new YAxisValueFormatter() {
-        //            @Override
-        //            public String getFormattedValue(float value, YAxis yAxis) {
-        //                return value + "℃";
-        //            }
-        //        });
-        LimitLine limitLineWater = new LimitLine(70, "水温阈值");
-        limitLineWater.setLineColor(Color.RED);
-        limitLineWater.setLineWidth(1f);
-        limitLineWater.setTextColor(Color.BLACK);
-        limitLineWater.setTextSize(12f);
-        limitLineWater.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-        //设置虚线
-        //        limitLineWater.enableDashedLine(6f, 10f, 0f);
-        leftAxis.addLimitLine(limitLineWater);
-        LimitLine limitLineRotateSpeed = new LimitLine(40, "转速阈值");
-        limitLineRotateSpeed.setLineColor(Color.GREEN);
-        limitLineRotateSpeed.setLineWidth(1f);
-        limitLineRotateSpeed.setTextColor(Color.BLACK);
-        limitLineRotateSpeed.setTextSize(12f);
-        limitLineRotateSpeed.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-        //设置虚线
-        //        limitLineRotateSpeed.enableDashedLine(6f, 10f, 0f);
-        leftAxis.addLimitLine(limitLineRotateSpeed);
-        //X轴设置在底部
-        XAxis xAxis = lineChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        //设置网格线虚线模式
-        xAxis.enableGridDashedLine(2f, 3f, 0f);
-        //设置标签字符间的空隙,默认是4字符间距
-        xAxis.setSpaceBetweenLabels(2);
-        //设置在"绘制下一个标签时",要忽略的标签数
-        xAxis.setLabelsToSkip(1);
-        //避免剪掉x轴上第一个和最后一个坐标项
-        xAxis.setAvoidFirstLastClipping(true);
-        //设置Legend,左下角的东西,可以是横线,方形
-        Legend legend = lineChart.getLegend();
-        legend.setForm(Legend.LegendForm.LINE);
-        //        legend.setTextColor(Color.RED);
     }
 
     /**
