@@ -17,7 +17,7 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     protected void bindViews() {
-        initToolbar(R.string.settings);
+        initToolbar(R.string.mine_system_setting);
     }
 
     @Override

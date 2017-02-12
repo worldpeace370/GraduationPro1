@@ -1,248 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.lebron.graduationpro1.view.DragLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffffff"
     android:clipToPadding="false"
     android:fitsSystemWindows="true"
-    android:background="@mipmap/bg"
-    tools:openDrawer="start"
-    tools:context="com.lebron.graduationpro1.main.MainActivity">
-    <!--left_content 左侧等待被侧拉出来的布局视图-->
-    <LinearLayout
-        android:id="@+id/left_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/content_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="50dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="50dp"
-        android:paddingTop="50dp"
-        android:visibility="invisible">
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_head_left"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:onClick="click"
-                android:src="@mipmap/user_head" />
-
-            <TextView
-                android:id="@+id/nick_name"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/image_head_left"
-                android:gravity="center"
-                android:onClick="click"
-                android:text="@string/nick_name"
-                android:textColor="#ffffff"
-                android:textSize="20sp" />
-        </RelativeLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="20dp"
-            android:layout_weight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/my_device"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    android:drawableLeft="@mipmap/my_device"
-                    android:drawablePadding="10dp"
-                    android:gravity="center"
-                    android:onClick="click"
-                    android:text="@string/my_device"
-                    android:textColor="#c2b6a8"
-                    android:textSize="20sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#000000" />
-
-                <TextView
-                    android:id="@+id/my_collect"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    android:drawableLeft="@mipmap/my_collect"
-                    android:drawablePadding="10dp"
-                    android:gravity="center"
-                    android:onClick="click"
-                    android:text="@string/my_collect"
-                    android:textColor="#c2b6a8"
-                    android:textSize="20sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#000000" />
-
-                <TextView
-                    android:id="@+id/my_note"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    android:drawableLeft="@mipmap/my_note"
-                    android:drawablePadding="10dp"
-                    android:gravity="center"
-                    android:onClick="click"
-                    android:text="@string/my_note"
-                    android:textColor="#c2b6a8"
-                    android:textSize="20sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#000000" />
-
-                <TextView
-                    android:id="@+id/my_contracts"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    android:drawableLeft="@mipmap/my_contracts"
-                    android:drawablePadding="10dp"
-                    android:gravity="center"
-                    android:onClick="click"
-                    android:text="@string/my_contracts"
-                    android:textColor="#c2b6a8"
-                    android:textSize="20sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#000000" />
-
-                <TextView
-                    android:id="@+id/my_data"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    android:drawableLeft="@mipmap/my_data"
-                    android:drawablePadding="10dp"
-                    android:gravity="center"
-                    android:onClick="click"
-                    android:text="@string/my_data"
-                    android:textColor="#c2b6a8"
-                    android:textSize="20sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#000000" />
-
-                <TextView
-                    android:id="@+id/exit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
-                    android:drawableLeft="@mipmap/exit"
-                    android:drawablePadding="10dp"
-                    android:gravity="center"
-                    android:onClick="click"
-                    android:text="@string/exit"
-                    android:textColor="#c2b6a8"
-                    android:textSize="20sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#000000" />
-            </LinearLayout>
-        </ScrollView>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp">
-
-            <TextView
-                android:id="@+id/settings"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:drawableLeft="@mipmap/settings"
-                android:drawablePadding="10dp"
-                android:gravity="center"
-                android:onClick="click"
-                android:text="@string/settings"
-                android:textColor="#c2b6a8"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/night_mode"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_marginLeft="40dp"
-                android:layout_toRightOf="@id/settings"
-                android:drawableLeft="@mipmap/night_mode"
-                android:drawablePadding="10dp"
-                android:gravity="center"
-                android:onClick="click"
-                android:text="@string/night_mode"
-                android:textColor="#c2b6a8"
-                android:textSize="20sp" />
-        </RelativeLayout>
-    </LinearLayout>
-    <!--main_content 显示的主界面-->
-    <com.lebron.graduationpro1.view.MainLinearLayout
-        android:id="@+id/main_content"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffffff"
-        android:orientation="vertical">
+        android:layout_height="1px"
+        android:background="@color/cut_off_line" />
 
-            <FrameLayout
-                android:id="@+id/content_container"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/cut_off_line" />
+        <RadioButton
+            android:id="@+id/scan"
+            style="@style/tab_style"
+            android:checked="true"
+            android:drawableTop="@drawable/tab_scan_selector"
+            android:text="@string/scan" />
 
-            <RadioGroup
-                android:id="@+id/radioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/video"
+            style="@style/tab_style"
+            android:drawableTop="@drawable/tab_video_selector"
+            android:text="@string/video" />
 
-                <RadioButton
-                    android:id="@+id/scan"
-                    style="@style/tab_style"
-                    android:checked="true"
-                    android:drawableTop="@drawable/tab_scan_selector"
-                    android:text="@string/scan" />
+        <RadioButton
+            android:id="@+id/control"
+            style="@style/tab_style"
+            android:drawableTop="@drawable/tab_control_selector"
+            android:text="@string/control" />
 
-                <RadioButton
-                    android:id="@+id/video"
-                    style="@style/tab_style"
-                    android:drawableTop="@drawable/tab_video_selector"
-                    android:text="@string/video" />
+        <RadioButton
+            android:id="@+id/details"
+            style="@style/tab_style"
+            android:drawableTop="@drawable/tab_details_selector"
+            android:text="@string/details" />
 
-                <RadioButton
-                    android:id="@+id/control"
-                    style="@style/tab_style"
-                    android:drawableTop="@drawable/tab_control_selector"
-                    android:text="@string/control" />
-
-                <RadioButton
-                    android:id="@+id/details"
-                    style="@style/tab_style"
-                    android:drawableTop="@drawable/tab_details_selector"
-                    android:text="@string/details" />
-            </RadioGroup>
-    </com.lebron.graduationpro1.view.MainLinearLayout>
-
-</com.lebron.graduationpro1.view.DragLayout>
+        <RadioButton
+            android:id="@+id/mine"
+            style="@style/tab_style"
+            android:drawableTop="@drawable/tab_mine_selector"
+            android:text="@string/mine" />
+    </RadioGroup>
+</LinearLayout>
