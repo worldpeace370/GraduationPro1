@@ -17,17 +17,16 @@
     <string name="last_scan">上次查询:</string>
     <string name="scan_node">朝阳区节点2</string>
     <string name="nick_name">世界和平</string>
-    <string name="my_device">我的设备</string>
-    <string name="settings">设置</string>
-    <string name="night_mode">夜间</string>
-    <string name="exit">退出登录</string>
-    <string name="my_collect">我的收藏</string>
-    <string name="my_note">我的记录</string>
-    <string name="my_contracts">我的联系</string>
-    <string name="my_data">我的资料</string>
+    <!--MineFragment-->
+    <string name="mine">我的</string>
+    <string name="mine_device">我的设备</string>
+    <string name="mine_collect">我的收藏</string>
+    <string name="mine_note">我的记录</string>
+    <string name="mine_contracts">我的联系</string>
+    <string name="mine_info">我的信息</string>
+    <string name="mine_system_setting">系统设置</string>
+    <string name="mine_night_mode">夜间模式</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="x_500">X:100</string>
     <string name="y_500">Y:100</string>
     <string name="scroll_to_scale">拖动查询历史数据</string>

@@ -7,6 +7,7 @@
     <color name="toolBarBackground">#18b6ef</color>
     <color name="tabRelease">#8a8a8a</color>
     <color name="cut_off_line">#dadada</color>
+    <color name="commen_gray_bg">#F5F5F5</color>
     <color name="transparent">#00000000</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
@@ -14,6 +15,7 @@
     <color name="greenyellow">#ADFF2F</color>
     <color name="yellow">#ffee2f</color>
     <color name="color_std_disenable">#c2c2c2</color>
+    <color name="color_std_grey_pressed">#f4f4f4</color>
     <color name="color_std_yellow_pressed">#c69500</color>
     <color name="color_std_yellow">#ECB217</color>
     <color name="green">#00f000</color>
@@ -28,6 +30,7 @@
     <color name="cursorGreen">#9bd435</color>
     <color name="text_color_blue">#5e8bbb</color>
     <color name="common_toast_bg">#AF000000</color>
+    <color name="custom_setting_item_color">#8a8a8a</color>
     <color name="colorStatusBar">#049fd7</color>
     <color name="text_color_black">#333333</color>
     <color name="text_color_light_black">#666666</color>

@@ -1,7 +1,5 @@
 package com.lebron.graduationpro1.main;
 
-import android.animation.ObjectAnimator;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,48 +8,34 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.CycleInterpolator;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseActivity;
-import com.lebron.graduationpro1.ui.activity.SettingActivity;
-import com.lebron.graduationpro1.ui.fragment.ControlFragment;
 import com.lebron.graduationpro1.detailpage.view.DetailFragment;
 import com.lebron.graduationpro1.scanpage.view.ScanFragment;
+import com.lebron.graduationpro1.ui.fragment.ControlFragment;
+import com.lebron.graduationpro1.ui.fragment.MineFragment;
 import com.lebron.graduationpro1.ui.fragment.VideoFragment;
 import com.lebron.graduationpro1.utils.MyActivityManager;
 import com.lebron.graduationpro1.utils.ShowToast;
-import com.lebron.graduationpro1.view.DragLayout;
-import com.lebron.graduationpro1.view.MainLinearLayout;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
     private static final String TAG = "MainActivity";
-    @BindView(R.id.drawer_layout)
-    DragLayout mDragLayout;
-    @BindView(R.id.main_content)
-    MainLinearLayout mMainLinearLayout;
-    @BindView(R.id.radioGroup)
-    RadioGroup mRadioGroup;
-    @BindView(R.id.image_head_left)
-    CircleImageView mImageHeadLeft;
-
+    private RadioGroup mRadioGroup;
     private final int tabScan = R.id.scan;
     private final int tabVideo = R.id.video;
     private final int tabControl = R.id.control;
     private final int tabDetails = R.id.details;
+    private final int tabMine = R.id.mine;
     private int currentSelectedTab = R.id.scan;
     private ScanFragment mScanFragment;
     private VideoFragment mVideoFragment;
     private ControlFragment mControlFragment;
     private DetailFragment mDetailFragment;
+    private MineFragment mMineFragment;
     private FragmentManager mFragmentManager;
     //用于按下两次返回键退出程序用
     private long mExitTime;
@@ -65,6 +49,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
             mVideoFragment = findFragmentByClassName(VideoFragment.class);
             mControlFragment = findFragmentByClassName(ControlFragment.class);
             mDetailFragment = findFragmentByClassName(DetailFragment.class);
+            mMineFragment = findFragmentByClassName(MineFragment.class);
         }
         /**
          * 开启硬件加速
@@ -81,32 +66,11 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     @Override
     protected void bindViews() {
-        ButterKnife.bind(this);
-        mMainLinearLayout.setDragLayout(mDragLayout);
+        mRadioGroup = ((RadioGroup) findViewById(R.id.radioGroup));
     }
 
     @Override
     protected void setListener() {
-        mDragLayout.setDragStatusChangedListener(new DragLayout.OnDragStatusChangedListener() {
-            @Override
-            public void onClosed() {
-            }
-
-            @Override
-            public void onOpened() {
-                //打开抽屉的时候让头像晃动
-                ObjectAnimator animator = ObjectAnimator.ofFloat(mImageHeadLeft, "translationX", 12.0f);
-                animator.setInterpolator(new CycleInterpolator(4.0f));
-                animator.setDuration(500);
-                animator.start();
-            }
-
-            @Override
-            public void onDragging(float percent) {
-                //设置在拖拽过程中的头像透明度渐变效果
-                mImageHeadLeft.setAlpha(percent);
-            }
-        });
         mRadioGroup.setOnCheckedChangeListener(this);
     }
 
@@ -179,6 +143,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         if (mDetailFragment != null) {
             ft.hide(mDetailFragment);
         }
+        if (mMineFragment != null) {
+            ft.hide(mMineFragment);
+        }
     }
 
     /**
@@ -204,6 +171,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 break;
             case tabDetails:
                 change2Details(ft);
+                break;
+            case tabMine:
+                change2Mine(ft);
                 break;
             default:
                 break;
@@ -246,42 +216,12 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         }
     }
 
-    public void click(View view) {
-        int id = view.getId();
-        switch (id) {
-            case R.id.image_head_left:
-                ShowToast.shortTime("image_head");
-                break;
-            case R.id.nick_name:
-                ShowToast.shortTime("nick_name");
-                break;
-            case R.id.my_device:
-                ShowToast.shortTime("my_device");
-                break;
-            case R.id.my_collect:
-                ShowToast.shortTime("my_collect");
-                break;
-            case R.id.my_note:
-                ShowToast.shortTime("my_note");
-                break;
-            case R.id.my_contracts:
-                ShowToast.shortTime("my_contracts");
-                break;
-            case R.id.my_data:
-                ShowToast.shortTime("my_data");
-                break;
-            case R.id.exit:
-                ShowToast.shortTime("exit");
-                break;
-            case R.id.settings:
-                //进入设置Activity
-                startActivity(new Intent(MainActivity.this, SettingActivity.class));
-                break;
-            case R.id.night_mode:
-                ShowToast.shortTime("night_mode");
-                break;
-            default:
-                break;
+    private void change2Mine(FragmentTransaction ft) {
+        if (mMineFragment == null) {
+            mMineFragment = new MineFragment();
+            addFragment(R.id.content_container, mMineFragment, ft);
+        } else {
+            ft.show(mMineFragment).commitAllowingStateLoss();
         }
     }
 

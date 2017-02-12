@@ -11,4 +11,15 @@
             <enum name="match_parent" value="-1" />
         </attr>
     </declare-styleable>
+    <declare-styleable name="CustomSetting">
+        <attr name="top_line_visibility" format="boolean" />
+        <attr name="bottom_line_visibility" format="boolean" />
+        <attr name="indicator_visibility" format="boolean" />
+        <attr name="item_text" format="reference" />
+        <attr name="text_size" format="dimension" />
+        <attr name="text_color" format="color" />
+        <attr name="item_icon" format="reference" />
+        <attr name="icon_width" format="dimension"/>
+        <attr name="icon_height" format="dimension"/>
+    </declare-styleable>
 </resources>

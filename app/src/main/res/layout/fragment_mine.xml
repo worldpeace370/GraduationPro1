@@ -1,0 +1,200 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/commen_gray_bg"
+    android:fadingEdge="none"
+    android:fillViewport="true"
+    android:scrollbars="none"
+    tools:context="com.lebron.graduationpro1.ui.fragment.MineFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@color/tabSelected">
+
+            <RelativeLayout
+                android:id="@+id/user_account_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image_user_head"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerInParent="true"
+                    android:src="@mipmap/user_head" />
+
+                <TextView
+                    android:id="@+id/nick_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/image_user_head"
+                    android:layout_marginTop="30dp"
+                    android:maxLines="1"
+                    android:text="@string/app_name"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/content_textsize" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <com.lebron.graduationpro1.view.CustomSettingItem
+                android:id="@+id/item_mine_device"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_custom_setting_item_selector"
+                custom:bottom_line_visibility="false"
+                custom:icon_height="23dp"
+                custom:icon_width="23dp"
+                custom:item_icon="@mipmap/mine_device"
+                custom:item_text="@string/mine_device"
+                custom:text_color="@color/custom_setting_item_color"
+                custom:text_size="@dimen/content_textsize"
+                custom:top_line_visibility="false" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1.0px"
+                android:layout_marginLeft="15dp"
+                android:background="@color/div_line_color" />
+
+            <com.lebron.graduationpro1.view.CustomSettingItem
+                android:id="@+id/item_mine_collect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_custom_setting_item_selector"
+                custom:bottom_line_visibility="false"
+                custom:icon_height="23dp"
+                custom:icon_width="23dp"
+                custom:item_icon="@mipmap/mine_collect"
+                custom:item_text="@string/mine_collect"
+                custom:text_color="@color/custom_setting_item_color"
+                custom:text_size="@dimen/content_textsize"
+                custom:top_line_visibility="false" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1.0px"
+                android:layout_marginLeft="15dp"
+                android:background="@color/div_line_color" />
+
+            <com.lebron.graduationpro1.view.CustomSettingItem
+                android:id="@+id/item_mine_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_custom_setting_item_selector"
+                custom:bottom_line_visibility="false"
+                custom:icon_height="23dp"
+                custom:icon_width="23dp"
+                custom:item_icon="@mipmap/mine_note"
+                custom:item_text="@string/mine_note"
+                custom:text_color="@color/custom_setting_item_color"
+                custom:text_size="@dimen/content_textsize"
+                custom:top_line_visibility="false" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <com.lebron.graduationpro1.view.CustomSettingItem
+                android:id="@+id/item_mine_contracts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_custom_setting_item_selector"
+                custom:bottom_line_visibility="false"
+                custom:icon_height="23dp"
+                custom:icon_width="23dp"
+                custom:item_icon="@mipmap/mine_contracts"
+                custom:item_text="@string/mine_contracts"
+                custom:text_color="@color/custom_setting_item_color"
+                custom:text_size="@dimen/content_textsize"
+                custom:top_line_visibility="false" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1.0px"
+                android:layout_marginLeft="15dp"
+                android:background="@color/div_line_color" />
+
+            <com.lebron.graduationpro1.view.CustomSettingItem
+                android:id="@+id/item_mine_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_custom_setting_item_selector"
+                custom:bottom_line_visibility="false"
+                custom:icon_height="23dp"
+                custom:icon_width="23dp"
+                custom:item_icon="@mipmap/mine_info"
+                custom:item_text="@string/mine_info"
+                custom:text_color="@color/custom_setting_item_color"
+                custom:text_size="@dimen/content_textsize"
+                custom:top_line_visibility="false" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="65dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <com.lebron.graduationpro1.view.CustomSettingItem
+                android:id="@+id/item_mine_system_setting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_custom_setting_item_selector"
+                custom:bottom_line_visibility="false"
+                custom:icon_height="23dp"
+                custom:icon_width="23dp"
+                custom:item_icon="@mipmap/mine_setting"
+                custom:item_text="@string/mine_system_setting"
+                custom:text_color="@color/custom_setting_item_color"
+                custom:text_size="@dimen/content_textsize"
+                custom:top_line_visibility="false" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1.0px"
+                android:layout_marginLeft="15dp"
+                android:background="@color/div_line_color" />
+
+            <com.lebron.graduationpro1.view.CustomSettingItem
+                android:id="@+id/item_mine_night_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_custom_setting_item_selector"
+                custom:bottom_line_visibility="false"
+                custom:icon_height="23dp"
+                custom:icon_width="23dp"
+                custom:item_icon="@mipmap/mine_night_mode"
+                custom:item_text="@string/mine_night_mode"
+                custom:text_color="@color/custom_setting_item_color"
+                custom:text_size="@dimen/content_textsize"
+                custom:top_line_visibility="false" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
