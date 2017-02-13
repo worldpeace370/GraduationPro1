@@ -7,7 +7,7 @@
     android:fadingEdge="none"
     android:fillViewport="true"
     android:scrollbars="none"
-    tools:context="com.lebron.graduationpro1.ui.fragment.MineFragment">
+    tools:context="com.lebron.graduationpro1.minepage.fragment.MineFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,13 +23,13 @@
                 android:id="@+id/user_account_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_head_nickname_selector"
                 android:layout_centerInParent="true">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/image_user_head"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:layout_centerInParent="true"
                     android:src="@mipmap/user_head" />
 
                 <TextView
@@ -37,7 +37,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/image_user_head"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_centerInParent="true"
                     android:maxLines="1"
                     android:text="@string/app_name"
                     android:textColor="@color/white"
@@ -66,11 +67,11 @@
                 custom:text_size="@dimen/content_textsize"
                 custom:top_line_visibility="false" />
 
-            <View
+            <include
+                layout="@layout/div_line_horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="1.0px"
-                android:layout_marginLeft="15dp"
-                android:background="@color/div_line_color" />
+                android:layout_height="1px"
+                android:layout_marginLeft="15dp"/>
 
             <com.lebron.graduationpro1.view.CustomSettingItem
                 android:id="@+id/item_mine_collect"
@@ -86,11 +87,11 @@
                 custom:text_size="@dimen/content_textsize"
                 custom:top_line_visibility="false" />
 
-            <View
+            <include
+                layout="@layout/div_line_horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="1.0px"
-                android:layout_marginLeft="15dp"
-                android:background="@color/div_line_color" />
+                android:layout_height="1px"
+                android:layout_marginLeft="15dp"/>
 
             <com.lebron.graduationpro1.view.CustomSettingItem
                 android:id="@+id/item_mine_note"
@@ -129,11 +130,11 @@
                 custom:text_size="@dimen/content_textsize"
                 custom:top_line_visibility="false" />
 
-            <View
+            <include
+                layout="@layout/div_line_horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="1.0px"
-                android:layout_marginLeft="15dp"
-                android:background="@color/div_line_color" />
+                android:layout_height="1px"
+                android:layout_marginLeft="15dp"/>
 
             <com.lebron.graduationpro1.view.CustomSettingItem
                 android:id="@+id/item_mine_info"
@@ -173,11 +174,11 @@
                 custom:text_size="@dimen/content_textsize"
                 custom:top_line_visibility="false" />
 
-            <View
+            <include
+                layout="@layout/div_line_horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="1.0px"
-                android:layout_marginLeft="15dp"
-                android:background="@color/div_line_color" />
+                android:layout_height="1px"
+                android:layout_marginLeft="15dp"/>
 
             <com.lebron.graduationpro1.view.CustomSettingItem
                 android:id="@+id/item_mine_night_mode"

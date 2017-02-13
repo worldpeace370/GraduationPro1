@@ -1,4 +1,4 @@
-package com.lebron.graduationpro1.ui.fragment;
+package com.lebron.graduationpro1.minepage.fragment;
 
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;

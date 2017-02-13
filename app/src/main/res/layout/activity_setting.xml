@@ -4,8 +4,10 @@
     android:id="@+id/activity_setting"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
     android:background="@color/colorGray"
-    tools:context="com.lebron.graduationpro1.ui.activity.SettingActivity">
+    tools:context="com.lebron.graduationpro1.minepage.activity.SettingActivity">
 
     <include
         android:id="@+id/toolbar"
@@ -15,7 +17,7 @@
         android:layout_alignParentTop="true" />
 
     <fragment
-        android:name="com.lebron.graduationpro1.ui.fragment.SettingFragment"
+        android:name="com.lebron.graduationpro1.minepage.fragment.SettingFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"

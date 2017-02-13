@@ -19,23 +19,27 @@
         <activity
             android:name=".main.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.activity.ShowVideoActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".ui.activity.NodeChoiceActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".ui.activity.SettingActivity" />
+        <activity
+            android:name=".minepage.activity.SettingActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.activity.LoginActivity" />
-        <activity android:name=".main.SplashActivity"
+        <activity
+            android:name=".main.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".minepage.activity.UserCenterActivity"/>
     </application>
 
 </manifest>
