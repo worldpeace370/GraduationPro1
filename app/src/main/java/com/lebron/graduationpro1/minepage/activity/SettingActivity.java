@@ -13,6 +13,8 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         bindViews();
+        setListener();
+        init();
     }
 
     @Override

@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".base.AppApplication"
@@ -19,7 +20,7 @@
         <activity
             android:name=".main.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.activity.ShowVideoActivity"
             android:screenOrientation="landscape" />
@@ -39,7 +40,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".minepage.activity.UserCenterActivity"/>
+        <activity android:name=".minepage.activity.UserCenterActivity" />
+        <activity android:name=".minepage.activity.CropActivity" />
+        <activity android:name=".minepage.activity.ChangeNickNameActivity"></activity>
     </application>
 
 </manifest>

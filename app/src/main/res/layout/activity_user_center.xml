@@ -86,7 +86,7 @@
                     android:layout_marginLeft="12dp" />
 
                 <com.lebron.graduationpro1.view.CustomSettingItem
-                    android:id="@+id/item_account"
+                    android:id="@+id/item_phone_num"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_custom_setting_item_selector"

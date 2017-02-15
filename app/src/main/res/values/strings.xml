@@ -17,6 +17,8 @@
     <string name="last_scan">上次查询:</string>
     <string name="scan_node">朝阳区节点2</string>
     <string name="nick_name">世界和平</string>
+    <string name="change_nick_hint">昵称不可包含*号</string>
+    <string name="input_user_nick">请输入昵称</string>
     <!--MineFragment-->
     <string name="mine">我的</string>
     <string name="mine_device">我的设备</string>
@@ -61,4 +63,9 @@
     <string name="user_head">头像</string>
     <string name="activity_system_settings_logout">退出登录</string>
     <string name="mine_account">我的账户</string>
+    <string name="cancel">取消</string>
+    <string name="pic_take_photo">拍照</string>
+    <string name="pic_from_album">从手机相册选择</string>
+    <string name="cut_pic">裁剪图片</string>
+    <string name="modify_nick_name">修改昵称</string>
 </resources>
