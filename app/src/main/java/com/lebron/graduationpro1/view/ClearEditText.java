@@ -13,14 +13,19 @@ import android.widget.EditText;
 import com.lebron.graduationpro1.R;
 
 /**
- * 当有输入的时候，右侧出现"清除icon"当点击的时候，清除当前EditText的输入信息
+ * 当有输入的时候，右侧出现"清除icon";当点击的时候，清除当前EditText的输入信息
  * Created by wuxia on 2016/12/20.
  * Contacts by wuxiangkun2015@163.com
  */
 
 public class ClearEditText extends EditText implements View.OnFocusChangeListener, TextWatcher {
-
-    private Drawable mDrawable;
+    /**
+     * 删除按钮的引用
+     */
+    private Drawable mClearDrawable;
+    /**
+     * 控件是否有焦点
+     */
     private boolean mHasFocused;
 
     public ClearEditText(Context context) {
@@ -28,7 +33,7 @@ public class ClearEditText extends EditText implements View.OnFocusChangeListene
     }
 
     public ClearEditText(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.editTextStyle);
+        this(context, attrs, R.attr.editTextStyle); // 这里构造方法也很重要，不加这个很多属性不能再XML里面定义
     }
 
     public ClearEditText(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -40,15 +45,21 @@ public class ClearEditText extends EditText implements View.OnFocusChangeListene
      * 初始化相关属性
      */
     private void init() {
-        mDrawable = getCompoundDrawables()[2]; //获取drawableRight
-        if (mDrawable == null) {
-            mDrawable = ContextCompat.getDrawable(getContext(), R.mipmap.input_clean);
+        mClearDrawable = getCompoundDrawables()[2]; // 获取EditText的DrawableRight,假如没有设置我们就使用默认的图片
+        if (mClearDrawable == null) {
+            mClearDrawable = ContextCompat.getDrawable(getContext(), R.mipmap.input_clean);
         }
-        setClearIconVisibility(false);
-        setOnFocusChangeListener(this);
-        addTextChangedListener(this);
+        mClearDrawable.setBounds(0, 0, mClearDrawable.getIntrinsicWidth(),
+                mClearDrawable.getIntrinsicHeight());
+        setClearIconVisibility(false); // 默认设置隐藏图标
+        setOnFocusChangeListener(this); // 设置焦点改变的监听
+        addTextChangedListener(this); // 设置输入框里面内容发生改变的监听
     }
 
+    /**
+     * 因为我们不能直接给EditText设置点击事件，所以我们用记住我们按下的位置来模拟点击事件 当我们按下的位置 在 EditText的宽度 -
+     * 图标到控件右边的间距 - 图标的宽度 和 EditText的宽度 - 图标到控件右边的间距之间我们就算点击了图标，竖直方向就没有考虑
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mHasFocused) {
@@ -77,11 +88,14 @@ public class ClearEditText extends EditText implements View.OnFocusChangeListene
      * @param isVisible true or false
      */
     private void setClearIconVisibility(boolean isVisible) {
-        Drawable drawableRight = isVisible ? mDrawable : null;
+        Drawable drawableRight = isVisible ? mClearDrawable : null;
         setCompoundDrawables(getCompoundDrawables()[0], getCompoundDrawables()[1],
                 drawableRight, getCompoundDrawables()[3]);
     }
 
+    /**
+     * 当ClearEditText焦点发生变化的时候，判断里面字符串长度设置清除图标的显示与隐藏
+     */
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         mHasFocused = hasFocus;
@@ -97,6 +111,9 @@ public class ClearEditText extends EditText implements View.OnFocusChangeListene
 
     }
 
+    /**
+     * 当输入框里面内容发生变化的时候回调的方法
+     */
     @Override
     public void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);

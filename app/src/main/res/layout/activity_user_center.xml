@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/layout_head"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_custom_setting_item_selector"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="5dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/user_head"
+                        android:textColor="@color/custom_setting_item_color"
+                        android:textSize="@dimen/content_textsize" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_head"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@mipmap/user_head" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="14dp"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/icon_indicator" />
+                </LinearLayout>
+
+                <include
+                    layout="@layout/div_line_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="12dp" />
+
+                <com.lebron.graduationpro1.view.CustomSettingItem
+                    android:id="@+id/item_nick_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_custom_setting_item_selector"
+                    custom:top_line_visibility="false"
+                    custom:bottom_line_visibility="false"
+                    custom:item_text="@string/nick_name"
+                    custom:text_color="@color/custom_setting_item_color"
+                    custom:text_size="@dimen/content_textsize"/>
+
+                <include
+                    layout="@layout/div_line_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="12dp" />
+
+                <com.lebron.graduationpro1.view.CustomSettingItem
+                    android:id="@+id/item_phone_num"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_custom_setting_item_selector"
+                    custom:top_line_visibility="false"
+                    custom:bottom_line_visibility="false"
+                    custom:indicator_visibility="false"
+                    custom:item_text="@string/phone_account"
+                    custom:text_color="@color/custom_setting_item_color"
+                    custom:text_size="@dimen/content_textsize"/>
+
+                <include
+                    layout="@layout/div_line_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="12dp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/activity_mine_logout"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_std_red_btn"
+                android:text="@string/activity_system_settings_logout"
+                android:textColor="@color/text_color_white"
+                android:textSize="@dimen/custom_medium_text_size" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -1,4 +1,4 @@
-package com.lebron.graduationpro1.ui.activity;
+package com.lebron.graduationpro1.minepage.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +13,8 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         bindViews();
+        setListener();
+        init();
     }
 
     @Override

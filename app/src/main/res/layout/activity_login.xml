@@ -4,43 +4,61 @@
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_std_grey_pressed"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="com.lebron.graduationpro1.ui.activity.LoginActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbarHeight" />
+
     <com.lebron.graduationpro1.view.ClearEditText
         android:id="@+id/editText_userName"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:drawablePadding="20dp"
+        android:layout_marginTop="16dp"
         android:background="@color/white"
+        android:drawableLeft="@mipmap/login_user_icon"
+        android:drawablePadding="20dp"
+        android:hint="@string/user_name_hint"
+        android:inputType="textEmailAddress"
+        android:maxLines="1"
         android:paddingLeft="20dp"
         android:paddingRight="5dp"
-        android:drawableLeft="@mipmap/login_user_icon"
-        android:hint="@string/user_name_hint"
-        android:maxLines="1">
+        android:textCursorDrawable="@drawable/cursor" />
 
-    </com.lebron.graduationpro1.view.ClearEditText>
-    <View android:layout_width="match_parent"
-        android:background="@color/colorGray"
-        android:layout_height="1px"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorGray" />
+
     <com.lebron.graduationpro1.view.ClearEditText
         android:id="@+id/editText_pwd"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:drawablePadding="20dp"
         android:background="@color/white"
-        android:textCursorDrawable="@drawable/cursor"
         android:drawableLeft="@mipmap/login_pwd_icon"
-        android:paddingLeft="20dp"
-        android:paddingRight="5dp"
+        android:drawablePadding="20dp"
         android:hint="@string/user_pwd_hint"
         android:inputType="textPassword"
-        android:maxLines="1"/>
-    <View android:layout_width="match_parent"
-        android:background="@color/colorGray"
-        android:layout_height="1px"/>
+        android:maxLines="1"
+        android:paddingLeft="20dp"
+        android:paddingRight="5dp"
+        android:textCursorDrawable="@drawable/cursor" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorGray" />
+
     <Button
         android:id="@+id/btn_login"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -48,11 +66,12 @@
         android:background="@drawable/bg_std_yellow_btn"
         android:text="@string/login_log_btn_text"
         android:textColor="@color/white"
-        android:textSize="@dimen/custom_medium_text_size"/>
+        android:textSize="@dimen/custom_medium_text_size" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/tv_forget_pwd"
             android:layout_width="wrap_content"
@@ -61,16 +80,16 @@
             android:layout_margin="16dp"
             android:text="@string/login_forget_pwd"
             android:textColor="@color/text_color_blue"
-            android:textSize="@dimen/custom_mini_text_size"/>
+            android:textSize="@dimen/custom_mini_text_size" />
 
         <TextView
-            android:id="@+id/btn_reg"
+            android:id="@+id/tv_reg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_margin="16dp"
             android:text="@string/login_reg_btn_text"
             android:textColor="@color/text_color_blue"
-            android:textSize="@dimen/custom_mini_text_size"/>
+            android:textSize="@dimen/custom_mini_text_size" />
     </RelativeLayout>
 </LinearLayout>
