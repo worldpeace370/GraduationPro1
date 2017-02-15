@@ -13,7 +13,7 @@ import android.widget.EditText;
 import com.lebron.graduationpro1.R;
 
 /**
- * 当有输入的时候，右侧出现"清除icon"当点击的时候，清除当前EditText的输入信息
+ * 当有输入的时候，右侧出现"清除icon";当点击的时候，清除当前EditText的输入信息
  * Created by wuxia on 2016/12/20.
  * Contacts by wuxiangkun2015@163.com
  */
@@ -22,7 +22,7 @@ public class ClearEditText extends EditText implements View.OnFocusChangeListene
     /**
      * 删除按钮的引用
      */
-    private Drawable mDrawable;
+    private Drawable mClearDrawable;
     /**
      * 控件是否有焦点
      */
@@ -45,10 +45,12 @@ public class ClearEditText extends EditText implements View.OnFocusChangeListene
      * 初始化相关属性
      */
     private void init() {
-        mDrawable = getCompoundDrawables()[2]; // 获取EditText的DrawableRight,假如没有设置我们就使用默认的图片
-        if (mDrawable == null) {
-            mDrawable = ContextCompat.getDrawable(getContext(), R.mipmap.input_clean);
+        mClearDrawable = getCompoundDrawables()[2]; // 获取EditText的DrawableRight,假如没有设置我们就使用默认的图片
+        if (mClearDrawable == null) {
+            mClearDrawable = ContextCompat.getDrawable(getContext(), R.mipmap.input_clean);
         }
+        mClearDrawable.setBounds(0, 0, mClearDrawable.getIntrinsicWidth(),
+                mClearDrawable.getIntrinsicHeight());
         setClearIconVisibility(false); // 默认设置隐藏图标
         setOnFocusChangeListener(this); // 设置焦点改变的监听
         addTextChangedListener(this); // 设置输入框里面内容发生改变的监听
@@ -86,7 +88,7 @@ public class ClearEditText extends EditText implements View.OnFocusChangeListene
      * @param isVisible true or false
      */
     private void setClearIconVisibility(boolean isVisible) {
-        Drawable drawableRight = isVisible ? mDrawable : null;
+        Drawable drawableRight = isVisible ? mClearDrawable : null;
         setCompoundDrawables(getCompoundDrawables()[0], getCompoundDrawables()[1],
                 drawableRight, getCompoundDrawables()[3]);
     }

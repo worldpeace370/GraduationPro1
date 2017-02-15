@@ -4,22 +4,33 @@
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_std_grey_pressed"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="com.lebron.graduationpro1.ui.activity.LoginActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbarHeight" />
 
     <com.lebron.graduationpro1.view.ClearEditText
         android:id="@+id/editText_userName"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_marginTop="16dp"
         android:background="@color/white"
         android:drawableLeft="@mipmap/login_user_icon"
         android:drawablePadding="20dp"
         android:hint="@string/user_name_hint"
+        android:inputType="textEmailAddress"
         android:maxLines="1"
         android:paddingLeft="20dp"
-        android:paddingRight="5dp">
+        android:paddingRight="5dp"
+        android:textCursorDrawable="@drawable/cursor" />
 
-    </com.lebron.graduationpro1.view.ClearEditText>
 
     <View
         android:layout_width="match_parent"
@@ -72,7 +83,7 @@
             android:textSize="@dimen/custom_mini_text_size" />
 
         <TextView
-            android:id="@+id/btn_reg"
+            android:id="@+id/tv_reg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"

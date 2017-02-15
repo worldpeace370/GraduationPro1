@@ -43,7 +43,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/label_average_temp"
                         android:textSize="14sp"
-                        android:textColor="@color/greenyellow"
+                        android:textColor="@color/green_yellow"
                         android:gravity="center"/>
                     <TextView android:id="@+id/tv_average_temp"
                         android:layout_marginLeft="20dp"
@@ -127,7 +127,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/label_average_temp"
                         android:textSize="14sp"
-                        android:textColor="@color/greenyellow"
+                        android:textColor="@color/green_yellow"
                         android:gravity="center"/>
                     <TextView android:id="@+id/tv_average_rate"
                         android:layout_marginLeft="20dp"
