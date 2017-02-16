@@ -3,6 +3,7 @@ package com.lebron.graduationpro1.base;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -330,5 +331,10 @@ public abstract class BaseFragment<P extends Presenter> extends LebronMvpFragmen
      */
     public boolean checkState() {
         return getActivity() != null && !getActivity().isFinishing() && isAdded();
+    }
+
+    public <T extends BaseActivity> void startActivityByClassName(Class<T> tClass) {
+        Intent intent = new Intent(getActivity(), tClass);
+        startActivity(intent);
     }
 }

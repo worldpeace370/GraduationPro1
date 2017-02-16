@@ -2,10 +2,12 @@ package com.lebron.graduationpro1.minepage.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -36,6 +38,7 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
     private static final int CAMERA_REQUEST_CODE = 1;    // 相机拍照标记
     private String mTempPhotoPath ; // 拍照临时图片
     private Uri mDestinationUri;   // 剪切后图像文件
+    private CollapsingToolbarLayout mCollapsingToolbar;
     private LinearLayout mHeadLayout;
     private PicSelectPopupWindow mPicSelectPopupWindow;
     private CircleImageView mImgHead;
@@ -54,6 +57,14 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void bindViews() {
         initToolbar(R.string.mine_account);
+        /**
+         * 设置工具栏标题, 设置展开和收缩的颜色
+         */
+        mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        mCollapsingToolbar.setTitle("我的账户");
+        mCollapsingToolbar.setExpandedTitleColor(Color.BLACK);
+        mCollapsingToolbar.setCollapsedTitleTextColor(Color.WHITE);
+
         mHeadLayout = ((LinearLayout) findViewById(R.id.layout_head));
         mImgHead = (CircleImageView) findViewById(R.id.img_head);
         mNickNameItem = (CustomSettingItem) findViewById(R.id.item_nick_name);
@@ -246,8 +257,4 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
         Toast.makeText(this, "图片已经保存到:" + imagePath, Toast.LENGTH_LONG).show();
     }
 
-    private <T extends BaseActivity> void startActivityByClassName(Class<T> tClass) {
-        Intent intent = new Intent(this, tClass);
-        startActivity(intent);
-    }
 }

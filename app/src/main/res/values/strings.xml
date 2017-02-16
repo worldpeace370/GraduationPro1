@@ -24,8 +24,6 @@
     <string name="mine_system_setting">系统设置</string>
     <string name="mine_night_mode">夜间模式</string>
     <string name="phone_account">手机号码</string>
-    <string name="x_500">X:100</string>
-    <string name="y_500">Y:100</string>
     <string name="scroll_to_scale">拖动查询历史数据</string>
     <string name="select_node">选择节点</string>
     <string name="save_image">保存图像</string>

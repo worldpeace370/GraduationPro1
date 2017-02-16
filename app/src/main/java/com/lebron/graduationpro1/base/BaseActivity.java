@@ -2,6 +2,7 @@ package com.lebron.graduationpro1.base;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -324,6 +325,11 @@ public abstract class BaseActivity<P extends Presenter> extends LebronMvpActivit
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);//此行代码主要是解决在华为手机上半透明效果无效的bug
         }
         getWindow().setAttributes(params);
+    }
+
+    public <T extends BaseActivity> void startActivityByClassName(Class<T> tClass) {
+        Intent intent = new Intent(this, tClass);
+        startActivity(intent);
     }
 
 }

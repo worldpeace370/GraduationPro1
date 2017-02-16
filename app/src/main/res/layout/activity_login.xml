@@ -8,7 +8,7 @@
     android:clipToPadding="false"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.lebron.graduationpro1.ui.activity.LoginActivity">
+    tools:context="com.lebron.graduationpro1.main.LoginActivity">
 
     <include
         android:id="@+id/toolbar"

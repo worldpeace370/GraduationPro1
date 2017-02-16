@@ -1,4 +1,4 @@
-package com.lebron.graduationpro1.ui.activity;
+package com.lebron.graduationpro1.main;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseActivity;
+import com.lebron.graduationpro1.minepage.model.UserInfo;
+import com.lebron.graduationpro1.utils.LebronPreference;
 import com.lebron.graduationpro1.view.ClearEditText;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener{
@@ -45,14 +47,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
     @Override
     protected void init() {
-
+        mUserName.setText("admin");
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_login:
-
+                handleLogin();
                 break;
             case R.id.tv_reg:
 
@@ -62,6 +64,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                 break;
             default:
                 break;
+        }
+    }
+
+    private void handleLogin() {
+        if (mUserName.getText().toString().equals("admin") && mPassWord.getText().toString().equals("123")) {
+            showCustomToast(R.mipmap.toast_done_icon, "登陆成功!");
+            LebronPreference.getInstance().saveUserInfo(new UserInfo("", "admin", ""));
+            LebronPreference.getInstance().saveHasLogin(true);
+            startActivityByClassName(MainActivity.class);
+            finish();
         }
     }
 }

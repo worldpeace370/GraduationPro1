@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.SeekBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +44,7 @@ import com.lebron.graduationpro1.ui.activity.NodeChoiceActivity;
 import com.lebron.graduationpro1.utils.AppLog;
 import com.lebron.graduationpro1.utils.ConstantValue;
 import com.lebron.graduationpro1.utils.LebronPreference;
+import com.lebron.graduationpro1.utils.NetStatusUtils;
 import com.lebron.graduationpro1.utils.ShowToast;
 import com.lebron.graduationpro1.view.AddPopWindow;
 import com.lebron.graduationpro1.view.MyMarkerView;
@@ -59,32 +60,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import static com.lebron.graduationpro1.R.id.lineChart;
 
 /**
  * 概览界面
  */
 @RequiresPresenter(ScanPresenter.class)
 public class ScanFragment extends BaseFragment<ScanPresenter>
-        implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, ScanContracts.View
+        implements View.OnClickListener, ScanContracts.View
         , CustomCalendarView.OnDateSelectedListener, CustomCalendarView.OnMonthChangedListener {
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-    @BindView(R.id.lineChart)
-    LineChart mLineChart;
-    @BindView(R.id.seekBar_X)
-    SeekBar mSeekBarX;
-    @BindView(R.id.seekBar_Y)
-    SeekBar mSeekBarY;
-    @BindView(R.id.textView_X_MAX)
-    TextView mTextViewX;
-    @BindView(R.id.textView_Y_MAX)
-    TextView mTextViewY;
-    @BindView(R.id.iv_show_select_date)
-    ImageView mIvShowSelectDate; // 日历选择提示图标
-
     public final static int POSITION_FIRST_DAY = 1;
     public final static int POSITION_SECOND_DAY = 2;
     public final static int POSITION_THIRD_DAY = 3;
@@ -93,8 +77,9 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
             , R.color.toolBarBackground);
     private static final int COLOR_NOT_SELECTED = ContextCompat.getColor(AppApplication.getAppContext()
             , R.color.color_std_light_black);
-
     private static final SimpleDateFormat SDF_M_D = new SimpleDateFormat("MM.dd", Locale.getDefault());
+    private LineChart mLineChart;
+    private RelativeLayout mShowSelectDateLayout; // 日历选择提示图标
     private LinearLayout mLayoutDay1, mLayoutDay2, mLayoutDay3;
     private TextView mTvWeek1, mTvDay1, mTvWeek2, mTvDay2, mTvWeek3, mTvDay3;
     private PopupWindow mSelectDateWindow;
@@ -102,7 +87,6 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     //节点名字,放置到mTextViewTitle中
     private String mNodeName;
 
-    private Unbinder mUnBinder;
     private static final String TAG = "ScanFragment";
     private MainActivity mMainActivity;
     private MyHandler mHandler;
@@ -111,9 +95,11 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
 
     private static class MyHandler extends Handler {
         WeakReference<ScanFragment> weakReference;
+
         MyHandler(ScanFragment fragment) {
             weakReference = new WeakReference<>(fragment);
         }
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -169,14 +155,15 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
 
     @Override
     protected void bindViews(View view) {
-        mUnBinder = ButterKnife.bind(this, mRootView);
-        mSeekBarX.setProgress(49);
-        mSeekBarY.setProgress(40);
-        initNoStandardUI(view);
         initToolBarUI(view);
         initSelectDateUI(view);
-        initLineChartUI();
-        initAxisUI(mLineChart);
+        initLineChartUI(view);
+        initAxisUI();
+        initNoStandardUI(view);
+        if (!NetStatusUtils.isNetWorkConnected(getActivity())) {
+            mLineChart.setVisibility(View.GONE);
+            showCommonNetErrorLayout();
+        }
     }
 
     /**
@@ -185,6 +172,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
      * @param view mRootView
      */
     private void initSelectDateUI(View view) {
+        mShowSelectDateLayout = ((RelativeLayout) view.findViewById(R.id.show_select_date_layout));
         mLayoutDay1 = (LinearLayout) view.findViewById(R.id.layout_day1);
         mLayoutDay2 = (LinearLayout) view.findViewById(R.id.layout_day2);
         mLayoutDay3 = (LinearLayout) view.findViewById(R.id.layout_day3);
@@ -211,7 +199,8 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     /**
      * 初始化LineChart的相关视觉属性
      */
-    private void initLineChartUI() {
+    private void initLineChartUI(View view) {
+        mLineChart = ((LineChart) view.findViewById(lineChart));
         mLineChart.setDescription("节点信息");//右下角说明
         mLineChart.setNoDataTextDescription("You need to provide data for the chart");
         mLineChart.setTouchEnabled(true);//enable touch gesture
@@ -226,13 +215,13 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     /**
      * 设置x,y轴和Legend显示的属性
      */
-    private void initAxisUI(LineChart lineChart) {
+    private void initAxisUI() {
         //获取右侧Y轴
-        YAxis rightAxis = lineChart.getAxisRight();
+        YAxis rightAxis = mLineChart.getAxisRight();
         //取消右侧Y轴显示
         rightAxis.setEnabled(false);
         //获取左侧Y轴
-        YAxis leftAxis = lineChart.getAxisLeft();
+        YAxis leftAxis = mLineChart.getAxisLeft();
         //设置网格线虚线模式
         leftAxis.enableGridDashedLine(2f, 3f, 0);
         //设置Y轴最大值
@@ -264,7 +253,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         //        limitLineRotateSpeed.enableDashedLine(6f, 10f, 0f);
         leftAxis.addLimitLine(limitLineRotateSpeed);
         //X轴设置在底部
-        XAxis xAxis = lineChart.getXAxis();
+        XAxis xAxis = mLineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         //设置网格线虚线模式
         xAxis.enableGridDashedLine(2f, 3f, 0f);
@@ -275,9 +264,9 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         //避免剪掉x轴上第一个和最后一个坐标项
         xAxis.setAvoidFirstLastClipping(true);
         //设置Legend,左下角的东西,可以是横线,方形
-        Legend legend = lineChart.getLegend();
+        Legend legend = mLineChart.getLegend();
         legend.setForm(Legend.LegendForm.LINE);
-        //        legend.setTextColor(Color.RED);
+        //legend.setTextColor(Color.RED);
     }
 
     @Override
@@ -293,9 +282,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
                 return false;
             }
         });
-        mSeekBarX.setOnSeekBarChangeListener(this);
-        mSeekBarY.setOnSeekBarChangeListener(this);
-        mIvShowSelectDate.setOnClickListener(this);
+        mShowSelectDateLayout.setOnClickListener(this);
         mLayoutDay1.setOnClickListener(this);
         mLayoutDay2.setOnClickListener(this);
         mLayoutDay3.setOnClickListener(this);
@@ -304,7 +291,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_show_select_date: //显示
+            case R.id.show_select_date_layout: //显示
                 getPresenter().showSelectDateWindow();
                 break;
             case R.id.iv_hide_select_date: //隐藏
@@ -539,7 +526,6 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mUnBinder.unbind();
         AppLog.i(TAG, "onDestroyView: 执行了");
     }
 
@@ -663,28 +649,5 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         dataSet.setHighLightColor(Color.YELLOW);
         dataSet.setDrawValues(false);
         return dataSet;
-    }
-
-
-    /**
-     * SeekBar三个拖动接口相关方法
-     * onProgressChanged
-     * onStartTrackingTouch
-     * onStopTrackingTouch
-     */
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
     }
 }
