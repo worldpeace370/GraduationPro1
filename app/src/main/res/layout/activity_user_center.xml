@@ -1,122 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/layout_toolbar" />
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="256dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <ScrollView
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="@color/toolBarBackground"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:id="@+id/backdrop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/user_center_jlu"
+                app:layout_collapseMode="parallax" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:id="@+id/root"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@color/white"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/layout_head"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_custom_setting_item_selector"
-                    android:gravity="center_vertical"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="12dp"
-                    android:paddingTop="5dp">
+                    android:layout_marginTop="12dp"
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:id="@+id/layout_head"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/user_head"
-                        android:textColor="@color/custom_setting_item_color"
-                        android:textSize="@dimen/content_textsize" />
+                        android:background="@drawable/bg_custom_setting_item_selector"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="12dp"
+                        android:paddingTop="5dp">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/img_head"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:src="@mipmap/user_head" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/user_head"
+                            android:textColor="@color/custom_setting_item_color"
+                            android:textSize="@dimen/content_textsize" />
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginLeft="6dp"
-                        android:layout_marginRight="14dp"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/icon_indicator" />
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/img_head"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@mipmap/user_head" />
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginLeft="6dp"
+                            android:layout_marginRight="14dp"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/icon_indicator" />
+                    </LinearLayout>
+
+                    <include
+                        layout="@layout/div_line_horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginLeft="12dp" />
+
+                    <com.lebron.graduationpro1.view.CustomSettingItem
+                        android:id="@+id/item_nick_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_custom_setting_item_selector"
+                        custom:bottom_line_visibility="false"
+                        custom:item_text="@string/nick_name"
+                        custom:text_color="@color/custom_setting_item_color"
+                        custom:text_size="@dimen/content_textsize"
+                        custom:top_line_visibility="false" />
+
+                    <include
+                        layout="@layout/div_line_horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginLeft="12dp" />
+
+                    <com.lebron.graduationpro1.view.CustomSettingItem
+                        android:id="@+id/item_phone_num"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_custom_setting_item_selector"
+                        custom:bottom_line_visibility="false"
+                        custom:indicator_visibility="false"
+                        custom:item_text="@string/phone_account"
+                        custom:text_color="@color/custom_setting_item_color"
+                        custom:text_size="@dimen/content_textsize"
+                        custom:top_line_visibility="false" />
+
+                    <include
+                        layout="@layout/div_line_horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginLeft="12dp" />
                 </LinearLayout>
 
-                <include
-                    layout="@layout/div_line_horizontal"
+                <Button
+                    android:id="@+id/activity_mine_logout"
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_marginLeft="12dp" />
-
-                <com.lebron.graduationpro1.view.CustomSettingItem
-                    android:id="@+id/item_nick_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_custom_setting_item_selector"
-                    custom:top_line_visibility="false"
-                    custom:bottom_line_visibility="false"
-                    custom:item_text="@string/nick_name"
-                    custom:text_color="@color/custom_setting_item_color"
-                    custom:text_size="@dimen/content_textsize"/>
-
-                <include
-                    layout="@layout/div_line_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_marginLeft="12dp" />
-
-                <com.lebron.graduationpro1.view.CustomSettingItem
-                    android:id="@+id/item_phone_num"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_custom_setting_item_selector"
-                    custom:top_line_visibility="false"
-                    custom:bottom_line_visibility="false"
-                    custom:indicator_visibility="false"
-                    custom:item_text="@string/phone_account"
-                    custom:text_color="@color/custom_setting_item_color"
-                    custom:text_size="@dimen/content_textsize"/>
-
-                <include
-                    layout="@layout/div_line_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_marginLeft="12dp" />
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_std_red_btn"
+                    android:text="@string/activity_system_settings_logout"
+                    android:textColor="@color/text_color_white"
+                    android:textSize="@dimen/custom_medium_text_size" />
             </LinearLayout>
+        </ScrollView>
 
-            <Button
-                android:id="@+id/activity_mine_logout"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_std_red_btn"
-                android:text="@string/activity_system_settings_logout"
-                android:textColor="@color/text_color_white"
-                android:textSize="@dimen/custom_medium_text_size" />
-        </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

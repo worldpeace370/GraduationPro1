@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.lebron.graduationpro1.ui.activity.LoginActivity;
 import com.lebron.graduationpro1.utils.LebronPreference;
 
 /**
