@@ -37,7 +37,6 @@ public class ScanPresenter extends Presenter<ScanContracts.View> implements
         if (getView() != null) {
             getView().showLoading();
             mRequestModel.getCollectInfo(date);//请求数据,然后回调到onSuccess中,在这里面更新UI
-            getView().showCommon();
         }
     }
 
@@ -118,10 +117,10 @@ public class ScanPresenter extends Presenter<ScanContracts.View> implements
         mSelectDay = calendar.get(Calendar.DAY_OF_MONTH);
         mThirdYear = mSelectYear;
         mThirdMonth = mSelectMonth;
-        mThirdYear = mSelectDay;
+        mThirdDay = mSelectDay;
         if (getView() != null) {
             getView().changeTopDateColor(POSITION_THIRD_DAY);
-            getView().setTopDateLayout(mThirdYear, mThirdMonth, mThirdYear);
+            getView().setTopDateLayout(mSelectYear, mSelectMonth, mSelectDay);
             getCollectInfo(CalendarTools.dateToString(mSelectYear, mSelectMonth, mSelectDay));
         }
     }
@@ -183,6 +182,8 @@ public class ScanPresenter extends Presenter<ScanContracts.View> implements
 
     @Override
     public void onFail(int retCode, String retDesc) {
-
+        if (getView() != null) {
+            getView().showError();
+        }
     }
 }
