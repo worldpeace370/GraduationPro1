@@ -4,6 +4,7 @@
     android:id="@+id/activity_node_choice"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context="com.lebron.graduationpro1.ui.activity.NodeChoiceActivity">
 
     <include
@@ -22,12 +23,13 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="#cae1ff">
+            android:background="@color/colorGray">
 
             <SearchView
                 android:id="@+id/searchView"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
+                android:layout_centerInParent="true"
                 android:layout_marginStart="85dp"
                 android:iconifiedByDefault="false"
                 android:imeOptions="actionSearch"
