@@ -36,7 +36,6 @@ import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.AppApplication;
 import com.lebron.graduationpro1.base.BaseFragment;
 import com.lebron.graduationpro1.main.MainActivity;
-import com.lebron.graduationpro1.model.LineChartTestData;
 import com.lebron.graduationpro1.scanpage.contracts.ScanContracts;
 import com.lebron.graduationpro1.scanpage.model.CollectInfoBean;
 import com.lebron.graduationpro1.scanpage.presenter.ScanPresenter;
@@ -44,7 +43,6 @@ import com.lebron.graduationpro1.ui.activity.NodeChoiceActivity;
 import com.lebron.graduationpro1.utils.AppLog;
 import com.lebron.graduationpro1.utils.ConstantValue;
 import com.lebron.graduationpro1.utils.LebronPreference;
-import com.lebron.graduationpro1.utils.NetStatusUtils;
 import com.lebron.graduationpro1.utils.ShowToast;
 import com.lebron.graduationpro1.view.AddPopWindow;
 import com.lebron.graduationpro1.view.MyMarkerView;
@@ -92,7 +90,6 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     private MyHandler mHandler;
     private View mRootView;
     private CustomCalendarView mCalendarView;
-
     private static class MyHandler extends Handler {
         WeakReference<ScanFragment> weakReference;
 
@@ -160,10 +157,6 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         initLineChartUI(view);
         initAxisUI();
         initNoStandardUI(view);
-        if (!NetStatusUtils.isNetWorkConnected(getActivity())) {
-            mLineChart.setVisibility(View.GONE);
-            showCommonNetErrorLayout();
-        }
     }
 
     /**
@@ -286,6 +279,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         mLayoutDay1.setOnClickListener(this);
         mLayoutDay2.setOnClickListener(this);
         mLayoutDay3.setOnClickListener(this);
+        mLayoutError.setOnClickListener(this);
     }
 
     @Override
@@ -310,6 +304,9 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
             case R.id.layout_day3:
                 getPresenter().changeToThirdPositionDay();
                 break;
+            case R.id.layout_common_network_error:
+                getPresenter().initTodayData();
+                break;
             default:
                 break;
         }
@@ -327,7 +324,6 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     @Override
     protected void init() {
         getPresenter().initTodayData();
-        initLineChartData();
     }
 
     @Override
@@ -352,7 +348,68 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
 
     @Override
     public void showContent(List<CollectInfoBean> infoList) {
-        showCommonLayout();
+        showCommon();
+        showLineChartData(infoList);
+    }
+
+    private void showLineChartData(List<CollectInfoBean> infoList) {
+        ArrayList<LineDataSet> dataSetList = new ArrayList<>();
+        List<Entry> entriesTemp = new ArrayList<>();
+        List<Entry> entriesRate = new ArrayList<>();
+        for (int i = 0; i < infoList.size(); i++) {
+            entriesTemp.add(new Entry(Float.parseFloat(infoList.get(i).getMtemperature()), i));
+            entriesRate.add(new Entry(Float.parseFloat(infoList.get(i).getMrate()), i));
+        }
+        addTempEntriesToDataSetList(entriesTemp, dataSetList);
+        addRateEntriesToDataSetList(entriesRate, dataSetList);
+        String xValues[] = new String[]{"0h", "1h", "2h", "3h", "4h", "5h", "6h", "7h", "8h", "9h", "10h", "11h", "12h"
+                , "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"};
+        LineData lineData = new LineData(xValues, dataSetList);
+        mLineChart.setData(lineData);
+        //X方向动画效果
+        mLineChart.animateX(1500, Easing.EasingOption.EaseInOutQuart);
+        //X,Y方向同时动画
+        //mLineChart.animateXY(3000, 3000);
+        mLineChart.invalidate();
+    }
+
+    private void addTempEntriesToDataSetList(List<Entry> entries, ArrayList<LineDataSet> dataSetList) {
+        //LineDataSet可以看作是一条线
+        LineDataSet tempDataSet = new LineDataSet(entries, "水温℃");
+        //设置折线的颜色
+        tempDataSet.setColor(Color.RED);
+        //设置折线上点的字体颜色
+        tempDataSet.setValueTextColor(Color.RED);
+        //设置折线圆点的颜色
+        tempDataSet.setCircleColor(Color.RED);
+        //图上不描述点的值
+        tempDataSet.setDrawValues(false);
+        //设置折线圆点中心的颜色
+        //dataSet.setCircleColorHole(Color.GRAY);
+        //设置圆点的大小
+        tempDataSet.setCircleSize(4f);
+        //设置点击某个点时,横竖两条线的颜色
+        tempDataSet.setHighLightColor(Color.YELLOW);
+        dataSetList.add(tempDataSet);
+    }
+
+    private void addRateEntriesToDataSetList(List<Entry> entries, ArrayList<LineDataSet> dataSetList) {
+        //LineDataSet可以看作是一条线
+        LineDataSet rateDataSet = new LineDataSet(entries, "转速n/s");
+        //设置折线的颜色
+        rateDataSet.setColor(Color.GREEN);
+        //设置折线上点的字体颜色
+        rateDataSet.setValueTextColor(Color.GREEN);
+        //设置折线圆点的颜色
+        rateDataSet.setCircleColor(Color.GREEN);
+        //设置折线圆点中心的颜色
+        //        dataSet.setCircleColorHole(Color.GRAY);
+        //设置圆点的大小
+        rateDataSet.setCircleSize(4f);
+        //设置点击某个点时,横竖两条线的颜色
+        rateDataSet.setHighLightColor(Color.YELLOW);
+        rateDataSet.setDrawValues(false);
+        dataSetList.add(rateDataSet);
     }
 
     @Override
@@ -384,8 +441,8 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
                 } else if (id == R.id.save_image_sd_card) {
                     getPresenter().saveLineImageToSDCard();
                 } else if (id == R.id.refresh_data) {
-                    showCustomToast(R.mipmap.toast_done_icon, "刷新中...", Toast.LENGTH_LONG);
                     getPresenter().refreshTodayData();
+                    showCustomToast(R.mipmap.toast_done_icon, "刷新中...", Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -567,87 +624,4 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         }
     }
 
-    private void initLineChartData() {
-        ArrayList<LineDataSet> dataSetList = new ArrayList<>();
-        dataSetList.add(initTemperatureLine(new ArrayList<LineChartTestData>()));
-        dataSetList.add(initFlowLine(new ArrayList<LineChartTestData>()));
-        String xVals[] = new String[]{"0h", "1h", "2h", "3h", "4h", "5h", "6h", "7h", "8h", "9h", "10h", "11h", "12h"
-                , "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"};
-        LineData lineData = new LineData(xVals, dataSetList);
-        mLineChart.setData(lineData);
-        //X方向动画效果
-        mLineChart.animateX(1500, Easing.EasingOption.EaseInOutQuart);
-        //X,Y方向同时动画
-        //mLineChart.animateXY(3000, 3000);
-        mLineChart.invalidate();
-    }
-
-    /**
-     * 初始化水温折线
-     *
-     * @param list 传入的数据,网络下载
-     * @return 返回LineDataSet
-     */
-    private LineDataSet initTemperatureLine(ArrayList<LineChartTestData> list) {
-        LineChartTestData[] datas = new LineChartTestData[24];
-        for (int i = 0; i < datas.length; i++) {
-            datas[i] = new LineChartTestData(i, 80 + (int) (Math.random() * 10));
-        }
-        List<Entry> entries = new ArrayList<>();
-        for (LineChartTestData data : datas) {
-            entries.add(new Entry(data.getyValue(), data.getxValue()));//左:Y值,右:X值
-        }
-
-        //LineDataSet可以看作是一条线
-        LineDataSet dataSet = new LineDataSet(entries, "水温℃");
-        //设置折线的颜色
-        dataSet.setColor(Color.RED);
-        //设置折线上点的字体颜色
-        dataSet.setValueTextColor(Color.RED);
-        //设置折线圆点的颜色
-        dataSet.setCircleColor(Color.RED);
-        //图上不描述点的值
-        dataSet.setDrawValues(false);
-        //设置折线圆点中心的颜色
-        //dataSet.setCircleColorHole(Color.GRAY);
-        //设置圆点的大小
-        dataSet.setCircleSize(4f);
-        //设置点击某个点时,横竖两条线的颜色
-        dataSet.setHighLightColor(Color.YELLOW);
-        return dataSet;
-    }
-
-    /**
-     * 初始化转速折线
-     *
-     * @param list 传入的数据,网络下载
-     * @return 返回LineDataSet
-     */
-    private LineDataSet initFlowLine(ArrayList<LineChartTestData> list) {
-        LineChartTestData[] datas = new LineChartTestData[24];
-        for (int i = 0; i < datas.length; i++) {
-            datas[i] = new LineChartTestData(i, 50 + (int) (Math.random() * 10));
-        }
-        List<Entry> entries = new ArrayList<>();
-        for (LineChartTestData data : datas) {
-            entries.add(new Entry(data.getyValue(), data.getxValue()));//左:Y值,右:X值
-        }
-
-        //LineDataSet可以看作是一条线
-        LineDataSet dataSet = new LineDataSet(entries, "转速n/s");
-        //设置折线的颜色
-        dataSet.setColor(Color.GREEN);
-        //设置折线上点的字体颜色
-        dataSet.setValueTextColor(Color.GREEN);
-        //设置折线圆点的颜色
-        dataSet.setCircleColor(Color.GREEN);
-        //设置折线圆点中心的颜色
-        //        dataSet.setCircleColorHole(Color.GRAY);
-        //设置圆点的大小
-        dataSet.setCircleSize(4f);
-        //设置点击某个点时,横竖两条线的颜色
-        dataSet.setHighLightColor(Color.YELLOW);
-        dataSet.setDrawValues(false);
-        return dataSet;
-    }
 }

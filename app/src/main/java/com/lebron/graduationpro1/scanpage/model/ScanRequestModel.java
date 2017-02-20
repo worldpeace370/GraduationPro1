@@ -13,10 +13,11 @@ import java.util.List;
 
 public class ScanRequestModel extends BaseModel<ScanContracts.Model.Callback>
         implements ScanContracts.Model {
+    private static final String URL = "http://114.215.117.169/thinkphp/Home/ApiGrad/dateSearch/date/%s";
     @Override
     public void getCollectInfo(String date) {
         // 网络请求
-        new VolleyService().getDataFromServer(date, CollectInfoBean.class,
+        new VolleyService().getDataFromServer(String.format(URL, date), CollectInfoBean.class,
                 new VolleyService.RequestCompleteListener<CollectInfoBean>() {
             @Override
             public void success(List<CollectInfoBean> list) {

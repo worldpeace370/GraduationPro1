@@ -10,7 +10,7 @@ import java.util.Locale;
 
 public class CalendarTools {
 
-  private static final SimpleDateFormat SDF_Y_M_D = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+  private static final SimpleDateFormat SDF_Y_M_D = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
   private static CalendarTools ourInstance = new CalendarTools();
 
@@ -80,12 +80,11 @@ public class CalendarTools {
    * @param year 年
    * @param month 月
    * @param day 日
-   * @return 返回类似 20161101 的字符串
+   * @return 返回类似 2016-11-01 的字符串
    */
   public static String dateToString(int year, int month, int day) {
     Calendar calendar = createCalendar(year, month, day);
-    String temp = SDF_Y_M_D.format(calendar.getTime());
-    return temp;
+    return SDF_Y_M_D.format(calendar.getTime());
   }
 
   /**
