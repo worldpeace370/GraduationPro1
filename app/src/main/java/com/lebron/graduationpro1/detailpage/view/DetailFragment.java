@@ -15,9 +15,6 @@ import com.lebron.graduationpro1.main.MainActivity;
 import com.lebron.graduationpro1.utils.AppLog;
 import com.lebron.mvp.factory.RequiresPresenter;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link DetailFragment#newInstance} factory method to
@@ -29,7 +26,6 @@ public class DetailFragment extends BaseFragment<DetailPresenter> {
     private String mParam;
     private MainActivity mMainActivity;
     private static final String TAG = "DetailFragment";
-    private Unbinder mBind;
     private View mRootView;
 
     public DetailFragment() {
@@ -75,18 +71,19 @@ public class DetailFragment extends BaseFragment<DetailPresenter> {
         super.onCreateView(inflater, container, savedInstanceState);
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
+            bindViews(mRootView);
+            setListener();
+            init();
         }
-        bindViews(mRootView);
         AppLog.i(TAG, "onCreateView: 执行了");
         return mRootView;
     }
 
     @Override
     protected void bindViews(View view) {
-        mBind = ButterKnife.bind(this, mRootView);
-        initNoStandardUI(view);
         initToolbar(view);
         getToolbar().setTitle("");
+        initNoStandardUI(view);
     }
 
     @Override
@@ -132,7 +129,6 @@ public class DetailFragment extends BaseFragment<DetailPresenter> {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mBind.unbind();
         AppLog.i(TAG, "onDestroyView: 执行了");
     }
 

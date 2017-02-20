@@ -12,17 +12,13 @@ import com.lebron.graduationpro1.adapter.StickyListAdapter;
 import com.lebron.graduationpro1.base.BaseActivity;
 import com.lebron.graduationpro1.utils.ConstantValue;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 import static com.lebron.graduationpro1.R.array.nodes;
 
 public class NodeChoiceActivity extends BaseActivity {
-    @BindView(R.id.node_listView)
-    StickyListHeadersListView mHeadersListView;
-    @BindView(R.id.searchView)
-    SearchView mSearchView;
+    private StickyListHeadersListView mHeadersListView;
+    private SearchView mSearchView;
     private String[] mNodeNameArray;
 
     @Override
@@ -36,7 +32,9 @@ public class NodeChoiceActivity extends BaseActivity {
 
     @Override
     protected void bindViews() {
-        ButterKnife.bind(this);
+        mHeadersListView = ((StickyListHeadersListView) findViewById(R.id.node_listView));
+        mSearchView = ((SearchView) findViewById(R.id.searchView));
+        initToolbar(R.string.node_choice);
     }
 
     @Override
@@ -58,11 +56,5 @@ public class NodeChoiceActivity extends BaseActivity {
         mNodeNameArray = getResources().getStringArray(nodes);
         StickyListAdapter adapter = new StickyListAdapter(this, mNodeNameArray);
         mHeadersListView.setAdapter(adapter);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
     }
 }

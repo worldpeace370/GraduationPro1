@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+apply plugin: 'realm-android'
 apply plugin: 'checkstyle'
 apply plugin: "findbugs"
 android {
@@ -53,6 +54,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile project(':mvp-kt')
+    compile project(':utilslibrary')
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
     // 图像剪切

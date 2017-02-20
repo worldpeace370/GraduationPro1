@@ -241,7 +241,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         limitLineWater.setTextSize(12f);
         limitLineWater.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
         //设置虚线
-        //        limitLineWater.enableDashedLine(6f, 10f, 0f);
+        //limitLineWater.enableDashedLine(6f, 10f, 0f);
         leftAxis.addLimitLine(limitLineWater);
         LimitLine limitLineRotateSpeed = new LimitLine(40, "转速阈值");
         limitLineRotateSpeed.setLineColor(Color.GREEN);
@@ -250,7 +250,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         limitLineRotateSpeed.setTextSize(12f);
         limitLineRotateSpeed.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
         //设置虚线
-        //        limitLineRotateSpeed.enableDashedLine(6f, 10f, 0f);
+        //limitLineRotateSpeed.enableDashedLine(6f, 10f, 0f);
         leftAxis.addLimitLine(limitLineRotateSpeed);
         //X轴设置在底部
         XAxis xAxis = mLineChart.getXAxis();
@@ -609,7 +609,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         //图上不描述点的值
         dataSet.setDrawValues(false);
         //设置折线圆点中心的颜色
-        //        dataSet.setCircleColorHole(Color.GRAY);
+        //dataSet.setCircleColorHole(Color.GRAY);
         //设置圆点的大小
         dataSet.setCircleSize(4f);
         //设置点击某个点时,横竖两条线的颜色
