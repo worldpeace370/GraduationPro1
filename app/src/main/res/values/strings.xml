@@ -2,7 +2,7 @@
     <string name="app_name">毕业设计</string>
 
     <string name="common_loading">努力加载中……</string>
-    <string name="network_error_hint">网络连接失败\n下拉屏幕，重新加载</string>
+    <string name="network_error_hint">网络连接失败\n点击屏幕，重新加载</string>
     <string name="tab_title">供暖节点</string>
     <string name="scan">概览</string>
     <string name="video">视频</string>
