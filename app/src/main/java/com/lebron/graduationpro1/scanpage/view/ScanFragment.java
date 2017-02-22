@@ -90,6 +90,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     private MyHandler mHandler;
     private View mRootView;
     private CustomCalendarView mCalendarView;
+
     private static class MyHandler extends Handler {
         WeakReference<ScanFragment> weakReference;
 
@@ -442,10 +443,19 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
                     getPresenter().saveLineImageToSDCard();
                 } else if (id == R.id.refresh_data) {
                     getPresenter().refreshTodayData();
-                    showCustomToast(R.mipmap.toast_done_icon, "刷新中...", Toast.LENGTH_SHORT);
                 }
             }
         });
+    }
+
+    @Override
+    public void showRefreshing() {
+        showCustomToast(R.mipmap.toast_done_icon, "刷新中...", Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void showCannotRefresh() {
+        showCustomToast(R.mipmap.input_clean, "历史数据，不需要刷新...", Toast.LENGTH_SHORT);
     }
 
     @Override
