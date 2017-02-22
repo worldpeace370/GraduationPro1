@@ -3,54 +3,42 @@ package com.lebron.graduationpro1.detailpage.view;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseFragment;
+import com.lebron.graduationpro1.detailpage.contracts.DetailContracts;
 import com.lebron.graduationpro1.detailpage.presenter.DetailPresenter;
 import com.lebron.graduationpro1.main.MainActivity;
 import com.lebron.graduationpro1.utils.AppLog;
 import com.lebron.mvp.factory.RequiresPresenter;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link DetailFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 详情页
  */
 @RequiresPresenter(DetailPresenter.class)
-public class DetailFragment extends BaseFragment<DetailPresenter> {
-    private static final String ARG_PARAM = "param";
-    private String mParam;
+public class DetailFragment extends BaseFragment<DetailPresenter> implements
+        SwipeRefreshLayout.OnRefreshListener, DetailContracts.View {
     private MainActivity mMainActivity;
     private static final String TAG = "DetailFragment";
     private View mRootView;
+    private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mRefreshLayout;
 
     public DetailFragment() {
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     * @param param Parameter.
-     * @return A new instance of fragment DetailFragment.
-     */
-    public static DetailFragment newInstance(String param) {
-        DetailFragment fragment = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM, param);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof MainActivity){
+        if (context instanceof MainActivity) {
             mMainActivity = ((MainActivity) getActivity());
-        }else {
+        } else {
             throw new IllegalArgumentException("The context must to be instanceof MainActivity");
         }
         AppLog.i(TAG, "onAttach: 执行了");
@@ -60,7 +48,7 @@ public class DetailFragment extends BaseFragment<DetailPresenter> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam = getArguments().getString(ARG_PARAM);
+            mMainActivity = (MainActivity) getActivity();
         }
         AppLog.i(TAG, "onCreate: 执行了");
     }
@@ -84,15 +72,38 @@ public class DetailFragment extends BaseFragment<DetailPresenter> {
         initToolbar(view);
         getToolbar().setTitle("");
         initNoStandardUI(view);
+        mRecyclerView = ((RecyclerView) view.findViewById(R.id.recycler_view_details));
+        mRefreshLayout = ((SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout));
+        mRefreshLayout.setColorSchemeColors(ContextCompat.getColor(mMainActivity, R.color.colorAccent),
+                ContextCompat.getColor(mMainActivity, R.color.green),
+                ContextCompat.getColor(mMainActivity, R.color.toolBarBackground));
+        // 第一次进入页面的时候显示刷新圈圈
+        mRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mRefreshLayout.setRefreshing(true);
+            }
+        });
     }
 
     @Override
     protected void setListener() {
+        mRefreshLayout.setOnRefreshListener(this);
+    }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        AppLog.i(TAG, "hidden = " + hidden); // 该方法第二次可见时 hidden = false,不可见时不一定会执行，执行就为true。
     }
 
     @Override
     protected void init() {
+        getPresenter().getHeatInfo(1);
+    }
+
+    @Override
+    public void onRefresh() {
 
     }
 
