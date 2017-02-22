@@ -16,7 +16,7 @@ public class ScanRequestModel extends BaseModel<ScanContracts.Model.Callback>
     private static final String URL = "http://114.215.117.169/thinkphp/Home/ApiGrad/dateSearch/date/%s";
     @Override
     public void getCollectInfo(String date) {
-        // 网络请求
+        // 网络请求，接口回调
         new VolleyService().getDataFromServer(String.format(URL, date), CollectInfoBean.class,
                 new VolleyService.RequestCompleteListener<CollectInfoBean>() {
             @Override
@@ -29,7 +29,6 @@ public class ScanRequestModel extends BaseModel<ScanContracts.Model.Callback>
                 handleFail(-200, error);
             }
         });
-        //接口回调
     }
 
     private void handleSuccess(List<CollectInfoBean> infoList) {

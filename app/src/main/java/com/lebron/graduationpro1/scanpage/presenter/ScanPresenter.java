@@ -69,7 +69,12 @@ public class ScanPresenter extends Presenter<ScanContracts.View> implements
     @Override
     public void refreshTodayData() {
         if (getView() != null) {
-            getCollectInfo(CalendarTools.dateToString(mSelectYear, mSelectMonth, mSelectDay));
+            if (mSelectDay == mTodayDay && mSelectMonth == mTodayMonth && mSelectYear == mTodayYear) {
+                getView().showRefreshing();
+                getCollectInfo(CalendarTools.dateToString(mSelectYear, mSelectMonth, mSelectDay));
+            } else {
+                getView().showCannotRefresh();
+            }
         }
     }
 

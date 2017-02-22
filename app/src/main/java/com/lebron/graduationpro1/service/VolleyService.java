@@ -14,7 +14,8 @@ import java.util.List;
  */
 
 public class VolleyService {
-    public <T> void getDataFromServer(String urlStr, final Class<T> type, final RequestCompleteListener<T> listener) {
+    public <T> void getDataFromServer(String urlStr, final Class<T> type
+            , final RequestCompleteListener<T> listener) {
         StringRequest request = new StringRequest(urlStr, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

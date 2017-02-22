@@ -48,6 +48,16 @@ public interface ScanContracts {
         void showAddMenuWindow();
 
         /**
+         * 如果是当日的数据，进行刷新的提示
+         */
+        void showRefreshing();
+
+        /**
+         * 历史数据不需要刷新
+         */
+        void showCannotRefresh();
+
+        /**
          * 点击日历,弹出PopWindow,选择不同的日期
          */
         void showSelectDateWindow(int year, int month, int day);
