@@ -1,6 +1,7 @@
 package com.lebron.graduationpro1.detailpage.model;
 
-/**供暖节点的数据信息模型
+/**
+ * 供暖节点的数据信息模型 数据库那边建的名字起的不规范，这里妥协
  * Created by wuxia on 2016/12/17.
  * Contacts by wuxiangkun2015@163.com
  */

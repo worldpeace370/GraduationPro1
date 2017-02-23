@@ -12,7 +12,30 @@ import java.util.List;
 public interface DetailContracts {
 
     interface View {
+        /**
+         * 显示正在加载页面
+         */
+        void showLoading();
 
+        /**
+         * 显示网络错误页面
+         */
+        void showError();
+
+        /**
+         * 显示空内容页面
+         */
+        void showEmpty();
+
+        /**
+         * 显示除了 加载中,网络错误,空内容的正常页面
+         */
+        void showCommon();
+
+        /**
+         * 显示正常加载出来的内容
+         */
+        void showContent(List<HeatInfo> infoList);
     }
 
     interface Presenter {

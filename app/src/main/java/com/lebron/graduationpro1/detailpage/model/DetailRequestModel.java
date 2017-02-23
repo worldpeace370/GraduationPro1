@@ -1,13 +1,10 @@
 package com.lebron.graduationpro1.detailpage.model;
 
 import com.lebron.graduationpro1.detailpage.contracts.DetailContracts;
-import com.lebron.graduationpro1.scanpage.model.CollectInfoBean;
 import com.lebron.graduationpro1.service.VolleyService;
 import com.lebron.mvp.model.BaseModel;
 
 import java.util.List;
-
-import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
 
 /**
  * Created by wuxiangkun on 2017/2/22.
