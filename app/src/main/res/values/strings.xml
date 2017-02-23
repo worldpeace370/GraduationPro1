@@ -56,4 +56,7 @@
     <string name="pic_from_album">从手机相册选择</string>
     <string name="cut_pic">裁剪图片</string>
     <string name="modify_nick_name">修改昵称</string>
+    <string name="rate_label">转速 n/s</string>
+    <string name="temp_label">温度 ℃</string>
+    <string name="loading_more">上拉加载更多...</string>
 </resources>
