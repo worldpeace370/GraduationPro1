@@ -1,19 +1,20 @@
-package com.lebron.graduationpro1.ui.fragment;
+package com.lebron.graduationpro1.controlpage;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.dd.CircularProgressButton;
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseFragment;
 import com.lebron.graduationpro1.main.MainActivity;
@@ -24,13 +25,11 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link ControlFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 控制页面
  */
 @RequiresPresenter(ControlPresenter.class)
 public class ControlFragment extends BaseFragment<ControlPresenter> implements
-        SeekBar.OnSeekBarChangeListener, View.OnClickListener{
+        SeekBar.OnSeekBarChangeListener, View.OnClickListener {
     @BindView(R.id.seekBar_water_temp)
     SeekBar mSeekBarWaterTemp;
     @BindView(R.id.seekBar_water_rate)
@@ -48,18 +47,12 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
     ImageView mButtonRateDecrease;
     @BindView(R.id.rate_increase)
     ImageView mButtonRateIncrease;
-    @BindView(R.id.water_post)
-    Button mButtonWaterPost;
-    @BindView(R.id.rate_post)
-    Button mButtonRatePost;
+    @BindView(R.id.temp_upload)
+    CircularProgressButton mBtnTempUpload;
+    @BindView(R.id.rate_upload)
+    CircularProgressButton mBtnRateUpload;
 
     private View mRootView;
-
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
     private Unbinder mBind;
     private MainActivity mMainActivity;
     private static final String TAG = "ControlFragment";
@@ -67,29 +60,13 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
     public ControlFragment() {
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ControlFragment.
-     */
-    public static ControlFragment newInstance(String param1, String param2) {
-        ControlFragment fragment = new ControlFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof MainActivity){
+        if (context instanceof MainActivity) {
             mMainActivity = (MainActivity) getActivity();
-        }else {
+        } else {
             throw new IllegalArgumentException("The context must to be instanceof MainActivity");
         }
         Log.i(TAG, "onAttach: 执行了");
@@ -98,10 +75,6 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -119,8 +92,8 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
 
     @Override
     protected void bindViews(View view) {
-        mBind = ButterKnife.bind(this, mRootView);
-        initToolbar(mRootView);
+        mBind = ButterKnife.bind(this, view);
+        initToolbar(view);
         mToolbar.setTitle("");
         mTextViewWaterTemp.setText(mSeekBarWaterTemp.getProgress() + "℃");
         mTextViewWaterRate.setText(mSeekBarWaterRate.getProgress() + "n/s");
@@ -134,8 +107,8 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
         mButtonWaterIncrease.setOnClickListener(this);
         mButtonRateDecrease.setOnClickListener(this);
         mButtonRateIncrease.setOnClickListener(this);
-        mButtonWaterPost.setOnClickListener(this);
-        mButtonRatePost.setOnClickListener(this);
+        mBtnTempUpload.setOnClickListener(this);
+        mBtnRateUpload.setOnClickListener(this);
     }
 
     @Override
@@ -143,22 +116,12 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
 
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mBind.unbind();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
     //下面三个方法是SeekBar拖动回调方法
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (seekBar.equals(mSeekBarWaterTemp)){
+        if (seekBar.equals(mSeekBarWaterTemp)) {
             mTextViewWaterTemp.setText(progress + "℃");
-        }else if (seekBar.equals(mSeekBarWaterRate)){
+        } else if (seekBar.equals(mSeekBarWaterRate)) {
             mTextViewWaterRate.setText(progress + "n/s");
         }
     }
@@ -176,7 +139,7 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id){
+        switch (id) {
             case R.id.water_decrease:
                 mSeekBarWaterTemp.setProgress(mSeekBarWaterTemp.getProgress() - 1);
                 break;
@@ -189,22 +152,54 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
             case R.id.rate_increase:
                 mSeekBarWaterRate.setProgress(mSeekBarWaterRate.getProgress() + 1);
                 break;
-            case R.id.water_post:
-                createDialog();
+            case R.id.temp_upload:
+                createTempUploadDialog();
                 break;
-            case R.id.rate_post:
-                createDialog();
+            case R.id.rate_upload:
+                createRateUploadDialog();
                 break;
         }
     }
 
-    private void createDialog(){
+    private void simulateSuccessProgress(final CircularProgressButton button) {
+        ValueAnimator widthAnimation = ValueAnimator.ofInt(1, 100);
+        widthAnimation.setDuration(1500);
+        widthAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        widthAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                Integer value = (Integer) animation.getAnimatedValue();
+                button.setProgress(value);
+            }
+        });
+        widthAnimation.start();
+    }
+
+    private void simulateErrorProgress(final CircularProgressButton button) {
+        ValueAnimator widthAnimation = ValueAnimator.ofInt(1, 99);
+        widthAnimation.setDuration(1500);
+        widthAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        widthAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                Integer value = (Integer) animation.getAnimatedValue();
+                button.setProgress(value);
+                if (value == 99) {
+                    button.setProgress(-1);
+                }
+            }
+        });
+        widthAnimation.start();
+    }
+
+    private void createTempUploadDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mMainActivity);
-        builder.setTitle("确认提交吗?");
+        builder.setTitle("确认提交上传数据吗?");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                handleTempUpload();
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -214,5 +209,51 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
             }
         });
         builder.create().show();
+    }
+
+    private void createRateUploadDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mMainActivity);
+        builder.setTitle("确认提交上传数据吗?");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                handleRateUpload();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
+    private void handleTempUpload() {
+        if (mBtnTempUpload.getProgress() == 0) {
+            simulateSuccessProgress(mBtnTempUpload);
+        } else {
+            mBtnTempUpload.setProgress(0);
+        }
+    }
+
+    private void handleRateUpload() {
+        if (mBtnRateUpload.getProgress() == 0) {
+            simulateSuccessProgress(mBtnRateUpload);
+        } else {
+            mBtnRateUpload.setProgress(0);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mBind.unbind();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 }

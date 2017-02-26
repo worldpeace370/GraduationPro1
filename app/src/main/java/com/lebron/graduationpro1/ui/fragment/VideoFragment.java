@@ -81,9 +81,7 @@ public class VideoFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mVideoUrlString = "http://" + "192.168.1.100" + ":8080/?action=snapshot";
-        }
+        mVideoUrlString = "http://" + "192.168.1.101" + ":8080/?action=snapshot";
         mMyHandler = new MyHandler(this);
         AppLog.i(TAG, "onCreate: 执行了");
     }

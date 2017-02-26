@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.lebron.graduationpro1.ui.fragment.ControlFragment">
+    tools:context="com.lebron.graduationpro1.controlpage.ControlFragment">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -24,175 +24,199 @@
             android:textSize="20sp" />
     </android.support.v7.widget.Toolbar>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:text="水温控制"
-        android:textSize="16sp" />
-
     <LinearLayout
-        android:id="@+id/linearLayout_temp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingEnd="5dp"
-        android:paddingStart="5dp">
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView_label_water_temp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
             android:gravity="center"
-            android:text="水温:" />
+            android:text="水温控制"
+            android:textSize="16sp" />
 
-        <SeekBar
-            android:id="@+id/seekBar_water_temp"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/linearLayout_temp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:max="100"
-            android:progress="60"
-            android:progressDrawable="@drawable/progress_holo_light"
-            android:thumb="@mipmap/seek_bar_icon" />
-
-        <TextView
-            android:id="@+id/textView_water_temp_MAX"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="100℃" />
+            android:orientation="horizontal"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp">
+
+            <TextView
+                android:id="@+id/textView_label_water_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="水温:" />
+
+            <SeekBar
+                android:id="@+id/seekBar_water_temp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:max="100"
+                android:progress="60"
+                android:progressDrawable="@drawable/progress_holo_light"
+                android:thumb="@mipmap/seek_bar_icon" />
+
+            <TextView
+                android:id="@+id/textView_water_temp_MAX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="100℃" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/water_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_gravity="left"
+                android:background="@drawable/inc_dec_selector"
+                android:src="@mipmap/decrease"
+                tools:ignore="contentDescription" />
+
+            <ImageView
+                android:id="@+id/water_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:background="@drawable/inc_dec_selector"
+                android:src="@mipmap/increase"
+                tools:ignore="contentDescription" />
+        </RelativeLayout>
+
+        <com.dd.CircularProgressButton
+            android:id="@+id/temp_upload"
+            android:layout_width="160dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cpb_cornerRadius="48dp"
+            app:cpb_textComplete="@string/complete"
+            app:cpb_textError="@string/error"
+            app:cpb_textIdle="@string/upload" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="30dp"
+            android:background="@color/tabSelected" />
+
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:padding="20dp">
-
-        <ImageView
-            android:id="@+id/water_decrease"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_gravity="left"
-            android:background="@drawable/inc_dec_selector"
-            android:src="@mipmap/decrease"
-            tools:ignore="contentDescription" />
-
-        <ImageView
-            android:id="@+id/water_increase"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="right"
-            android:background="@drawable/inc_dec_selector"
-            android:src="@mipmap/increase"
-            tools:ignore="contentDescription" />
-    </RelativeLayout>
-
-    <Button
-        android:id="@+id/water_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/control_post"
-        android:gravity="center"
-        android:text="提交水温更改?"
-        android:textSize="20sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="20dp"
-        android:background="@color/tabSelected" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:text="转速控制"
-        android:textSize="16sp" />
-
     <LinearLayout
-        android:id="@+id/linearLayout_rate"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingEnd="5dp"
-        android:paddingStart="5dp">
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView_label_water_rate"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
             android:gravity="center"
-            android:text="转速:" />
+            android:text="转速控制"
+            android:textSize="16sp" />
 
-        <SeekBar
-            android:id="@+id/seekBar_water_rate"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/linearLayout_rate"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:max="100"
-            android:progress="40"
-            android:progressDrawable="@drawable/progress_holo_light"
-            android:thumb="@mipmap/seek_bar_icon" />
-
-        <TextView
-            android:id="@+id/textView_water_rate_MAX"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="100n/s" />
+            android:orientation="horizontal"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp">
+
+            <TextView
+                android:id="@+id/textView_label_water_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="转速:" />
+
+            <SeekBar
+                android:id="@+id/seekBar_water_rate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:max="100"
+                android:progress="40"
+                android:progressDrawable="@drawable/progress_holo_light"
+                android:thumb="@mipmap/seek_bar_icon" />
+
+            <TextView
+                android:id="@+id/textView_water_rate_MAX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="100n/s" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/rate_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_gravity="left"
+                android:background="@drawable/inc_dec_selector"
+                android:src="@mipmap/decrease"
+                tools:ignore="contentDescription" />
+
+            <ImageView
+                android:id="@+id/rate_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:background="@drawable/inc_dec_selector"
+                android:src="@mipmap/increase"
+                tools:ignore="contentDescription" />
+        </RelativeLayout>
+
+        <com.dd.CircularProgressButton
+            android:id="@+id/rate_upload"
+            android:layout_width="160dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cpb_cornerRadius="48dp"
+            app:cpb_textComplete="@string/complete"
+            app:cpb_textError="@string/error"
+            app:cpb_textIdle="@string/upload" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="30dp"
+            android:background="@color/tabSelected" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:padding="20dp">
-
-        <ImageView
-            android:id="@+id/rate_decrease"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_gravity="left"
-            android:background="@drawable/inc_dec_selector"
-            android:src="@mipmap/decrease"
-            tools:ignore="contentDescription" />
-
-        <ImageView
-            android:id="@+id/rate_increase"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="right"
-            android:background="@drawable/inc_dec_selector"
-            android:src="@mipmap/increase"
-            tools:ignore="contentDescription" />
-    </RelativeLayout>
-
-    <Button
-        android:id="@+id/rate_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/control_post"
-        android:gravity="center"
-        android:text="提交转速更改?"
-        android:textSize="20sp" />
 </LinearLayout>
