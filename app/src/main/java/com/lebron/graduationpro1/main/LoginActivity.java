@@ -11,7 +11,7 @@ import com.lebron.graduationpro1.minepage.model.UserInfo;
 import com.lebron.graduationpro1.utils.LebronPreference;
 import com.lebron.graduationpro1.view.ClearEditText;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener{
+public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     private ClearEditText mUserName;
     private ClearEditText mPassWord;
@@ -47,7 +47,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
     @Override
     protected void init() {
-        mUserName.setText("admin");
+        mUserName.setText(LebronPreference.getInstance().getUserInfo().getNickName());
     }
 
     @Override
@@ -57,10 +57,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                 handleLogin();
                 break;
             case R.id.tv_reg:
-
+                //注册界面
                 break;
             case R.id.tv_forget_pwd:
-
+                //找回密码界面
                 break;
             default:
                 break;

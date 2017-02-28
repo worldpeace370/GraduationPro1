@@ -1,7 +1,7 @@
 package com.lebron.graduationpro1.detailpage.model;
 
 import com.lebron.graduationpro1.detailpage.contracts.DetailContracts;
-import com.lebron.graduationpro1.service.VolleyService;
+import com.lebron.graduationpro1.service.VolleyRequestService;
 import com.lebron.mvp.model.BaseModel;
 
 import java.util.List;
@@ -19,8 +19,8 @@ public class DetailRequestModel extends BaseModel<DetailContracts.Model.CallBack
     @Override
     public void getHeatInfo(int page) {
         // 网络请求，接口回调
-        new VolleyService().getDataFromServer(String.format(mHostDetailUrl, page), HeatInfo.class,
-                new VolleyService.RequestCompleteListener<HeatInfo>() {
+        new VolleyRequestService().getDataFromServer(String.format(mHostDetailUrl, page), HeatInfo.class,
+                new VolleyRequestService.RequestCompleteListener<HeatInfo>() {
                     @Override
                     public void success(List<HeatInfo> list) {
                         handleSuccess(list);

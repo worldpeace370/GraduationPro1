@@ -13,7 +13,7 @@ import java.util.List;
  * Contact way wuxiangkun2015@163.com
  */
 
-public class VolleyService {
+public class VolleyRequestService {
     public <T> void getDataFromServer(String urlStr, final Class<T> type
             , final RequestCompleteListener<T> listener) {
         StringRequest request = new StringRequest(urlStr, new Response.Listener<String>() {

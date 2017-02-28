@@ -1,4 +1,4 @@
-package com.lebron.graduationpro1.controlpage;
+package com.lebron.graduationpro1.controlpage.view;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.dd.CircularProgressButton;
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseFragment;
+import com.lebron.graduationpro1.controlpage.contracts.ControlContracts;
+import com.lebron.graduationpro1.controlpage.presenter.ControlPresenter;
 import com.lebron.graduationpro1.main.MainActivity;
 import com.lebron.mvp.factory.RequiresPresenter;
 
@@ -29,7 +31,7 @@ import butterknife.Unbinder;
  */
 @RequiresPresenter(ControlPresenter.class)
 public class ControlFragment extends BaseFragment<ControlPresenter> implements
-        SeekBar.OnSeekBarChangeListener, View.OnClickListener {
+        SeekBar.OnSeekBarChangeListener, View.OnClickListener, ControlContracts.View {
     @BindView(R.id.seekBar_water_temp)
     SeekBar mSeekBarWaterTemp;
     @BindView(R.id.seekBar_water_rate)
@@ -161,7 +163,9 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
         }
     }
 
-    private void simulateSuccessProgress(final CircularProgressButton button) {
+    @Override
+    public void showUploadResult(String resultStr) {
+        final boolean result = resultStr.equals("success");
         ValueAnimator widthAnimation = ValueAnimator.ofInt(1, 100);
         widthAnimation.setDuration(1500);
         widthAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -169,28 +173,16 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 Integer value = (Integer) animation.getAnimatedValue();
-                button.setProgress(value);
-            }
-        });
-        widthAnimation.start();
-    }
-
-    private void simulateErrorProgress(final CircularProgressButton button) {
-        ValueAnimator widthAnimation = ValueAnimator.ofInt(1, 99);
-        widthAnimation.setDuration(1500);
-        widthAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        widthAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                Integer value = (Integer) animation.getAnimatedValue();
-                button.setProgress(value);
-                if (value == 99) {
-                    button.setProgress(-1);
+                if (result) {
+                    mBtnTempUpload.setProgress(value);
+                } else {
+                    mBtnTempUpload.setProgress(-1);
                 }
             }
         });
         widthAnimation.start();
     }
+
 
     private void createTempUploadDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mMainActivity);
@@ -232,7 +224,7 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
 
     private void handleTempUpload() {
         if (mBtnTempUpload.getProgress() == 0) {
-            simulateSuccessProgress(mBtnTempUpload);
+            getPresenter().uploadTempInfo(mSeekBarWaterTemp.getProgress() + "");
         } else {
             mBtnTempUpload.setProgress(0);
         }
@@ -240,7 +232,7 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
 
     private void handleRateUpload() {
         if (mBtnRateUpload.getProgress() == 0) {
-            simulateSuccessProgress(mBtnRateUpload);
+            getPresenter().uploadRateInfo(mSeekBarWaterRate.getProgress() + "");
         } else {
             mBtnRateUpload.setProgress(0);
         }

@@ -1,7 +1,7 @@
 package com.lebron.graduationpro1.scanpage.model;
 
 import com.lebron.graduationpro1.scanpage.contracts.ScanContracts;
-import com.lebron.graduationpro1.service.VolleyService;
+import com.lebron.graduationpro1.service.VolleyRequestService;
 import com.lebron.mvp.model.BaseModel;
 
 import java.util.List;
@@ -17,8 +17,8 @@ public class ScanRequestModel extends BaseModel<ScanContracts.Model.Callback>
     @Override
     public void getCollectInfo(String date) {
         // 网络请求，接口回调
-        new VolleyService().getDataFromServer(String.format(URL, date), CollectInfoBean.class,
-                new VolleyService.RequestCompleteListener<CollectInfoBean>() {
+        new VolleyRequestService().getDataFromServer(String.format(URL, date), CollectInfoBean.class,
+                new VolleyRequestService.RequestCompleteListener<CollectInfoBean>() {
             @Override
             public void success(List<CollectInfoBean> list) {
                 handleSuccess(list);
