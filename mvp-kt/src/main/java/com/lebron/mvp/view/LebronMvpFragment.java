@@ -25,6 +25,8 @@ import com.lebron.mvp.presenter.Presenter;
 
 public abstract class LebronMvpFragment<P extends Presenter> extends Fragment implements ViewWithPresenter<P> {
     private static final String PRESENTER_STATE_KEY = "presenter_state";
+    // 通过getClass()得到了当前Fragment,然后在ReflectionPresenterFactory中得到了当前Fragment对应的Presenter
+    // ReflectionPresenterFactory对象作为PresenterLifecycleDelegate的参数，代理自然也得到了Presenter
     private PresenterLifecycleDelegate<P> mPresenterDelegate =
             new PresenterLifecycleDelegate<>(ReflectionPresenterFactory.<P>fromViewClass(getClass())); // getClass()为运行时实际的Fragment实例class
 
@@ -70,7 +72,7 @@ public abstract class LebronMvpFragment<P extends Presenter> extends Fragment im
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mPresenterDelegate.onTakeView(this); // 将Presenter控制的实际View(Fragment or Activity)传入
+        mPresenterDelegate.onTakeView(this); // 将Presenter控制的实际View(Fragment or Activity)传入, this表示当前的子Fragment
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
