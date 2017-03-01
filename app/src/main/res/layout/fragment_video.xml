@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lebron.graduationpro1.ui.fragment.VideoFragment">
+    tools:context="com.lebron.graduationpro1.videopage.VideoFragment">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -27,15 +27,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:background="@color/transparent" >
+        android:layout_height="240dp"
+        android:layout_centerInParent="true"
+        android:background="@color/transparent">
 
         <SurfaceView
             android:id="@+id/surfaceView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true" />
     </RelativeLayout>
 
 

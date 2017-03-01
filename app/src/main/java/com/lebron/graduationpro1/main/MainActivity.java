@@ -16,9 +16,9 @@ import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseActivity;
 import com.lebron.graduationpro1.detailpage.view.DetailFragment;
 import com.lebron.graduationpro1.scanpage.view.ScanFragment;
-import com.lebron.graduationpro1.ui.fragment.ControlFragment;
+import com.lebron.graduationpro1.controlpage.view.ControlFragment;
 import com.lebron.graduationpro1.minepage.fragment.MineFragment;
-import com.lebron.graduationpro1.ui.fragment.VideoFragment;
+import com.lebron.graduationpro1.videopage.VideoFragment;
 import com.lebron.graduationpro1.utils.MyActivityManager;
 import com.lebron.graduationpro1.utils.ShowToast;
 

@@ -1,4 +1,4 @@
-package com.lebron.graduationpro1.ui.fragment;
+package com.lebron.graduationpro1.videopage;
 
 import android.content.Context;
 import android.content.Intent;
@@ -81,9 +81,7 @@ public class VideoFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mVideoUrlString = "http://" + "192.168.1.100" + ":8080/?action=snapshot";
-        }
+        mVideoUrlString = "http://" + "192.168.1.101" + ":8080/?action=snapshot";
         mMyHandler = new MyHandler(this);
         AppLog.i(TAG, "onCreate: 执行了");
     }
@@ -115,79 +113,6 @@ public class VideoFragment extends BaseFragment {
     @Override
     protected void init() {
         initSurfaceView();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        AppLog.i(TAG, "onActivityCreated: 执行了");
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        AppLog.i(TAG, "onStart: 执行了");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        AppLog.i(TAG, "onResume: 执行了");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        AppLog.i(TAG, "onPause: 执行了");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        AppLog.i(TAG, "onStop: 执行了");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        AppLog.i(TAG, "onDestroyView: 执行了");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        AppLog.i(TAG, "onDestroy: 执行了");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        AppLog.i(TAG, "onDetach: 执行了");
-    }
-
-    /**
-     * 网络连接失败,弹出对话框提醒
-     */
-    private void createNetFailedDialog(String errorInfo) {
-        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                .title(errorInfo)
-                .content("本项目开源, 你想怎么改?快来联系我~")
-                .positiveText("Github")
-                .negativeText("Zhihu")
-                .callback(new MaterialDialog.Callback() {
-                    @Override
-                    public void onPositive(MaterialDialog dialog) {
-                        startActivity(new Intent(Intent.ACTION_VIEW,
-                                Uri.parse("https://github.com/worldpeace370")));
-                    }
-
-                    @Override
-                    public void onNegative(MaterialDialog dialog) {
-                        startActivity(new Intent(Intent.ACTION_VIEW,
-                                Uri.parse("https://www.zhihu.com/people/hu-qi-xing-66")));
-                    }
-                }).build();
-        dialog.show();
     }
 
     private void initSurfaceView() {
@@ -275,7 +200,7 @@ public class VideoFragment extends BaseFragment {
                     Message message = mMyHandler.obtainMessage();
                     message.what = 0;
                     mMyHandler.sendMessage(message);
-                    Log.i(TAG, "connect is error!");
+                    Log.i(TAG, "connect is fail!");
                     return;
                 } finally {
                     if (canvas != null) {
@@ -284,5 +209,78 @@ public class VideoFragment extends BaseFragment {
                 }
             }
         }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        AppLog.i(TAG, "onActivityCreated: 执行了");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        AppLog.i(TAG, "onStart: 执行了");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AppLog.i(TAG, "onResume: 执行了");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AppLog.i(TAG, "onPause: 执行了");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        AppLog.i(TAG, "onStop: 执行了");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        AppLog.i(TAG, "onDestroyView: 执行了");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AppLog.i(TAG, "onDestroy: 执行了");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        AppLog.i(TAG, "onDetach: 执行了");
+    }
+
+    /**
+     * 网络连接失败,弹出对话框提醒
+     */
+    private void createNetFailedDialog(String errorInfo) {
+        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                .title(errorInfo)
+                .content("本项目开源, 你想怎么改?快来联系我~")
+                .positiveText("Github")
+                .negativeText("Zhihu")
+                .callback(new MaterialDialog.Callback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("https://github.com/worldpeace370")));
+                    }
+
+                    @Override
+                    public void onNegative(MaterialDialog dialog) {
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("https://www.zhihu.com/people/hu-qi-xing-66")));
+                    }
+                }).build();
+        dialog.show();
     }
 }

@@ -39,7 +39,6 @@ import com.lebron.graduationpro1.main.MainActivity;
 import com.lebron.graduationpro1.scanpage.contracts.ScanContracts;
 import com.lebron.graduationpro1.scanpage.model.CollectInfoBean;
 import com.lebron.graduationpro1.scanpage.presenter.ScanPresenter;
-import com.lebron.graduationpro1.ui.activity.NodeChoiceActivity;
 import com.lebron.graduationpro1.utils.AppLog;
 import com.lebron.graduationpro1.utils.ConstantValue;
 import com.lebron.graduationpro1.utils.LebronPreference;
@@ -358,8 +357,8 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         List<Entry> entriesTemp = new ArrayList<>();
         List<Entry> entriesRate = new ArrayList<>();
         for (int i = 0; i < infoList.size(); i++) {
-            entriesTemp.add(new Entry(Float.parseFloat(infoList.get(i).getMtemperature()), i));
-            entriesRate.add(new Entry(Float.parseFloat(infoList.get(i).getMrate()), i));
+            entriesTemp.add(new Entry(Float.parseFloat(infoList.get(i).getTemperature()), i));
+            entriesRate.add(new Entry(Float.parseFloat(infoList.get(i).getRate()), i));
         }
         addTempEntriesToDataSetList(entriesTemp, dataSetList);
         addRateEntriesToDataSetList(entriesRate, dataSetList);

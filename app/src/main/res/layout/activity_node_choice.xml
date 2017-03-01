@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.lebron.graduationpro1.ui.activity.NodeChoiceActivity">
+    tools:context="com.lebron.graduationpro1.scanpage.view.NodeChoiceActivity">
 
     <include
         android:id="@+id/toolbar"
