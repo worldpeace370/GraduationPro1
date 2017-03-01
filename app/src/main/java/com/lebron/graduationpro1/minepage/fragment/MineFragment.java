@@ -1,26 +1,22 @@
 package com.lebron.graduationpro1.minepage.fragment;
 
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.lebron.graduationpro1.R;
-import com.lebron.graduationpro1.base.BaseActivity;
+import com.lebron.graduationpro1.base.BaseFragment;
 import com.lebron.graduationpro1.minepage.activity.SettingActivity;
 import com.lebron.graduationpro1.minepage.activity.UserCenterActivity;
 import com.lebron.graduationpro1.view.CustomSettingItem;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link MineFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 个人中心界面
  */
-public class MineFragment extends Fragment implements View.OnClickListener{
+public class MineFragment extends BaseFragment implements View.OnClickListener{
     private View mRootView;
     private RelativeLayout mUserAccountLayout;
     private CustomSettingItem mMineDeviceItem;
@@ -34,19 +30,6 @@ public class MineFragment extends Fragment implements View.OnClickListener{
     public MineFragment() {
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment MineFragment.
-     */
-    public static MineFragment newInstance() {
-        MineFragment fragment = new MineFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +38,7 @@ public class MineFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.fragment_mine, container, false);
             bindViews(mRootView);
@@ -64,7 +48,8 @@ public class MineFragment extends Fragment implements View.OnClickListener{
         return mRootView;
     }
 
-    private void bindViews(View rootView) {
+    @Override
+    protected void bindViews(View rootView) {
         mUserAccountLayout = ((RelativeLayout) rootView.findViewById(R.id.user_account_layout));
         mMineDeviceItem = ((CustomSettingItem) rootView.findViewById(R.id.item_mine_device));
         mMineCollectItem = ((CustomSettingItem) rootView.findViewById(R.id.item_mine_collect));
@@ -75,7 +60,8 @@ public class MineFragment extends Fragment implements View.OnClickListener{
         mNightModeItem = ((CustomSettingItem) rootView.findViewById(R.id.item_mine_night_mode));
     }
 
-    private void setListener() {
+    @Override
+    protected void setListener() {
         mUserAccountLayout.setOnClickListener(this);
         mMineDeviceItem.setOnClickListener(this);
         mMineCollectItem.setOnClickListener(this);
@@ -86,7 +72,8 @@ public class MineFragment extends Fragment implements View.OnClickListener{
         mNightModeItem.setOnClickListener(this);
     }
 
-    private void init() {
+    @Override
+    protected void init() {
 
     }
 
@@ -103,10 +90,5 @@ public class MineFragment extends Fragment implements View.OnClickListener{
             default:
                 break;
         }
-    }
-
-    private <T extends BaseActivity> void startActivityByClassName(Class<T> tClass) {
-        Intent intent = new Intent(getActivity(), tClass);
-        startActivity(intent);
     }
 }

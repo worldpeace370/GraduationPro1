@@ -29,7 +29,7 @@ public class ReflectionPresenterFactory<P extends Presenter> implements Presente
         return presenterClass == null ? null : new ReflectionPresenterFactory<>(presenterClass);
     }
 
-    public ReflectionPresenterFactory(Class<P> presenterClass) {
+    private ReflectionPresenterFactory(Class<P> presenterClass) {
         this.presenterClass = presenterClass;
     }
 

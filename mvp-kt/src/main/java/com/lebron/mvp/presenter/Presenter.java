@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
+/**Presenter<View>中的View指实现了View接口的Fragment或者Activity，使用时将接口作为泛型擦除的实际对象
  * Created by wuxiangkun on 2017/1/2.
  * Contact way wuxiangkun2015@163.com
  */
