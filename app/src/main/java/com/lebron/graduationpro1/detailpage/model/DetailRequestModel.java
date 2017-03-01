@@ -15,11 +15,11 @@ public class DetailRequestModel extends BaseModel<DetailContracts.Model.CallBack
         implements DetailContracts.Model {
     private static final String mHostDetailUrl =
             "http://114.215.117.169/thinkphp/Home/ApiGrad/pageSearch/page/%d";
-
+    private VolleyRequestService mRequestService = new VolleyRequestService();
     @Override
     public void getHeatInfo(int page) {
         // 网络请求，接口回调
-        new VolleyRequestService().getDataFromServer(String.format(mHostDetailUrl, page), HeatInfo.class,
+        mRequestService.getDataFromServer(String.format(mHostDetailUrl, page), HeatInfo.class,
                 new VolleyRequestService.RequestCompleteListener<HeatInfo>() {
                     @Override
                     public void success(List<HeatInfo> list) {

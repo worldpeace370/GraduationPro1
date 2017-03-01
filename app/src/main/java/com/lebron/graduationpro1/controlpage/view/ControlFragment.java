@@ -20,7 +20,13 @@ import com.lebron.graduationpro1.base.BaseFragment;
 import com.lebron.graduationpro1.controlpage.contracts.ControlContracts;
 import com.lebron.graduationpro1.controlpage.presenter.ControlPresenter;
 import com.lebron.graduationpro1.main.MainActivity;
+import com.lebron.graduationpro1.scanpage.model.CollectInfoBean;
+import com.lebron.graduationpro1.service.VolleyRequestService;
 import com.lebron.mvp.factory.RequiresPresenter;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,7 +64,9 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
     private Unbinder mBind;
     private MainActivity mMainActivity;
     private static final String TAG = "ControlFragment";
-
+    private static final String INFO_TYPE_1 = "temperature";
+    private static final String INFO_TYPE_2 = "rate";
+    private static final SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd"); // HH 24小时制
     public ControlFragment() {
     }
 
@@ -113,9 +121,34 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
         mBtnRateUpload.setOnClickListener(this);
     }
 
+    /**
+     * 初始化SeekBar上面的温度值和转速值，设置label(TextView显示的温度、转速)
+     * 从服务器读取最新的数据(此处不涉及到具体的交互只是初始化操作，没有用MVP实现)
+     */
     @Override
     protected void init() {
+        String url = "http://114.215.117.169/thinkphp/Home/ApiGrad/dateSearch/date/%s";
+        Date date = new Date(System.currentTimeMillis());
+        String dateStr = mDateFormat.format(date);
+        new VolleyRequestService().getDataFromServer(String.format(url, dateStr), CollectInfoBean.class,
+                new VolleyRequestService.RequestCompleteListener<CollectInfoBean>() {
+                    @Override
+                    public void success(List<CollectInfoBean> list) {
+                        if (list != null && list.size() > 0) {
+                            String temperature = list.get(list.size() - 1).getTemperature();
+                            String rate = list.get(list.size() - 1).getRate();
+                            mTextViewWaterTemp.setText(temperature + "℃");
+                            mSeekBarWaterTemp.setProgress(Integer.parseInt(temperature));
+                            mTextViewWaterRate.setText(rate + "n/s");
+                            mSeekBarWaterRate.setProgress(Integer.parseInt(rate));
+                        }
+                    }
 
+                    @Override
+                    public void error(String error) {
+
+                    }
+                });
     }
 
     //下面三个方法是SeekBar拖动回调方法
@@ -155,17 +188,16 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
                 mSeekBarWaterRate.setProgress(mSeekBarWaterRate.getProgress() + 1);
                 break;
             case R.id.temp_upload:
-                createTempUploadDialog();
+                createUploadDialog(mBtnTempUpload, mSeekBarWaterTemp, INFO_TYPE_1);
                 break;
             case R.id.rate_upload:
-                createRateUploadDialog();
+                createUploadDialog(mBtnRateUpload, mSeekBarWaterRate, INFO_TYPE_2);
                 break;
         }
     }
 
     @Override
-    public void showUploadResult(String resultStr) {
-        final boolean result = resultStr.equals("success");
+    public void showUploadSuccess(final String infoType) {
         ValueAnimator widthAnimation = ValueAnimator.ofInt(1, 100);
         widthAnimation.setDuration(1500);
         widthAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -173,25 +205,34 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 Integer value = (Integer) animation.getAnimatedValue();
-                if (result) {
+                if (infoType.equals(INFO_TYPE_1)) {
                     mBtnTempUpload.setProgress(value);
-                } else {
-                    mBtnTempUpload.setProgress(-1);
+                } else if(infoType.equals(INFO_TYPE_2)){
+                    mBtnRateUpload.setProgress(value);
                 }
             }
         });
         widthAnimation.start();
     }
 
+    @Override
+    public void showUploadFail(int retCode, String retDesc) {
+        showCustomToast(R.mipmap.input_clean, retDesc);
+    }
 
-    private void createTempUploadDialog() {
+    private void createUploadDialog(final CircularProgressButton button, final SeekBar seekBar,
+                                    final String infoType) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mMainActivity);
         builder.setTitle("确认提交上传数据吗?");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                handleTempUpload();
+                if (button.getProgress() == 0) {
+                    getPresenter().uploadControlInfo(infoType, seekBar.getProgress() + "");
+                } else {
+                    button.setProgress(0);
+                }
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -203,38 +244,13 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
         builder.create().show();
     }
 
-    private void createRateUploadDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mMainActivity);
-        builder.setTitle("确认提交上传数据吗?");
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                handleRateUpload();
-            }
-        });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-    }
-
-    private void handleTempUpload() {
-        if (mBtnTempUpload.getProgress() == 0) {
-            getPresenter().uploadTempInfo(mSeekBarWaterTemp.getProgress() + "");
-        } else {
-            mBtnTempUpload.setProgress(0);
-        }
-    }
-
-    private void handleRateUpload() {
-        if (mBtnRateUpload.getProgress() == 0) {
-            getPresenter().uploadRateInfo(mSeekBarWaterRate.getProgress() + "");
-        } else {
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) { // 当该页面再次可见的时候，hidden = false，重置上传按键的进度状态
             mBtnRateUpload.setProgress(0);
+            mBtnTempUpload.setProgress(0);
+            init();
         }
     }
 

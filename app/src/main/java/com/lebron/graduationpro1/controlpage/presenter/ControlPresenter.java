@@ -1,9 +1,13 @@
 package com.lebron.graduationpro1.controlpage.presenter;
 
+import android.support.annotation.NonNull;
+
 import com.lebron.graduationpro1.controlpage.contracts.ControlContracts;
 import com.lebron.graduationpro1.controlpage.model.ControlModel;
 import com.lebron.mvp.presenter.Presenter;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +20,7 @@ import java.util.Map;
 public class ControlPresenter extends Presenter<ControlContracts.View>
         implements ControlContracts.Presenter, ControlContracts.Model.CallBack {
     private ControlModel mControlModel;
+    private static final SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // HH 24小时制
 
     public ControlPresenter() {
         mControlModel = new ControlModel();
@@ -23,30 +28,25 @@ public class ControlPresenter extends Presenter<ControlContracts.View>
     }
 
     @Override
-    public void uploadTempInfo(String tempStr) {
-        Map<String, String> tempMap = new HashMap<>();
-        tempMap.put("mTemperature", tempStr);
-        mControlModel.uploadControlInfo(tempMap);
+    public void uploadControlInfo(@NonNull String infoType, @NonNull String infoValue) {
+        Map<String, String> paramsMap = new HashMap<>();
+        paramsMap.put(infoType, infoValue);
+        Date date = new Date(System.currentTimeMillis());
+        paramsMap.put("createtime", mDateFormat.format(date));
+        mControlModel.uploadControlInfo(paramsMap);
     }
 
     @Override
-    public void uploadRateInfo(String rateStr) {
-        Map<String, String> tempMap = new HashMap<>();
-        tempMap.put("mRate", rateStr);
-        mControlModel.uploadControlInfo(tempMap);
-    }
-
-    @Override
-    public void onSuccess(String retDesc) {
+    public void onSuccess(String infoType) {
         if (getView() != null) {
-            getView().showUploadResult(retDesc);
+            getView().showUploadSuccess(infoType);
         }
     }
 
     @Override
     public void onFail(int retCode, String retDesc) {
         if (getView() != null) {
-            getView().showUploadResult(retDesc);
+            getView().showUploadFail(retCode, retDesc);
         }
     }
 }

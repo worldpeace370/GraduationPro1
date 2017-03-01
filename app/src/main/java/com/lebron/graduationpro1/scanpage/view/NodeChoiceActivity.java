@@ -1,4 +1,4 @@
-package com.lebron.graduationpro1.ui.activity;
+package com.lebron.graduationpro1.scanpage.view;
 
 import android.content.Intent;
 import android.os.Bundle;

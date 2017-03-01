@@ -6,37 +6,37 @@ package com.lebron.graduationpro1.scanpage.model;
  */
 
 public class CollectInfoBean {
-    private String mtemperature;
-    private String mrate;
-    private String mcreateTime;
+    private String temperature;
+    private String rate;
+    private String createtime;
 
-    public String getMtemperature() {
-        return mtemperature;
+    public String getTemperature() {
+        return temperature;
     }
 
-    public void setMtemperature(String mtemperature) {
-        this.mtemperature = mtemperature;
+    public void setTemperature(String temperature) {
+        this.temperature = temperature;
     }
 
-    public String getMrate() {
-        return mrate;
+    public String getRate() {
+        return rate;
     }
 
-    public void setMrate(String mrate) {
-        this.mrate = mrate;
+    public void setRate(String rate) {
+        this.rate = rate;
     }
 
-    public String getMcreateTime() {
-        return mcreateTime;
+    public String getCreatetime() {
+        return createtime;
     }
 
-    public void setMcreateTime(String mcreateTime) {
-        this.mcreateTime = mcreateTime;
+    public void setCreatetime(String createtime) {
+        this.createtime = createtime;
     }
 
     @Override
     public String toString() {
-        return "mtemperature = " + mtemperature + ", mrate = " + mrate
-                + ", mcreateTime = " + mcreateTime;
+        return "temperature = " + temperature + ", rate = " + rate
+                + ", createtime = " + createtime;
     }
 }

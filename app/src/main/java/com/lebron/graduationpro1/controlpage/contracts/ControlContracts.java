@@ -10,21 +10,29 @@ import java.util.Map;
 public interface ControlContracts {
     interface View {
         /**
-         * 显示上传的结果
+         * 上传控制信息成功后的回调，界面显示
+         *
+         * @param infoType 信息种类 temperature or rate
          */
-        void showUploadResult(String resultStr);
+        void showUploadSuccess(String infoType);
+
+        /**
+         * 上传控制信息失败后的回调，界面显示
+         *
+         * @param retCode 返回码
+         * @param retDesc 返回错误描述
+         */
+        void showUploadFail(int retCode, String retDesc);
     }
 
     interface Presenter {
         /**
-         * 上传温度控制信息
+         * 上传控制信息
+         *
+         * @param infoType  信息种类 temperature or rate
+         * @param infoValue 信息值
          */
-        void uploadTempInfo(String tempStr);
-
-        /**
-         * 上传转速控制信息
-         */
-        void uploadRateInfo(String rateStr);
+        void uploadControlInfo(String infoType, String infoValue);
     }
 
     interface Model {
@@ -38,9 +46,9 @@ public interface ControlContracts {
             /**
              * 返回成功请求的内容
              *
-             * @param retDesc 请求成功返回字符串
+             * @param infoType 温度类型 or 转速类型
              */
-            void onSuccess(String retDesc);
+            void onSuccess(String infoType);
 
             /**
              * 处理网络错误的返回
