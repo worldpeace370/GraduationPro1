@@ -47,7 +47,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void init() {
-        mUserName.setText(LebronPreference.getInstance().getUserInfo().getNickName());
+        if (null != LebronPreference.getInstance().getUserInfo()) {
+            mUserName.setText(LebronPreference.getInstance().getUserInfo().getNickName());
+        }
     }
 
     @Override

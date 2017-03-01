@@ -1,6 +1,12 @@
 package com.lebron.graduationpro1.minepage.fragment;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +17,10 @@ import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseFragment;
 import com.lebron.graduationpro1.minepage.activity.SettingActivity;
 import com.lebron.graduationpro1.minepage.activity.UserCenterActivity;
+import com.lebron.graduationpro1.utils.LebronPreference;
 import com.lebron.graduationpro1.view.CustomSettingItem;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * 个人中心界面
@@ -19,6 +28,7 @@ import com.lebron.graduationpro1.view.CustomSettingItem;
 public class MineFragment extends BaseFragment implements View.OnClickListener{
     private View mRootView;
     private RelativeLayout mUserAccountLayout;
+    private CircleImageView mImgHead;
     private CustomSettingItem mMineDeviceItem;
     private CustomSettingItem mMineCollectItem;
     private CustomSettingItem mMineNoteItem;
@@ -26,6 +36,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private CustomSettingItem mMineInfoItem;
     private CustomSettingItem mSystemSettingItem;
     private CustomSettingItem mNightModeItem;
+    private MyReceiver mReceiver;
 
     public MineFragment() {
     }
@@ -33,6 +44,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mReceiver = new MyReceiver();
+        IntentFilter filter = new IntentFilter("picture.has.cropped");
+        getActivity().registerReceiver(mReceiver, filter);
     }
 
     @Override
@@ -51,6 +65,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     @Override
     protected void bindViews(View rootView) {
         mUserAccountLayout = ((RelativeLayout) rootView.findViewById(R.id.user_account_layout));
+        mImgHead = ((CircleImageView) rootView.findViewById(R.id.image_user_head));
         mMineDeviceItem = ((CustomSettingItem) rootView.findViewById(R.id.item_mine_device));
         mMineCollectItem = ((CustomSettingItem) rootView.findViewById(R.id.item_mine_collect));
         mMineNoteItem = ((CustomSettingItem) rootView.findViewById(R.id.item_mine_note));
@@ -74,7 +89,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
     @Override
     protected void init() {
-
+        if (null != LebronPreference.getInstance().getHeadImageUrl()){
+            String urlStr = LebronPreference.getInstance().getHeadImageUrl();
+            Bitmap bitmap = BitmapFactory.decodeFile(urlStr);
+            mImgHead.setImageBitmap(bitmap);
+        }
     }
 
     @Override
@@ -90,5 +109,19 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             default:
                 break;
         }
+    }
+
+    class  MyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            init();
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        getActivity().unregisterReceiver(mReceiver);
     }
 }

@@ -90,7 +90,7 @@
                             android:id="@+id/img_head"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:src="@mipmap/user_head" />
+                            android:src="@mipmap/pic_userhead" />
 
                         <ImageView
                             android:layout_width="24dp"
