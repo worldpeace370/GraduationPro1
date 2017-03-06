@@ -30,7 +30,7 @@ import java.util.List;
  */
 @RequiresPresenter(DetailPresenter.class)
 public class DetailFragment extends BaseFragment<DetailPresenter> implements
-        SwipeRefreshLayout.OnRefreshListener, DetailContracts.View {
+        SwipeRefreshLayout.OnRefreshListener, DetailContracts.View, View.OnClickListener{
     private MainActivity mMainActivity;
     private static final String TAG = "DetailFragment";
     private View mRootView;
@@ -117,6 +117,7 @@ public class DetailFragment extends BaseFragment<DetailPresenter> implements
                 lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
             }
         });
+        mLayoutError.setOnClickListener(this);
     }
 
     @Override
@@ -128,6 +129,18 @@ public class DetailFragment extends BaseFragment<DetailPresenter> implements
     @Override
     protected void init() {
         getPresenter().getHeatInfo(mCurrentPage);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.layout_common_network_error:
+                getPresenter().getHeatInfo(mCurrentPage);
+                showCustomToast(R.mipmap.toast_done_icon, "重新加载中...", Toast.LENGTH_SHORT);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
