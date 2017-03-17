@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -49,7 +47,6 @@ import com.lebron.graduationpro1.view.customcalendarview.CalendarTools;
 import com.lebron.graduationpro1.view.customcalendarview.CustomCalendarView;
 import com.lebron.mvp.factory.RequiresPresenter;
 
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -86,30 +83,8 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
 
     private static final String TAG = "ScanFragment";
     private MainActivity mMainActivity;
-    private MyHandler mHandler;
     private View mRootView;
     private CustomCalendarView mCalendarView;
-
-    private static class MyHandler extends Handler {
-        WeakReference<ScanFragment> weakReference;
-
-        MyHandler(ScanFragment fragment) {
-            weakReference = new WeakReference<>(fragment);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            ScanFragment fragment = weakReference.get();
-            if (fragment != null) {//如果activity仍然在弱引用中,执行...
-                switch (msg.what) {
-                    case 0x01:
-
-                        break;
-                }
-            }
-        }
-    }
 
     public ScanFragment() {
     }
@@ -128,7 +103,6 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mHandler = new MyHandler(this);
         mNodeName = LebronPreference.getInstance().getNodeChoice();
         if (mNodeName.equals("")) {
             mNodeName = "朝阳区节点1";
