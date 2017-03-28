@@ -40,7 +40,8 @@
         <activity android:name=".minepage.activity.UserCenterActivity" />
         <activity android:name=".minepage.activity.CropActivity" />
         <activity android:name=".minepage.activity.ChangeNickNameActivity" />
-        <activity android:name=".detailpage.view.DetailActivity"></activity>
+        <activity android:name=".detailpage.view.DetailActivity" />
+        <activity android:name=".scanpage.view.InfoDetailActivity"/>
     </application>
 
 </manifest>

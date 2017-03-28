@@ -44,7 +44,7 @@ public class AddPopWindow extends PopupWindow {
 		//设置SelectPicPopWindow弹出窗体动画效果
 		this.setAnimationStyle(R.style.PopupWindowAnimation);
 		LinearLayout selectNewNode = (LinearLayout) contentView
-				.findViewById(R.id.select_new_node);
+				.findViewById(R.id.watch_to_detail);
 		LinearLayout saveImageSdCard = (LinearLayout) contentView
 				.findViewById(R.id.save_image_sd_card);
 		LinearLayout refreshData = (LinearLayout) contentView.findViewById(R.id.refresh_data);

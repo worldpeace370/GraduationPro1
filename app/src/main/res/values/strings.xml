@@ -32,7 +32,7 @@
     <string name="mine_night_mode">夜间模式</string>
     <string name="phone_account">手机号码</string>
     <string name="scroll_to_scale">拖动查询历史数据</string>
-    <string name="select_node">选择节点</string>
+    <string name="select_node">查看细节</string>
     <string name="save_image">保存图像</string>
     <string name="refresh_data">刷新数据</string>
     <string name="loading_text">努力加载中……</string>
@@ -70,4 +70,8 @@
     <string name="fail">错误</string>
     <string name="upload">上传</string>
     <string name="revert_status">复位上传状态</string>
+    <string name="info_details">详情信息</string>
+    <string name="collect_temp">采集温度：</string>
+    <string name="collect_rate">采集转速：</string>
+    <string name="collect_time">采集时间：</string>
 </resources>

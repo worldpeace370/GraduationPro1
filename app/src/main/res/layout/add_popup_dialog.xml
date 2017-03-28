@@ -46,7 +46,7 @@
             android:background="@color/tabRelease" />
 
         <LinearLayout
-            android:id="@+id/select_new_node"
+            android:id="@+id/watch_to_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
