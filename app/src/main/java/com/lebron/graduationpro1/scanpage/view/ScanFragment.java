@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -49,7 +47,6 @@ import com.lebron.graduationpro1.view.customcalendarview.CalendarTools;
 import com.lebron.graduationpro1.view.customcalendarview.CustomCalendarView;
 import com.lebron.mvp.factory.RequiresPresenter;
 
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -86,30 +83,8 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
 
     private static final String TAG = "ScanFragment";
     private MainActivity mMainActivity;
-    private MyHandler mHandler;
     private View mRootView;
     private CustomCalendarView mCalendarView;
-
-    private static class MyHandler extends Handler {
-        WeakReference<ScanFragment> weakReference;
-
-        MyHandler(ScanFragment fragment) {
-            weakReference = new WeakReference<>(fragment);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            ScanFragment fragment = weakReference.get();
-            if (fragment != null) {//如果activity仍然在弱引用中,执行...
-                switch (msg.what) {
-                    case 0x01:
-
-                        break;
-                }
-            }
-        }
-    }
 
     public ScanFragment() {
     }
@@ -128,7 +103,6 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mHandler = new MyHandler(this);
         mNodeName = LebronPreference.getInstance().getNodeChoice();
         if (mNodeName.equals("")) {
             mNodeName = "朝阳区节点1";
@@ -356,18 +330,22 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         ArrayList<LineDataSet> dataSetList = new ArrayList<>();
         List<Entry> entriesTemp = new ArrayList<>();
         List<Entry> entriesRate = new ArrayList<>();
-        for (int i = 0; i < infoList.size(); i++) {
+        int infoSize = infoList.size();
+        for (int i = 0; i < infoSize; i++) {
             entriesTemp.add(new Entry(Float.parseFloat(infoList.get(i).getTemperature()), i));
             entriesRate.add(new Entry(Float.parseFloat(infoList.get(i).getRate()), i));
         }
         addTempEntriesToDataSetList(entriesTemp, dataSetList);
         addRateEntriesToDataSetList(entriesRate, dataSetList);
-        String xValues[] = new String[]{"0h", "1h", "2h", "3h", "4h", "5h", "6h", "7h", "8h", "9h", "10h", "11h", "12h"
-                , "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h", "21h", "22h", "23h"};
+        //初始化x轴
+        String xValues[] = new String[infoSize];
+        for (int i = 0; i < infoSize; i++) {
+            xValues[i] = i + "";
+        }
         LineData lineData = new LineData(xValues, dataSetList);
         mLineChart.setData(lineData);
         //X方向动画效果
-        mLineChart.animateX(1500, Easing.EasingOption.EaseInOutQuart);
+        mLineChart.animateX(1000, Easing.EasingOption.EaseInOutQuart);
         //X,Y方向同时动画
         //mLineChart.animateXY(3000, 3000);
         mLineChart.invalidate();
@@ -436,8 +414,9 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         addPopWindow.setOnPopupWindowItemClickListener(new AddPopWindow.OnPopupWindowItemClickListener() {
             @Override
             public void onItemClick(int id) {
-                if (id == R.id.select_new_node) {
-                    startNodeChoiceActivity();
+                if (id == R.id.watch_to_detail) {
+                    startInfoDetailActivity();
+//                    startNodeChoiceActivity();
                 } else if (id == R.id.save_image_sd_card) {
                     getPresenter().saveLineImageToSDCard();
                 } else if (id == R.id.refresh_data) {
@@ -605,6 +584,17 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
     public void onDetach() {
         super.onDetach();
         AppLog.i(TAG, "onDetach: 执行了");
+    }
+
+    /**
+     * 跳转到带有时间戳的转速、温度详情Activity中去
+     */
+    private void startInfoDetailActivity() {
+        //跳转到供暖节点选择Activity
+        Intent intent = new Intent(mMainActivity, InfoDetailActivity.class);
+        startActivity(intent);
+        //Activity启动动画
+        mMainActivity.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
     }
 
     /**

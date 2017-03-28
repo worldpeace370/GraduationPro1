@@ -2,6 +2,7 @@ package com.lebron.graduationpro1.minepage.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,10 +21,10 @@ import com.kevin.crop.UCrop;
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseActivity;
 import com.lebron.graduationpro1.minepage.view.PicSelectPopupWindow;
+import com.lebron.graduationpro1.utils.LebronPreference;
 import com.lebron.graduationpro1.view.CustomSettingItem;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -36,7 +37,7 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
     private static final String TAG = "UserCenterActivity";
     private static final int GALLERY_REQUEST_CODE = 0;    // 相册选图标记
     private static final int CAMERA_REQUEST_CODE = 1;    // 相机拍照标记
-    private String mTempPhotoPath ; // 拍照临时图片
+    private String mTempPhotoPath; // 拍照临时图片
     private Uri mDestinationUri;   // 剪切后图像文件
     private CollapsingToolbarLayout mCollapsingToolbar;
     private LinearLayout mHeadLayout;
@@ -82,6 +83,11 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
         mDestinationUri = Uri.fromFile(new File(getCacheDir(), "cropImage.jpeg"));
         mTempPhotoPath = Environment.getExternalStorageDirectory() + File.separator + "photo.jpeg";
         mPhoneNumItem.setSubText("18744024728");
+        if (null != LebronPreference.getInstance().getHeadImageUrl()){
+            String urlStr = LebronPreference.getInstance().getHeadImageUrl();
+            Bitmap bitmap = BitmapFactory.decodeFile(urlStr);
+            mImgHead.setImageBitmap(bitmap);
+        }
     }
 
     @Override
@@ -122,7 +128,8 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
 
     /**
      * 图片选择的回调
-     * @param view 点击的按键View
+     *
+     * @param view     点击的按键View
      * @param position 按键对应的编号
      */
     @Override
@@ -213,8 +220,6 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
             Bitmap bitmap = null;
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -254,7 +259,9 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
         mImgHead.setImageBitmap(bitmap);
         String filePath = fileUri.getEncodedPath();
         String imagePath = Uri.decode(filePath);
-        Toast.makeText(this, "图片已经保存到:" + imagePath, Toast.LENGTH_LONG).show();
+        LebronPreference.getInstance().saveHeadImageUrl(imagePath);
+        Intent intent = new Intent("picture.has.cropped"); // 指定广播目标action
+        sendBroadcast(intent);
     }
 
 }

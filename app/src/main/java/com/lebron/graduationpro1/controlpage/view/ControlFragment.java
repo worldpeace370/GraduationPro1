@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -104,6 +106,7 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
     protected void bindViews(View view) {
         mBind = ButterKnife.bind(this, view);
         initToolbar(view);
+        mToolbar.inflateMenu(R.menu.menu_control_fragment);
         mToolbar.setTitle("");
         mTextViewWaterTemp.setText(mSeekBarWaterTemp.getProgress() + "℃");
         mTextViewWaterRate.setText(mSeekBarWaterRate.getProgress() + "n/s");
@@ -119,6 +122,18 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
         mButtonRateIncrease.setOnClickListener(this);
         mBtnTempUpload.setOnClickListener(this);
         mBtnRateUpload.setOnClickListener(this);
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_revert:
+                        mBtnRateUpload.setProgress(0);
+                        mBtnTempUpload.setProgress(0);
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     /**

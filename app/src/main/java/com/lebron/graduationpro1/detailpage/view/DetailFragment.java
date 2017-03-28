@@ -30,13 +30,13 @@ import java.util.List;
  */
 @RequiresPresenter(DetailPresenter.class)
 public class DetailFragment extends BaseFragment<DetailPresenter> implements
-        SwipeRefreshLayout.OnRefreshListener, DetailContracts.View {
+        SwipeRefreshLayout.OnRefreshListener, DetailContracts.View, View.OnClickListener{
     private MainActivity mMainActivity;
     private static final String TAG = "DetailFragment";
     private View mRootView;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mRefreshLayout;
-    private List<HeatInfo> totalList = new ArrayList<>();
+    private List<HeatInfo> mTotalList = new ArrayList<>();
     private int mCurrentPage = 1;
     private RecyclerViewAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
@@ -91,7 +91,7 @@ public class DetailFragment extends BaseFragment<DetailPresenter> implements
         mRecyclerView = ((RecyclerView) view.findViewById(R.id.recycler_view_details));
         mLayoutManager = new LinearLayoutManager(mMainActivity);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new RecyclerViewAdapter(mMainActivity, totalList);
+        mAdapter = new RecyclerViewAdapter(mMainActivity, mTotalList);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -117,6 +117,7 @@ public class DetailFragment extends BaseFragment<DetailPresenter> implements
                 lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
             }
         });
+        mLayoutError.setOnClickListener(this);
     }
 
     @Override
@@ -128,6 +129,18 @@ public class DetailFragment extends BaseFragment<DetailPresenter> implements
     @Override
     protected void init() {
         getPresenter().getHeatInfo(mCurrentPage);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.layout_common_network_error:
+                getPresenter().getHeatInfo(mCurrentPage);
+                showCustomToast(R.mipmap.toast_done_icon, "重新加载中...", Toast.LENGTH_SHORT);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -173,7 +186,7 @@ public class DetailFragment extends BaseFragment<DetailPresenter> implements
      * @param infoList 数据集合
      */
     private void addDataToRecyclerView(List<HeatInfo> infoList) {
-        totalList.addAll(infoList);
+        mTotalList.addAll(infoList);
         mAdapter.notifyDataSetChanged();
         mRefreshLayout.setRefreshing(false); // 加载更多时加载成功, 取消加载的动画
         if (mCurrentPage == 1) { // 只有刚进入页面的时候显示, 上拉加载不需要显示
@@ -187,8 +200,8 @@ public class DetailFragment extends BaseFragment<DetailPresenter> implements
      * @param infoList 数据集合
      */
     private void refreshDataToRecyclerView(List<HeatInfo> infoList) {
-        totalList.clear();
-        totalList.addAll(infoList);
+        mTotalList.clear();
+        mTotalList.addAll(infoList);
         mAdapter.notifyDataSetChanged();
         mRefreshLayout.setRefreshing(false); // 数据重新加载成功, 取消刷新的动画
         showCustomToast(R.mipmap.toast_done_icon, "刷新成功!", Toast.LENGTH_SHORT);

@@ -24,7 +24,7 @@ public class ChangeNickNameActivity extends BaseActivity {
     @Override
     protected void bindViews() {
         initToolbar(R.string.modify_nick_name);
-        getToolbar().inflateMenu(R.menu.menu_save);
+        getToolbar().inflateMenu(R.menu.menu_nick_name_save);
         mEditNickName = (ClearEditText) findViewById(R.id.edt_nick_name);
     }
 

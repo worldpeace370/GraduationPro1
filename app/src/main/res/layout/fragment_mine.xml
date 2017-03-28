@@ -29,7 +29,7 @@
                     android:id="@+id/image_user_head"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@mipmap/user_head" />
+                    android:src="@mipmap/pic_userhead" />
 
                 <TextView
                     android:id="@+id/nick_name"

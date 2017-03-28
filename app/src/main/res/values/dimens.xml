@@ -5,6 +5,10 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="footer_padding">10dp</dimen>
+    <dimen name="header_height">60dp</dimen>
+    <dimen name="footer_height">90dp</dimen>
+    <dimen name="custom_tiny_plus_text_size">10sp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="common_radius">2dp</dimen>
     <dimen name="toolbarHeight">56dp</dimen>

@@ -12,8 +12,9 @@ import com.lebron.graduationpro1.minepage.model.UserInfo;
 
 public class LebronPreference extends BasePreference {
     private final static String PREFERENCE_KEY_NODE_CHOICE = "node_choice";
-    private final static String PREFERENCE_KEY_USER_INFO = "USER_INFO";
+    private final static String PREFERENCE_KEY_USER_INFO = "user_info";
     private final static String PREFERENCE_KEY_HAS_LOGIN = "has_login";
+    private final static String PREFERENCE_KEY_HEAD_IMAGE_URL = "head_image_url";
     private static LebronPreference instance;
 
     public static LebronPreference getInstance() {
@@ -104,5 +105,32 @@ public class LebronPreference extends BasePreference {
             hasLogin = sPrefs.getBoolean(PREFERENCE_KEY_HAS_LOGIN, false);
         }
         return hasLogin;
+    }
+
+    /**
+     * 保存对头像图片剪切后保存的地址
+     *
+     * @param urlString 头像图片剪切后保存的地址
+     */
+    public void saveHeadImageUrl(String urlString) {
+        checkPrefs();
+        if (sPrefs != null) {
+            SharedPreferences.Editor editor = sPrefs.edit();
+            editor.putString(PREFERENCE_KEY_HEAD_IMAGE_URL, urlString);
+            if (mUseApply) {
+                editor.apply();
+            } else {
+                editor.commit();
+            }
+        }
+    }
+
+    public String getHeadImageUrl() {
+        checkPrefs();
+        String urlStr = null;
+        if (sPrefs != null) {
+            urlStr = sPrefs.getString(PREFERENCE_KEY_HEAD_IMAGE_URL, null);
+        }
+        return urlStr;
     }
 }
