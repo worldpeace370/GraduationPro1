@@ -153,9 +153,9 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
                             String temperature = list.get(list.size() - 1).getTemperature();
                             String rate = list.get(list.size() - 1).getRate();
                             mTextViewWaterTemp.setText(temperature + "℃");
-                            mSeekBarWaterTemp.setProgress(Integer.parseInt(temperature));
+                            mSeekBarWaterTemp.setProgress((int)Float.parseFloat(temperature));
                             mTextViewWaterRate.setText(rate + "n/s");
-                            mSeekBarWaterRate.setProgress(Integer.parseInt(rate));
+                            mSeekBarWaterRate.setProgress((int)Float.parseFloat(rate));//上传温度大部分为小数，之前转为Integer报了异常
                         }
                     }
 

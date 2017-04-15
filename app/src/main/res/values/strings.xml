@@ -32,7 +32,7 @@
     <string name="mine_night_mode">夜间模式</string>
     <string name="phone_account">手机号码</string>
     <string name="scroll_to_scale">拖动查询历史数据</string>
-    <string name="select_node">查看细节</string>
+    <string name="watch_detail">查看细节</string>
     <string name="save_image">保存图像</string>
     <string name="refresh_data">刷新数据</string>
     <string name="loading_text">努力加载中……</string>

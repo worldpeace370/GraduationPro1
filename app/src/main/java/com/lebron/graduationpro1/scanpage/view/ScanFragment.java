@@ -201,20 +201,20 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         //                return value + "℃";
         //            }
         //        });
-        LimitLine limitLineWater = new LimitLine(70, "水温阈值");
+        LimitLine limitLineWater = new LimitLine(25, "水温阈值");
         limitLineWater.setLineColor(Color.RED);
-        limitLineWater.setLineWidth(1f);
+        limitLineWater.setLineWidth(0.2f);
         limitLineWater.setTextColor(Color.BLACK);
-        limitLineWater.setTextSize(12f);
+        limitLineWater.setTextSize(10f);
         limitLineWater.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
         //设置虚线
         //limitLineWater.enableDashedLine(6f, 10f, 0f);
         leftAxis.addLimitLine(limitLineWater);
-        LimitLine limitLineRotateSpeed = new LimitLine(40, "转速阈值");
+        LimitLine limitLineRotateSpeed = new LimitLine(70, "转速阈值");
         limitLineRotateSpeed.setLineColor(Color.GREEN);
-        limitLineRotateSpeed.setLineWidth(1f);
+        limitLineRotateSpeed.setLineWidth(0.2f);
         limitLineRotateSpeed.setTextColor(Color.BLACK);
-        limitLineRotateSpeed.setTextSize(12f);
+        limitLineRotateSpeed.setTextSize(10f);
         limitLineRotateSpeed.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
         //设置虚线
         //limitLineRotateSpeed.enableDashedLine(6f, 10f, 0f);
@@ -353,7 +353,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
 
     private void addTempEntriesToDataSetList(List<Entry> entries, ArrayList<LineDataSet> dataSetList) {
         //LineDataSet可以看作是一条线
-        LineDataSet tempDataSet = new LineDataSet(entries, "水温℃");
+        LineDataSet tempDataSet = new LineDataSet(entries, "水温 ℃");
         //设置折线的颜色
         tempDataSet.setColor(Color.RED);
         //设置折线上点的字体颜色
@@ -365,7 +365,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         //设置折线圆点中心的颜色
         //dataSet.setCircleColorHole(Color.GRAY);
         //设置圆点的大小
-        tempDataSet.setCircleSize(4f);
+        tempDataSet.setCircleSize(1f);
         //设置点击某个点时,横竖两条线的颜色
         tempDataSet.setHighLightColor(Color.YELLOW);
         dataSetList.add(tempDataSet);
@@ -373,7 +373,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
 
     private void addRateEntriesToDataSetList(List<Entry> entries, ArrayList<LineDataSet> dataSetList) {
         //LineDataSet可以看作是一条线
-        LineDataSet rateDataSet = new LineDataSet(entries, "转速n/s");
+        LineDataSet rateDataSet = new LineDataSet(entries, "转速 10n/s");
         //设置折线的颜色
         rateDataSet.setColor(Color.GREEN);
         //设置折线上点的字体颜色
@@ -383,7 +383,7 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         //设置折线圆点中心的颜色
         //        dataSet.setCircleColorHole(Color.GRAY);
         //设置圆点的大小
-        rateDataSet.setCircleSize(4f);
+        rateDataSet.setCircleSize(1f);
         //设置点击某个点时,横竖两条线的颜色
         rateDataSet.setHighLightColor(Color.YELLOW);
         rateDataSet.setDrawValues(false);
@@ -414,17 +414,56 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         addPopWindow.setOnPopupWindowItemClickListener(new AddPopWindow.OnPopupWindowItemClickListener() {
             @Override
             public void onItemClick(int id) {
-                if (id == R.id.watch_to_detail) {
+                if (id == R.id.refresh_data) {
+                    getPresenter().refreshTodayData();
+                } else if (id == R.id.watch_to_detail) {
                     startInfoDetailActivity();
-//                    startNodeChoiceActivity();
+                } else if (id == R.id.choice_node) {
+                    startNodeChoiceActivity();
                 } else if (id == R.id.save_image_sd_card) {
                     getPresenter().saveLineImageToSDCard();
-                } else if (id == R.id.refresh_data) {
-                    getPresenter().refreshTodayData();
                 }
             }
         });
     }
+
+    /**
+     * 跳转到带有时间戳的转速、温度详情Activity中去
+     */
+    private void startInfoDetailActivity() {
+        //跳转到供暖节点选择Activity
+        Intent intent = new Intent(mMainActivity, InfoDetailActivity.class);
+        startActivity(intent);
+        //Activity启动动画
+        mMainActivity.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
+    }
+
+    /**
+     * 跳转到节点选择的Activity中去
+     */
+    private void startNodeChoiceActivity() {
+        //跳转到供暖节点选择Activity
+        Intent intent = new Intent(mMainActivity, NodeChoiceActivity.class);
+        startActivityForResult(intent, ConstantValue.NODE_CHOICE_REQUEST_CODE);
+        //Activity启动动画
+        mMainActivity.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
+    }
+
+    //得到选择的节点,设置到ToolBat title中
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //获得 mNodeName
+        if (requestCode == ConstantValue.NODE_CHOICE_REQUEST_CODE
+                && resultCode == ConstantValue.NODE_CHOICE_RESULT_CODE) {
+            if (data != null) {
+                mNodeName = data.getStringExtra("nodeName");
+                LebronPreference.getInstance().saveNodeChoice(mNodeName);
+                mToolbar.setTitle(mNodeName);
+            }
+        }
+    }
+
 
     @Override
     public void showRefreshing() {
@@ -585,42 +624,4 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         super.onDetach();
         AppLog.i(TAG, "onDetach: 执行了");
     }
-
-    /**
-     * 跳转到带有时间戳的转速、温度详情Activity中去
-     */
-    private void startInfoDetailActivity() {
-        //跳转到供暖节点选择Activity
-        Intent intent = new Intent(mMainActivity, InfoDetailActivity.class);
-        startActivity(intent);
-        //Activity启动动画
-        mMainActivity.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
-    }
-
-    /**
-     * 跳转到节点选择的Activity中去
-     */
-    private void startNodeChoiceActivity() {
-        //跳转到供暖节点选择Activity
-        Intent intent = new Intent(mMainActivity, NodeChoiceActivity.class);
-        startActivityForResult(intent, ConstantValue.NODE_CHOICE_REQUEST_CODE);
-        //Activity启动动画
-        mMainActivity.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_from_left);
-    }
-
-    //得到选择的节点,设置到ToolBat title中
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //获得 mNodeName
-        if (requestCode == ConstantValue.NODE_CHOICE_REQUEST_CODE
-                && resultCode == ConstantValue.NODE_CHOICE_RESULT_CODE) {
-            if (data != null) {
-                mNodeName = data.getStringExtra("nodeName");
-                LebronPreference.getInstance().saveNodeChoice(mNodeName);
-                mToolbar.setTitle(mNodeName);
-            }
-        }
-    }
-
 }
