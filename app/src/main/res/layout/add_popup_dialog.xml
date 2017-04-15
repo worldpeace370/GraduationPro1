@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_marginTop="34dp">
+        android:layout_marginTop="42dp">
 
         <LinearLayout
             android:id="@+id/refresh_data"
@@ -64,7 +64,36 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:gravity="center"
-                android:text="@string/select_node"
+                android:text="@string/watch_detail"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:background="@color/tabRelease" />
+
+        <LinearLayout
+            android:id="@+id/choice_node"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp" >
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/choice_node"
+                tools:ignore="contentDescription" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="@string/node_choice"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
         </LinearLayout>
