@@ -6,37 +6,46 @@ package com.lebron.graduationpro1.scanpage.model;
  */
 
 public class CollectInfoBean {
-    private String temperature;
-    private String rate;
-    private String createtime;
+    private String temp_out;
+    private String temp_in;
+    private String water_press;
+    private String create_time;
 
-    public String getTemperature() {
-        return temperature;
+    public String getTemp_out() {
+        return temp_out;
     }
 
-    public void setTemperature(String temperature) {
-        this.temperature = temperature;
+    public void setTemp_out(String temp_out) {
+        this.temp_out = temp_out;
     }
 
-    public String getRate() {
-        return rate;
+    public String getTemp_in() {
+        return temp_in;
     }
 
-    public void setRate(String rate) {
-        this.rate = rate;
+    public void setTemp_in(String temp_in) {
+        this.temp_in = temp_in;
     }
 
-    public String getCreatetime() {
-        return createtime;
+    public String getWater_press() {
+        return water_press;
     }
 
-    public void setCreatetime(String createtime) {
-        this.createtime = createtime;
+    public void setWater_press(String water_press) {
+        this.water_press = water_press;
+    }
+
+    public String getCreate_time() {
+        return create_time;
+    }
+
+    public void setCreate_time(String create_time) {
+        this.create_time = create_time;
     }
 
     @Override
     public String toString() {
-        return "temperature = " + temperature + ", rate = " + rate
-                + ", createtime = " + createtime;
+        return "temp_out = " + temp_out + ", temp_in = " + temp_out
+                + ", water_press = " + water_press + ", create_time = " + create_time;
     }
 }

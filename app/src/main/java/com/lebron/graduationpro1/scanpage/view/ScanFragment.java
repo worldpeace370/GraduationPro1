@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -201,24 +200,24 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         //                return value + "℃";
         //            }
         //        });
-        LimitLine limitLineWater = new LimitLine(25, "水温阈值");
-        limitLineWater.setLineColor(Color.RED);
-        limitLineWater.setLineWidth(0.2f);
-        limitLineWater.setTextColor(Color.BLACK);
-        limitLineWater.setTextSize(10f);
-        limitLineWater.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-        //设置虚线
-        //limitLineWater.enableDashedLine(6f, 10f, 0f);
-        leftAxis.addLimitLine(limitLineWater);
-        LimitLine limitLineRotateSpeed = new LimitLine(70, "转速阈值");
-        limitLineRotateSpeed.setLineColor(Color.GREEN);
-        limitLineRotateSpeed.setLineWidth(0.2f);
-        limitLineRotateSpeed.setTextColor(Color.BLACK);
-        limitLineRotateSpeed.setTextSize(10f);
-        limitLineRotateSpeed.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-        //设置虚线
-        //limitLineRotateSpeed.enableDashedLine(6f, 10f, 0f);
-        leftAxis.addLimitLine(limitLineRotateSpeed);
+//        LimitLine limitLineWater = new LimitLine(25, "水温阈值");
+//        limitLineWater.setLineColor(Color.RED);
+//        limitLineWater.setLineWidth(0.2f);
+//        limitLineWater.setTextColor(Color.BLACK);
+//        limitLineWater.setTextSize(10f);
+//        limitLineWater.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+//        //设置虚线
+//        //limitLineWater.enableDashedLine(6f, 10f, 0f);
+//        leftAxis.addLimitLine(limitLineWater);
+//        LimitLine limitLineRotateSpeed = new LimitLine(70, "转速阈值");
+//        limitLineRotateSpeed.setLineColor(Color.GREEN);
+//        limitLineRotateSpeed.setLineWidth(0.2f);
+//        limitLineRotateSpeed.setTextColor(Color.BLACK);
+//        limitLineRotateSpeed.setTextSize(10f);
+//        limitLineRotateSpeed.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+//        //设置虚线
+//        //limitLineRotateSpeed.enableDashedLine(6f, 10f, 0f);
+//        leftAxis.addLimitLine(limitLineRotateSpeed);
         //X轴设置在底部
         XAxis xAxis = mLineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -328,15 +327,18 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
 
     private void showLineChartData(List<CollectInfoBean> infoList) {
         ArrayList<LineDataSet> dataSetList = new ArrayList<>();
-        List<Entry> entriesTemp = new ArrayList<>();
-        List<Entry> entriesRate = new ArrayList<>();
+        List<Entry> entriesTempOut = new ArrayList<>();
+        List<Entry> entriesTempIn = new ArrayList<>();
+        List<Entry> entriesWaterPress = new ArrayList<>();
         int infoSize = infoList.size();
         for (int i = 0; i < infoSize; i++) {
-            entriesTemp.add(new Entry(Float.parseFloat(infoList.get(i).getTemperature()), i));
-            entriesRate.add(new Entry(Float.parseFloat(infoList.get(i).getRate()), i));
+            entriesTempOut.add(new Entry(Float.parseFloat(infoList.get(i).getTemp_out()), i));
+            entriesTempIn.add(new Entry(Float.parseFloat(infoList.get(i).getTemp_in()), i));
+            entriesWaterPress.add(new Entry(Float.parseFloat(infoList.get(i).getWater_press()), i));
         }
-        addTempEntriesToDataSetList(entriesTemp, dataSetList);
-        addRateEntriesToDataSetList(entriesRate, dataSetList);
+        addTempOutEntriesToDataSetList(entriesTempOut, dataSetList);
+        addTempInEntriesToDataSetList(entriesTempIn, dataSetList);
+        addRateEntriesToDataSetList(entriesWaterPress, dataSetList);
         //初始化x轴
         String xValues[] = new String[infoSize];
         for (int i = 0; i < infoSize; i++) {
@@ -351,9 +353,9 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         mLineChart.invalidate();
     }
 
-    private void addTempEntriesToDataSetList(List<Entry> entries, ArrayList<LineDataSet> dataSetList) {
+    private void addTempOutEntriesToDataSetList(List<Entry> entries, ArrayList<LineDataSet> dataSetList) {
         //LineDataSet可以看作是一条线
-        LineDataSet tempDataSet = new LineDataSet(entries, "水温 ℃");
+        LineDataSet tempDataSet = new LineDataSet(entries, "出水温度 ℃");
         //设置折线的颜色
         tempDataSet.setColor(Color.RED);
         //设置折线上点的字体颜色
@@ -371,15 +373,35 @@ public class ScanFragment extends BaseFragment<ScanPresenter>
         dataSetList.add(tempDataSet);
     }
 
+    private void addTempInEntriesToDataSetList(List<Entry> entries, ArrayList<LineDataSet> dataSetList) {
+        //LineDataSet可以看作是一条线
+        LineDataSet tempDataSet = new LineDataSet(entries, "进水温度 ℃");
+        //设置折线的颜色
+        tempDataSet.setColor(Color.GREEN);
+        //设置折线上点的字体颜色
+        tempDataSet.setValueTextColor(Color.GREEN);
+        //设置折线圆点的颜色
+        tempDataSet.setCircleColor(Color.GREEN);
+        //图上不描述点的值
+        tempDataSet.setDrawValues(false);
+        //设置折线圆点中心的颜色
+        //dataSet.setCircleColorHole(Color.GRAY);
+        //设置圆点的大小
+        tempDataSet.setCircleSize(1f);
+        //设置点击某个点时,横竖两条线的颜色
+        tempDataSet.setHighLightColor(Color.YELLOW);
+        dataSetList.add(tempDataSet);
+    }
+
     private void addRateEntriesToDataSetList(List<Entry> entries, ArrayList<LineDataSet> dataSetList) {
         //LineDataSet可以看作是一条线
-        LineDataSet rateDataSet = new LineDataSet(entries, "转速 10n/s");
+        LineDataSet rateDataSet = new LineDataSet(entries, "管道水压 kPa");
         //设置折线的颜色
-        rateDataSet.setColor(Color.GREEN);
+        rateDataSet.setColor(Color.BLUE);
         //设置折线上点的字体颜色
-        rateDataSet.setValueTextColor(Color.GREEN);
+        rateDataSet.setValueTextColor(Color.BLUE);
         //设置折线圆点的颜色
-        rateDataSet.setCircleColor(Color.GREEN);
+        rateDataSet.setCircleColor(Color.BLUE);
         //设置折线圆点中心的颜色
         //        dataSet.setCircleColorHole(Color.GRAY);
         //设置圆点的大小

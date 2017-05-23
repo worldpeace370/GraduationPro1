@@ -20,44 +20,45 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/layout_temp"
+            android:id="@+id/layout_temp_out"
             android:layout_width="match_parent"
             android:layout_height="40dp">
 
             <ImageView
-                android:id="@+id/iv_temp"
+                android:id="@+id/iv_temp_out"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@null"
-                android:src="@mipmap/detail_temp" />
+                android:src="@mipmap/temp_out" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/iv_temp">
+                android:layout_toRightOf="@id/iv_temp_out">
 
                 <TextView
-                    android:id="@+id/label_temp"
+                    android:id="@+id/label_temp_out"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
                     android:gravity="center"
-                    android:text="@string/collect_temp"
+                    android:text="@string/collect_temp_out"
                     android:textColor="@color/color_std_red"
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/tv_collect_temp"
+                    android:id="@+id/tv_collect_temp_out"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@id/label_temp"
+                    android:layout_toRightOf="@id/label_temp_out"
+                    android:textColor="@color/color_std_red"
                     android:gravity="center"
                     tools:text="80℃" />
             </RelativeLayout>
@@ -69,46 +70,97 @@
             android:background="@color/item_dark" />
 
         <RelativeLayout
-            android:id="@+id/layout_rate"
+            android:id="@+id/layout_temp_in"
             android:layout_width="match_parent"
             android:layout_height="40dp">
 
             <ImageView
-                android:id="@+id/iv_rate"
+                android:id="@+id/iv_temp_in"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@null"
-                android:src="@mipmap/detail_rate" />
+                android:src="@mipmap/temp_in" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/iv_rate">
+                android:layout_toRightOf="@id/iv_temp_in">
 
                 <TextView
-                    android:id="@+id/label_rate"
+                    android:id="@+id/label_temp_in"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
                     android:gravity="center"
-                    android:text="@string/collect_rate"
-                    android:textColor="@color/color_std_yellow"
+                    android:text="@string/collect_temp_in"
+                    android:textColor="@color/color_std_green"
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/tv_collect_rate"
+                    android:id="@+id/tv_collect_temp_in"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@id/label_rate"
+                    android:layout_toRightOf="@id/label_temp_in"
+                    android:textColor="@color/color_std_green"
                     android:gravity="center"
-                    tools:text="80n/s" />
+                    tools:text="80℃" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/item_dark" />
+
+        <RelativeLayout
+            android:id="@+id/layout_water_press"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <ImageView
+                android:id="@+id/iv_water_press"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@null"
+                android:src="@mipmap/water_press" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/iv_water_press">
+
+                <TextView
+                    android:id="@+id/label_water_press"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="center"
+                    android:text="@string/collect_water_press"
+                    android:textColor="@color/color_std_blue"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_collect_water_press"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@id/label_water_press"
+                    android:textColor="@color/color_std_blue"
+                    android:gravity="center"
+                    tools:text="80kPa" />
             </RelativeLayout>
         </RelativeLayout>
 
@@ -146,7 +198,6 @@
                     android:layout_marginLeft="20dp"
                     android:gravity="center"
                     android:text="@string/collect_time"
-                    android:textColor="@color/green_yellow"
                     android:textSize="14sp" />
 
                 <TextView

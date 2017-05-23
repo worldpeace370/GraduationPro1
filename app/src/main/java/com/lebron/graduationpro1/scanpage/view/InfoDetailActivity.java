@@ -38,7 +38,7 @@ public class InfoDetailActivity extends BaseActivity<InfoDetailPresenter> implem
     private MyHandler mHandler;
     private static class MyHandler extends Handler{
         WeakReference<InfoDetailActivity> weakReference;
-        public MyHandler(InfoDetailActivity activity){
+        MyHandler(InfoDetailActivity activity){
             weakReference = new WeakReference<>(activity);
         }
 

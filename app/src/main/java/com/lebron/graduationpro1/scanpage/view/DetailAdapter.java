@@ -45,22 +45,25 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCollectTemp;
-        TextView tvCollectRate;
+        TextView tvCollectTempOut;
+        TextView tvCollectTempIn;
+        TextView tvCollectWaterPress;
         TextView tvCollectTime;
 
         ItemViewHolder(View itemView) {
             super(itemView);
-            tvCollectTemp = ((TextView) itemView.findViewById(R.id.tv_collect_temp));
-            tvCollectRate = ((TextView) itemView.findViewById(R.id.tv_collect_rate));
-            tvCollectTime = ((TextView) itemView.findViewById(R.id.tv_collect_time));
+            tvCollectTempOut = (TextView) itemView.findViewById(R.id.tv_collect_temp_out);
+            tvCollectTempIn = (TextView) itemView.findViewById(R.id.tv_collect_temp_in);
+            tvCollectWaterPress = (TextView) itemView.findViewById(R.id.tv_collect_water_press);
+            tvCollectTime = (TextView) itemView.findViewById(R.id.tv_collect_time);
         }
 
         void setData(final int position) {
             if (mList != null) {
-                tvCollectTemp.setText(mList.get(position).getTemperature() + "℃");
-                tvCollectRate.setText(mList.get(position).getRate() + "n/s");
-                tvCollectTime.setText(mList.get(position).getCreatetime());
+                tvCollectTempOut.setText(mList.get(position).getTemp_out() + "℃");
+                tvCollectTempIn.setText(mList.get(position).getTemp_in() + "℃");
+                tvCollectWaterPress.setText(mList.get(position).getWater_press() + "kPa");
+                tvCollectTime.setText(mList.get(position).getCreate_time());
             }
         }
     }

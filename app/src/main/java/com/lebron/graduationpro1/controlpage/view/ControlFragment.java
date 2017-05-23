@@ -109,7 +109,7 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
         mToolbar.inflateMenu(R.menu.menu_control_fragment);
         mToolbar.setTitle("");
         mTextViewWaterTemp.setText(mSeekBarWaterTemp.getProgress() + "℃");
-        mTextViewWaterRate.setText(mSeekBarWaterRate.getProgress() + "n/s");
+        mTextViewWaterRate.setText(mSeekBarWaterRate.getProgress() + "kPa");
     }
 
     @Override
@@ -142,7 +142,7 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
      */
     @Override
     protected void init() {
-        String url = "http://114.215.117.169/thinkphp/Home/ApiGrad/dateSearch/date/%s";
+        String url = "http://114.215.117.169/thinkphp/Home/ApiMiniData/dateSearch/date/%s";
         Date date = new Date(System.currentTimeMillis());
         String dateStr = mDateFormat.format(date);
         new VolleyRequestService().getDataFromServer(String.format(url, dateStr), CollectInfoBean.class,
@@ -150,11 +150,11 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
                     @Override
                     public void success(List<CollectInfoBean> list) {
                         if (list != null && list.size() > 0) {
-                            String temperature = list.get(list.size() - 1).getTemperature();
-                            String rate = list.get(list.size() - 1).getRate();
+                            String temperature = list.get(list.size() - 1).getTemp_out();
+                            String rate = list.get(list.size() - 1).getWater_press();
                             mTextViewWaterTemp.setText(temperature + "℃");
                             mSeekBarWaterTemp.setProgress((int)Float.parseFloat(temperature));
-                            mTextViewWaterRate.setText(rate + "n/s");
+                            mTextViewWaterRate.setText(rate + "kPa");
                             mSeekBarWaterRate.setProgress((int)Float.parseFloat(rate));//上传温度大部分为小数，之前转为Integer报了异常
                         }
                     }
@@ -172,7 +172,7 @@ public class ControlFragment extends BaseFragment<ControlPresenter> implements
         if (seekBar.equals(mSeekBarWaterTemp)) {
             mTextViewWaterTemp.setText(progress + "℃");
         } else if (seekBar.equals(mSeekBarWaterRate)) {
-            mTextViewWaterRate.setText(progress + "n/s");
+            mTextViewWaterRate.setText(progress + "kPa");
         }
     }
 

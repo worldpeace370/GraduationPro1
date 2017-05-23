@@ -71,7 +71,14 @@
     <string name="upload">上传</string>
     <string name="revert_status">复位上传状态</string>
     <string name="info_details">详情信息</string>
-    <string name="collect_temp">采集温度：</string>
-    <string name="collect_rate">采集转速：</string>
+    <string name="collect_temp_out">出水温度：</string>
+    <string name="collect_temp_in">进水温度：</string>
+    <string name="collect_water_press">管道水压：</string>
     <string name="collect_time">采集时间：</string>
+    <string name="temp_control">水温控制</string>
+    <string name="press_control">水压控制</string>
+    <string name="press_label_control">水压:</string>
+    <string name="press_unit">100kPa</string>
+    <string name="temp_unit">100℃</string>
+    <string name="temp_label_control">水温:</string>
 </resources>

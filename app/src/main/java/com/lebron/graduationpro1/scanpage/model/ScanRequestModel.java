@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ScanRequestModel extends BaseModel<ScanContracts.Model.Callback>
         implements ScanContracts.Model {
-    private static final String URL = "http://114.215.117.169/thinkphp/Home/ApiGrad/dateSearch/date/%s";
+    private static final String URL = "http://114.215.117.169/thinkphp/Home/ApiMiniData/dateSearch/date/%s";
     private VolleyRequestService mRequestService = new VolleyRequestService();
     @Override
     public void getCollectInfo(String date) {

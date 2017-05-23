@@ -20,12 +20,12 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/layout_temp"
+            android:id="@+id/layout_temp_out"
             android:layout_width="match_parent"
             android:layout_height="70dp">
 
             <ImageView
-                android:id="@+id/iv_temp"
+                android:id="@+id/iv_temp_out"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_alignParentLeft="true"
@@ -38,7 +38,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/iv_temp"
+                android:layout_toRightOf="@id/iv_temp_out"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -122,13 +122,13 @@
             android:background="@color/item_dark" />
 
         <RelativeLayout
-            android:id="@+id/layout_rate"
+            android:id="@+id/layout_water_press"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_marginTop="6dp">
 
             <RelativeLayout
-                android:id="@+id/iv_rate"
+                android:id="@+id/iv_water_press"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_alignParentLeft="true"
@@ -148,7 +148,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/iv_rate"
+                android:layout_toRightOf="@id/iv_water_press"
                 android:orientation="vertical">
 
                 <LinearLayout

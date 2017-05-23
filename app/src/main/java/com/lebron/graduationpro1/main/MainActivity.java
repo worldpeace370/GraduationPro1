@@ -14,13 +14,11 @@ import android.widget.RadioGroup;
 
 import com.lebron.graduationpro1.R;
 import com.lebron.graduationpro1.base.BaseActivity;
-import com.lebron.graduationpro1.detailpage.view.DetailFragment;
-import com.lebron.graduationpro1.scanpage.view.ScanFragment;
 import com.lebron.graduationpro1.controlpage.view.ControlFragment;
 import com.lebron.graduationpro1.minepage.fragment.MineFragment;
-import com.lebron.graduationpro1.videopage.VideoFragment;
-import com.lebron.graduationpro1.utils.MyActivityManager;
+import com.lebron.graduationpro1.scanpage.view.ScanFragment;
 import com.lebron.graduationpro1.utils.ShowToast;
+import com.lebron.graduationpro1.videopage.VideoFragment;
 
 public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
     private static final String TAG = "MainActivity";
@@ -28,13 +26,13 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     private final int tabScan = R.id.scan;
     private final int tabVideo = R.id.video;
     private final int tabControl = R.id.control;
-    private final int tabDetails = R.id.details;
+//    private final int tabDetails = R.id.details;
     private final int tabMine = R.id.mine;
     private int currentSelectedTab = R.id.scan;
     private ScanFragment mScanFragment;
     private VideoFragment mVideoFragment;
     private ControlFragment mControlFragment;
-    private DetailFragment mDetailFragment;
+//    private DetailFragment mDetailFragment;
     private MineFragment mMineFragment;
     private FragmentManager mFragmentManager;
     //用于按下两次返回键退出程序用
@@ -48,7 +46,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
             mScanFragment = findFragmentByClassName(ScanFragment.class);
             mVideoFragment = findFragmentByClassName(VideoFragment.class);
             mControlFragment = findFragmentByClassName(ControlFragment.class);
-            mDetailFragment = findFragmentByClassName(DetailFragment.class);
+//            mDetailFragment = findFragmentByClassName(DetailFragment.class);
             mMineFragment = findFragmentByClassName(MineFragment.class);
         }
         /**
@@ -140,9 +138,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         if (mControlFragment != null) {
             ft.hide(mControlFragment);
         }
-        if (mDetailFragment != null) {
-            ft.hide(mDetailFragment);
-        }
+//        if (mDetailFragment != null) {
+//            ft.hide(mDetailFragment);
+//        }
         if (mMineFragment != null) {
             ft.hide(mMineFragment);
         }
@@ -169,9 +167,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
             case tabControl:
                 change2Control(ft);
                 break;
-            case tabDetails:
-                change2Details(ft);
-                break;
+//            case tabDetails:
+//                change2Details(ft);
+//                break;
             case tabMine:
                 change2Mine(ft);
                 break;
@@ -207,14 +205,14 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         }
     }
 
-    private void change2Details(FragmentTransaction ft) {
-        if (mDetailFragment == null) {
-            mDetailFragment = new DetailFragment();
-            addFragment(R.id.content_container, mDetailFragment, ft);
-        } else {
-            ft.show(mDetailFragment).commitAllowingStateLoss();
-        }
-    }
+//    private void change2Details(FragmentTransaction ft) {
+//        if (mDetailFragment == null) {
+//            mDetailFragment = new DetailFragment();
+//            addFragment(R.id.content_container, mDetailFragment, ft);
+//        } else {
+//            ft.show(mDetailFragment).commitAllowingStateLoss();
+//        }
+//    }
 
     private void change2Mine(FragmentTransaction ft) {
         if (mMineFragment == null) {
@@ -225,25 +223,6 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         }
     }
 
-    //
-    //    /**
-    //     * 获得输入的ip地址,正则表达式验证合法性之后启动Activity
-    //     */
-    //    private void openShowVideoActivity() {
-    //        String ipString = mEditText.getText().toString();
-    //        String ipRegex = "\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b";
-    //        Pattern pattern = Pattern.compile(ipRegex);
-    //        Matcher matcher = pattern.matcher(ipString);
-    //        if (matcher.find()){
-    //            Intent intent = new Intent(this, ShowVideoActivity.class);
-    //            Bundle bundle = new Bundle();
-    //            bundle.putString("video_url", ipString);
-    //            intent.putExtras(bundle);
-    //            startActivity(intent);
-    //        }else {
-    //            ShowToast.shortTime("您输入的ip地址不合法!");
-    //        }
-    //    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
@@ -251,7 +230,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 ShowToast.shortTime("再按一次退出程序");
                 mExitTime = System.currentTimeMillis();
             } else {
-                MyActivityManager.getInstance().finishAllActivityAndExit();
+                finish();
+                android.os.Process.killProcess(android.os.Process.myPid());
             }
             return true;//此处返回true or false 貌似没有意义了,两个都能正常的退出程序
         }

@@ -44,11 +44,11 @@
             android:drawableTop="@drawable/tab_control_selector"
             android:text="@string/control" />
 
-        <RadioButton
-            android:id="@+id/details"
-            style="@style/tab_style"
-            android:drawableTop="@drawable/tab_details_selector"
-            android:text="@string/details" />
+        <!--<RadioButton-->
+            <!--android:id="@+id/details"-->
+            <!--style="@style/tab_style"-->
+            <!--android:drawableTop="@drawable/tab_details_selector"-->
+            <!--android:text="@string/details" />-->
 
         <RadioButton
             android:id="@+id/mine"

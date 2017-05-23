@@ -36,7 +36,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
             android:gravity="center"
-            android:text="水温控制"
+            android:text="@string/temp_control"
             android:textSize="16sp" />
 
         <LinearLayout
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="水温:" />
+                android:text="@string/temp_label_control" />
 
             <SeekBar
                 android:id="@+id/seekBar_water_temp"
@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="100℃" />
+                android:text="@string/temp_unit" />
         </LinearLayout>
 
         <RelativeLayout
@@ -134,7 +134,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
             android:gravity="center"
-            android:text="转速控制"
+            android:text="@string/press_control"
             android:textSize="16sp" />
 
         <LinearLayout
@@ -152,7 +152,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="转速:" />
+                android:text="@string/press_label_control" />
 
             <SeekBar
                 android:id="@+id/seekBar_water_rate"
@@ -169,7 +169,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="100n/s" />
+                android:text="@string/press_unit" />
         </LinearLayout>
 
         <RelativeLayout
